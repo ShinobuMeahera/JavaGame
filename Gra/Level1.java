@@ -73,9 +73,9 @@ public class Level1 extends GameState{
 		es.setPosition(2000, 100);
 		enemies.add(es);
 		
-		eg = new EnemyGhost(tileMap, player);
+		/*eg = new EnemyGhost(tileMap, player);
 		eg.setPosition(2300, 200);
-		enemies.add(eg);
+		enemies.add(eg);*/
 	}
 	
 	public void update() {

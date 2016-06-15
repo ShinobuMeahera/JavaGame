@@ -96,13 +96,16 @@ public class Player extends Object{
 		super(tm);
 		
 		attackRect = new Rectangle(0, 0, 0, 0);
-		attackRect.width = 45;
+		attackRect.width = 25;
 		attackRect.height = 20;
 				
 		alr = new Rectangle((int)x - 15, (int)y - 45, 45, 45);
 		cr = new Rectangle(0, 0, 0, 0);
 		cr.width = 50;
 		cr.height = 40;
+		
+		attackRectDraw = new Rectangle();
+		attackRectDraw = attackRect;
 		
 		//rozmiary gracza, do wyswietlenia
 		width = 45;
@@ -124,6 +127,8 @@ public class Player extends Object{
 		
 		facing = true;
 		attack = false;
+		hi_attack = false;
+		low_attack = false;
 		
 		damage = 2;
 		health = maxHealth = 5;
@@ -314,7 +319,7 @@ public class Player extends Object{
 					
 			
 		if(currentAction == ATTACK || currentAction == HIGH_ATTACK || currentAction == LOW_ATTACK) {
-			if(animation.hasPlayedOnce()) {
+			if(swordAnimation.hasPlayedOnce() ) {
 				hi_attack = false;
 				attack = false;
 				low_attack = false;
@@ -331,7 +336,13 @@ public class Player extends Object{
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
-			}						
+			}
+			else if(currentAction == LOW_ATTACK &&
+					animation.getFrame() == 3 && animation.getCount() == 0) {
+				if(e.intersects(attackRect)) {
+					e.hit(damage);
+				}
+			}					
 			// kolizja z wrogiem, na niekorzysc gracza
 			if(!e.isDead() && intersects(e)) {
 				hit(e.getDamage());
@@ -343,17 +354,17 @@ public class Player extends Object{
 		if (hi_attack){
 			if (currentAction != HIGH_ATTACK){
 				setAnimation(HIGH_ATTACK);
-				attackRect.y = (int)y - 6;
+				attackRect.y = (int)y - 16;
 				if(facing) attackRect.x = (int)x + 10;
-				else attackRect.x = (int)x - 40;
+				else attackRect.x = (int)x - 35;
 			}
 		}
 		else if (attack){
 			if (currentAction != ATTACK){
 				setAnimation(ATTACK);
-				attackRect.y = (int)y - 6;
+				attackRect.y = (int)y - 16;
 				if(facing) attackRect.x = (int)x + 10;
-				else attackRect.x = (int)x - 40;
+				else attackRect.x = (int)x - 35;
 			}
 		}
 		else if (low_attack){
@@ -361,7 +372,7 @@ public class Player extends Object{
 				setAnimation(LOW_ATTACK);
 				attackRect.y = (int)y - 6;
 				if(facing) attackRect.x = (int)x + 10;
-				else attackRect.x = (int)x - 40;
+				else attackRect.x = (int)x - 35;
 			}
 		}				
 		else if(dy < 0) {
@@ -444,14 +455,14 @@ public class Player extends Object{
 		}
 		
 		// collision box
-		Rectangle r = getRectangle();
+		/*Rectangle r = getRectangle();
 		r.x += xmap;
 		r.y += ymap;
-		g.draw(r);
+		g.draw(r);*/
 		
-		/*attackRectDraw.x += xmap;
+		attackRectDraw.x += xmap;
 		attackRectDraw.y += ymap;
-		g.draw(attackRectDraw);*/
+		g.draw(attackRectDraw);
 
 	}
 }

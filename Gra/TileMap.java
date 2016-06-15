@@ -60,24 +60,27 @@ public class TileMap {
 			);
 			
 			numTilesAcross = tileset.getWidth() / tileSize;
-			tiles = new Tile[2][numTilesAcross];
+			tiles = new Tile[6][numTilesAcross];
 			
 			BufferedImage subimage;
 			for(int col = 0; col < numTilesAcross; col++) {
-				subimage = tileset.getSubimage(
-							col * tileSize,
-							0,
-							tileSize,
-							tileSize
-						);
+				subimage = tileset.getSubimage( col * tileSize,	tileSize*0, tileSize, tileSize );
 				tiles[0][col] = new Tile(subimage, Tile.AIR);
-				subimage = tileset.getSubimage(
-							col * tileSize,
-							tileSize,
-							tileSize,
-							tileSize
-						);
-				tiles[1][col] = new Tile(subimage, Tile.SOLID);
+				
+				subimage = tileset.getSubimage(	col * tileSize,	tileSize*1, tileSize, tileSize );
+				tiles[1][col] = new Tile(subimage, Tile.AIR);
+				
+				subimage = tileset.getSubimage(	col * tileSize,	tileSize*2, tileSize, tileSize );
+				tiles[2][col] = new Tile(subimage, Tile.SOLID);
+				
+				subimage = tileset.getSubimage(	col * tileSize,	tileSize*3, tileSize, tileSize );
+				tiles[3][col] = new Tile(subimage, Tile.SOLID);
+				
+				subimage = tileset.getSubimage(	col * tileSize,	tileSize*4, tileSize, tileSize );
+				tiles[4][col] = new Tile(subimage, Tile.SOLID);
+				
+				subimage = tileset.getSubimage(	col * tileSize,	tileSize*5, tileSize, tileSize );
+				tiles[5][col] = new Tile(subimage, Tile.SOLID);
 			}
 			
 		}
@@ -101,6 +104,7 @@ public class TileMap {
 			map = new int[numRows][numCols];
 			width = numCols * tileSize;
 			height = numRows * tileSize;
+			
 			
 			xmin = GamePanel.WIDTH - width;
 			xmax = 0;

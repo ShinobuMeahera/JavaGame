@@ -212,9 +212,21 @@ public class Player extends Object{
 	}
 	
 	public void setAttacking() {
-		if(jumping && !attack) hi_attack = true;
-		else if (squat && !attack) low_attack = true;
-		else attack = true;
+		if((jumping || falling) && (!attack || !hi_attack) && !squat){
+			hi_attack = true;
+			attack = false;
+			low_attack = false;
+		}
+		else if (squat && (!attack || !low_attack) && !jumping && !falling){
+			hi_attack = false;
+			attack = false;
+			low_attack = true;
+		}
+		else if (!squat && !jumping && !falling && !attack && !low_attack && !hi_attack){
+			hi_attack = false;
+			attack = true;
+			low_attack = false;
+		}
 	}
 	
 	public void reset() {
@@ -319,7 +331,7 @@ public class Player extends Object{
 					
 			
 		if(currentAction == ATTACK || currentAction == HIGH_ATTACK || currentAction == LOW_ATTACK) {
-			if(swordAnimation.hasPlayedOnce() ) {
+			if(swordAnimation.hasPlayedOnce()) {
 				hi_attack = false;
 				attack = false;
 				low_attack = false;
@@ -331,14 +343,14 @@ public class Player extends Object{
 			Enemy e = enemies.get(i);
 			
 			// sprawdzenie ataku, zadajemy obrazenia wrogowi
-			if(currentAction == ATTACK &&
-					animation.getFrame() == 3 && animation.getCount() == 0) {
+			if(currentAction == ATTACK /*&&
+					animation.getFrame() == 2 && animation.getCount() == 0*/) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
 			}
-			else if(currentAction == LOW_ATTACK &&
-					animation.getFrame() == 3 && animation.getCount() == 0) {
+			else if(currentAction == LOW_ATTACK /*&&
+					animation.getFrame() == 2 && animation.getCount() == 0*/) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
@@ -422,7 +434,7 @@ public class Player extends Object{
 			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2),	(int)(y + ymap - height / 2), null );
 			g.drawImage( robeAnimation.getImage(), 	(int)(x + xmap- width / 2), 	(int)(y + ymap - height / 2), null );
 			
-			if (attack || hi_attack || low_attack){
+			if (attack || low_attack || hi_attack){
 				double new_y = 0;
 				
 				if (squat){
@@ -440,7 +452,7 @@ public class Player extends Object{
 			g.drawImage( animation.getImage(), 		(int)(x + xmap- width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap- width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 			
-			if (attack || hi_attack || low_attack){
+			if (attack || low_attack || hi_attack){
 				double new_y = 0;
 				
 				if (squat) {
@@ -460,9 +472,10 @@ public class Player extends Object{
 		r.y += ymap;
 		g.draw(r);*/
 		
-		attackRectDraw.x += xmap;
+		// collision box dla miecza, jak jest rysowany, to nie zadaje obrazen
+		/*attackRectDraw.x += xmap;
 		attackRectDraw.y += ymap;
-		g.draw(attackRectDraw);
+		g.draw(attackRectDraw);*/
 
 	}
 }

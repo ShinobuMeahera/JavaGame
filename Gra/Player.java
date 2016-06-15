@@ -49,12 +49,12 @@ public class Player extends Object{
 	
 	//opoznienie klatki, im mniejsze tym szybsza animacja
 	private final int[] SPRITEDELAYS = {
-		-1, -1, -1, 4, 6, 6, 6, -1
+		-1, -1, -1, 5, 5, 5, 5, -1
 	};
 	
 	// KLATKI DLA MEICZA
 	private final int [] swordNUMFRAMES = {
-		0, 0, 0, 0, 3, 3, 3, 0
+		0, 0, 0, 0, 5, 5, 5, 0
 	};
 	private final int[] swordFRAMEWIDTHS = {
 		60, 60, 60, 60, 60, 60, 60, 60
@@ -67,7 +67,7 @@ public class Player extends Object{
 	
 	//opoznienie klatki, im mniejsze tym szybsza animacja
 	private final int[] swordSPRITEDELAYS = {
-		-1, -1, -1, -1, 6, 6, 6, -1
+		-1, -1, -1, -1, 5, 5, 5, -1
 	};
 	
 	//klasa animacji
@@ -96,8 +96,8 @@ public class Player extends Object{
 		super(tm);
 		
 		attackRect = new Rectangle(0, 0, 0, 0);
-		attackRect.width = 25;
-		attackRect.height = 20;
+		attackRect.width = 20;
+		attackRect.height = 10;
 				
 		alr = new Rectangle((int)x - 15, (int)y - 45, 45, 45);
 		cr = new Rectangle(0, 0, 0, 0);
@@ -116,14 +116,14 @@ public class Player extends Object{
 		cheight = 45;
 		
 		//artybuty poruszania sie
-		moveSpeed = 3.0;
-		maxSpeed = 3.0;
-		stopSpeed = 1.6;
+		moveSpeed = 0.5;
+		maxSpeed = 2.8;
+		stopSpeed = 1.0;
 		fallSpeed = 0.2;
 		maxFallSpeed = 9.0;
-		jumpStart = -6;
+		jumpStart = -5.5;
 		stopJumpSpeed = 0.3;
-		doubleJumpStart = -6;
+		doubleJumpStart = -5;
 		
 		facing = true;
 		attack = false;
@@ -212,7 +212,7 @@ public class Player extends Object{
 	}
 	
 	public void setAttacking() {
-		if((jumping || falling) && (!attack || !hi_attack) && !squat){
+		if(jumping && (!attack || !hi_attack) && !squat){
 			hi_attack = true;
 			attack = false;
 			low_attack = false;
@@ -331,7 +331,7 @@ public class Player extends Object{
 					
 			
 		if(currentAction == ATTACK || currentAction == HIGH_ATTACK || currentAction == LOW_ATTACK) {
-			if(swordAnimation.hasPlayedOnce()) {
+			if(animation.hasPlayedOnce()) {
 				hi_attack = false;
 				attack = false;
 				low_attack = false;
@@ -343,6 +343,12 @@ public class Player extends Object{
 			Enemy e = enemies.get(i);
 			
 			// sprawdzenie ataku, zadajemy obrazenia wrogowi
+			if(currentAction == HIGH_ATTACK /*&&
+					animation.getFrame() == 2 && animation.getCount() == 0*/) {
+				if(e.intersects(attackRect)) {
+					e.hit(damage);
+				}
+			}
 			if(currentAction == ATTACK /*&&
 					animation.getFrame() == 2 && animation.getCount() == 0*/) {
 				if(e.intersects(attackRect)) {
@@ -382,7 +388,7 @@ public class Player extends Object{
 		else if (low_attack){
 			if (currentAction != LOW_ATTACK){
 				setAnimation(LOW_ATTACK);
-				attackRect.y = (int)y - 6;
+				attackRect.y = (int)y;
 				if(facing) attackRect.x = (int)x + 10;
 				else attackRect.x = (int)x - 35;
 			}
@@ -432,7 +438,7 @@ public class Player extends Object{
 		if(facing) {
 			// jeżeli obrócony w prawo
 			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2),	(int)(y + ymap - height / 2), null );
-			g.drawImage( robeAnimation.getImage(), 	(int)(x + xmap- width / 2), 	(int)(y + ymap - height / 2), null );
+			g.drawImage( robeAnimation.getImage(), 	(int)(x + xmap - width / 2), 	(int)(y + ymap - height / 2), null );
 			
 			if (attack || low_attack || hi_attack){
 				double new_y = 0;
@@ -449,8 +455,8 @@ public class Player extends Object{
 		}
 		else {
 			// jeżeli obrócony w lewo
-			g.drawImage( animation.getImage(), 		(int)(x + xmap- width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
-			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap- width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
+			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
+			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 			
 			if (attack || low_attack || hi_attack){
 				double new_y = 0;

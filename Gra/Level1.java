@@ -87,6 +87,8 @@ public class Level1 extends GameState{
 		tileMap.update();
 		tileMap.fixBounds();
 
+		if (player.gety() >= tileMap.getHeight()) gsm.setState(gsm.MENUSTATE); // jeżeli spadniemy to wraca do menu
+		
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy e = enemies.get(i);
 			e.update();

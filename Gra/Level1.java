@@ -12,9 +12,10 @@ public class Level1 extends GameState{
 	private ArrayList<Rectangle> tb;
 	private Player player;
 	private TileMap tileMap;
-	
+	private FireBall fireball;
 	private BufferedImage background = null;
 	private ArrayList<Enemy> enemies;
+	private ArrayList<FireBall> fireballs;
 	
 	private int eventCount = 0;
 	private boolean eventStart;
@@ -37,6 +38,7 @@ public class Level1 extends GameState{
 		//player
 		player = new Player(tileMap);
 		player.setPosition(400, 150);	
+		fireballs = new ArrayList<FireBall>();
 		
 		//takie ladne zielone intro
 		eventStart = true;
@@ -58,25 +60,25 @@ public class Level1 extends GameState{
 		EnemySkeleton es;
 		EnemyGhost eg;
 		
-		es = new EnemySkeleton(tileMap, player);
+		/*es = new EnemySkeleton(tileMap, player);
 		es.setPosition(1425, 50);
 		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(2500, 100);
-		enemies.add(es);
+		enemies.add(es);*/
 		
 		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(340, 200);
 		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(2000, 100);
+		es.setPosition(600, 150);
 		enemies.add(es);
 		
-		eg = new EnemyGhost(tileMap, player);
+		/*eg = new EnemyGhost(tileMap, player);
 		eg.setPosition(2300, 200);
-		enemies.add(eg);
+		enemies.add(eg);*/
 	}
 	
 	public void update() {
@@ -87,13 +89,23 @@ public class Level1 extends GameState{
 		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() );
 		tileMap.update();
 		tileMap.fixBounds();
-
+		
 		if (player.gety() >= tileMap.getHeight()) gsm.setState(gsm.MENUSTATE); // jeżeli spadniemy to wraca do menu
+		
+		for(int i = 0; i < fireballs.size(); i++){
+			FireBall f = fireballs.get(i);
+			f.update();
+			if (f.isHit() ){
+				fireballs.remove(i);
+				i--;
+			}
+		}
 		
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy e = enemies.get(i);
 			e.update();
-			if(e.isDead()) {
+			System.out.println(e.getLastBreath());
+			if(e.shouldRemove()){
 				enemies.remove(i);
 				i--;
 			}
@@ -101,12 +113,26 @@ public class Level1 extends GameState{
 	}
 	
 	public void handleInput() {
+		FireBall fb;
+		
 		player.setJumping(Keys.keyState[Keys.UP]);
 		player.setLeft(Keys.keyState[Keys.LEFT]);
 		player.setRight(Keys.keyState[Keys.RIGHT]);
 		player.setDown(Keys.keyState[Keys.DOWN]);
 		if(Keys.isPressed(Keys.ENTER)) player.setAttacking();
 		if(Keys.isPressed(Keys.ESCAPE)) gsm.setPaused(true);
+		
+		if(Keys.isPressed(Keys.BUTTON1)) {
+			if ( player.isFireballReady()){
+				fb = new FireBall(tileMap, player.facing);
+				fb.shootFireball(player.getx(), player.gety(), player.facing);
+				fireballs.add(fb);
+								
+				player.fireballShooted = true;
+				player.setAttacking();
+				player.setFireballCooldown(player.maxFireballCooldown);
+			}
+		}
 	}
 	
 	public void draw(Graphics2D g) {
@@ -114,12 +140,10 @@ public class Level1 extends GameState{
 		
 		back.draw(g);
 		player.draw(g);
-		
+		for(int i = 0; i < fireballs.size(); i++) { fireballs.get(i).draw(g); }
 		for(int i = 0; i < enemies.size(); i++) { enemies.get(i).draw(g); }
 		 
 		 
-		 
-		
 		tileMap.draw(g);
 		g.setColor(java.awt.Color.GREEN);
 		for(int i = 0; i < tb.size(); i++) {

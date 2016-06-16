@@ -13,23 +13,26 @@ public class Player extends Object{
 	protected boolean hi_attack;
 	protected boolean attack;
 	protected boolean low_attack;
+	public static boolean fireballShooted;
+	public int fireballCooldown;
+	public int maxFireballCooldown;
 		
 	private boolean doubleJump;
 	private boolean alreadyDoubleJump;
 	private double doubleJumpStart;
 	
 	// dynks do animacji
-	protected boolean facing = true;		// true - w prawo, false - w lewo
+	public boolean facing = true;		// true - w prawo, false - w lewo
 	protected int currentAction;
 	protected int previousAction;
 	
 	private int health;
 	private int maxHealth;
 	private int damage;
-	private boolean knockback;
+	public boolean knockback;
 	private boolean flinching;
 	private long flinchCount;
-	
+		
 	// ANIMACJE
 	private ArrayList<BufferedImage[]> sprites;
 	private ArrayList<BufferedImage[]> robeSprites;
@@ -96,7 +99,7 @@ public class Player extends Object{
 	private static final int LOW_ATTACK = 6;
 	private static final int SQUAT = 7;
 	private static final int KNOCKBACK = 8;
-	
+
 	public Player(TileMap tm) {
 	
 		super(tm);
@@ -104,7 +107,11 @@ public class Player extends Object{
 		attackRect = new Rectangle(0, 0, 0, 0);
 		attackRect.width = 20;
 		attackRect.height = 10;
-				
+		maxFireballCooldown = 50;
+		
+		fireballShooted = false;
+		setFireballCooldown(maxFireballCooldown);
+		
 		alr = new Rectangle((int)x - 15, (int)y - 45, 45, 45);
 		cr = new Rectangle(0, 0, 0, 0);
 		cr.width = 50;
@@ -138,7 +145,7 @@ public class Player extends Object{
 		
 		damage = 2;
 		health = maxHealth = 5;
-		
+				
 		// ładowanie sprajtow, ogolnie to powinny byc tak ustawione, że co linijka to inna animacja
 		try {
 			
@@ -205,6 +212,15 @@ public class Player extends Object{
 	
 	public void init(ArrayList<Enemy> enemies) {
 		this.enemies = enemies;
+	}
+	
+	public void setFireballCooldown(int x){
+		fireballCooldown = x;
+	}
+	
+	public boolean isFireballReady(){
+		if (fireballCooldown <= 0 && (!falling || jumping )&& !knockback) return true;
+		else return false;
 	}
 	
 	public void setJumping(boolean b) {
@@ -349,6 +365,12 @@ public class Player extends Object{
 		
 		if(dx == 0) x = (int)x;
 		
+		if (maxFireballCooldown - fireballCooldown > 10) fireballShooted = false;
+		if (fireballCooldown < 0){
+			fireballCooldown = 0;
+		}
+		else fireballCooldown--;
+		
 		if(flinching) {
 			flinchCount++;		
 			if(flinchCount > 120) {
@@ -377,20 +399,17 @@ public class Player extends Object{
 			Enemy e = enemies.get(i);
 			
 			// sprawdzenie ataku, zadajemy obrazenia wrogowi
-			if(currentAction == HIGH_ATTACK /*&&
-					animation.getFrame() == 2 && animation.getCount() == 0*/) {
+			if( currentAction == HIGH_ATTACK ) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
 			}
-			if(currentAction == ATTACK /*&&
-					animation.getFrame() == 2 && animation.getCount() == 0*/) {
+			if( currentAction == ATTACK ) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
 			}
-			else if(currentAction == LOW_ATTACK /*&&
-					animation.getFrame() == 2 && animation.getCount() == 0*/) {
+			else if( currentAction == LOW_ATTACK ) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
@@ -485,35 +504,38 @@ public class Player extends Object{
 			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2),	(int)(y + ymap - height / 2), null );
 			g.drawImage( robeAnimation.getImage(), 	(int)(x + xmap - width / 2), 	(int)(y + ymap - height / 2), null );
 			
-			if (attack || low_attack || hi_attack){
-				double new_y = 0;
-				
-				if (squat){
-					new_y = y+ ymap -(height/2) + 10;
+			if (!fireballShooted){
+				if (attack || low_attack || hi_attack){
+					double new_y = 0;
+					
+					if (squat){
+						new_y = y+ ymap -(height/2) + 10;
+					}
+					else {
+						new_y = y+ ymap -height/2;
+					}
+					
+					g.drawImage( swordAnimation.getImage(),	(int)(x + xmap- width / 2),	(int)(new_y), null );
 				}
-				else {
-					new_y = y+ ymap -height/2;
-				}
-				
-				g.drawImage( swordAnimation.getImage(),	(int)(x + xmap- width / 2),	(int)(new_y), null );
 			}
 		}
 		else {
 			// jeżeli obrócony w lewo
 			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
-			
-			if (attack || low_attack || hi_attack){
-				double new_y = 0;
-				
-				if (squat) {
-					new_y = y + ymap - (height / 2) + 10;
+			if (!fireballShooted){
+				if (attack || low_attack || hi_attack){
+					double new_y = 0;
+					
+					if (squat) {
+						new_y = y + ymap - (height / 2) + 10;
+					}
+					else {
+						new_y = y + ymap - height / 2;
+					}
+					
+					g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2 + width), (int)(new_y), -60,	30,	null );
 				}
-				else {
-					new_y = y + ymap - height / 2;
-				}
-				
-				g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2 + width), (int)(new_y), -60,	30,	null );
 			}
 		}
 		
@@ -522,11 +544,5 @@ public class Player extends Object{
 		r.x += xmap;
 		r.y += ymap;
 		g.draw(r);*/
-		
-		// collision box dla miecza, jak jest rysowany, to nie zadaje obrazen
-		/*attackRectDraw.x += xmap;
-		attackRectDraw.y += ymap;
-		g.draw(attackRectDraw);*/
-
 	}
 }

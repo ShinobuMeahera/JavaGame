@@ -26,6 +26,9 @@ public class Player extends Object{
 	private int health;
 	private int maxHealth;
 	private int damage;
+	private boolean knockback;
+	private boolean flinching;
+	private long flinchCount;
 	
 	// ANIMACJE
 	private ArrayList<BufferedImage[]> sprites;
@@ -34,40 +37,40 @@ public class Player extends Object{
 	
 	//ilosc klatek animacji
 	private final int[] NUMFRAMES = {
-		1, 1, 1, 8, 4, 4, 4, 1
+		1, 1, 1, 8, 4, 4, 4, 1, 8
 	};
 	
 	//rozmiar klatki animacji
 	private final int[] FRAMEWIDTHS = {
-		46, 46, 46, 46, 46, 46, 46, 46
+		46, 46, 46, 46, 46, 46, 46, 46, 46
 	};
 	
 	//rozmiar klatki animacji
 	private final int[] FRAMEHEIGHTS = {
-		50, 50, 50, 50, 50, 50, 50, 50
+		50, 50, 50, 50, 50, 50, 50, 50, 50
 	};
 	
 	//opoznienie klatki, im mniejsze tym szybsza animacja
 	private final int[] SPRITEDELAYS = {
-		-1, -1, -1, 5, 5, 5, 5, -1
+		-1, -1, -1, 5, 5, 5, 5, -1, 5
 	};
 	
 	// KLATKI DLA MEICZA
 	private final int [] swordNUMFRAMES = {
-		0, 0, 0, 0, 5, 5, 5, 0
+		0, 0, 0, 0, 5, 5, 5, 0, 0
 	};
 	private final int[] swordFRAMEWIDTHS = {
-		60, 60, 60, 60, 60, 60, 60, 60
+		60, 60, 60, 60, 60, 60, 60, 60, 60
 	};
 	
 	//rozmiar klatki animacji
 	private final int[] swordFRAMEHEIGHTS = {
-		30, 30, 30, 30, 30, 30, 30, 30
+		30, 30, 30, 30, 30, 30, 30, 30, 30
 	};
 	
 	//opoznienie klatki, im mniejsze tym szybsza animacja
 	private final int[] swordSPRITEDELAYS = {
-		-1, -1, -1, -1, 5, 5, 5, -1
+		-1, -1, -1, -1, 5, 5, 5, -1, -1
 	};
 	
 	//klasa animacji
@@ -90,6 +93,7 @@ public class Player extends Object{
 	private static final int HIGH_ATTACK = 5;
 	private static final int LOW_ATTACK = 6;
 	private static final int SQUAT = 7;
+	private static final int KNOCKBACK = 8;
 	
 	public Player(TileMap tm) {
 	
@@ -202,7 +206,10 @@ public class Player extends Object{
 	}
 	
 	public void setJumping(boolean b) {
-		if(b && !jumping && falling && !alreadyDoubleJump) { doubleJump = true; }
+		if(knockback) return;
+		if(b && !jumping && falling && !alreadyDoubleJump) {
+			doubleJump = true;
+		}
 		jumping = b;
 	}
 	
@@ -212,6 +219,7 @@ public class Player extends Object{
 	}
 	
 	public void setAttacking() {
+		if(knockback) return;
 		if(jumping && (!attack || !hi_attack) && !squat){
 			hi_attack = true;
 			attack = false;
@@ -236,12 +244,18 @@ public class Player extends Object{
 	}
 	
 	public void stop() {
-		left = right = jumping = squat = attack = false;
+		left = right = jumping = flinching = squat = attack = hi_attack = low_attack = false;
 	}
 	
 	private void getNextPosition() {
 		double maxSpeed = this.maxSpeed;
-
+		
+		if(knockback) {
+			dy += fallSpeed * 2;
+			if(!falling) knockback = false;
+			return;
+		}
+		
 		if(left) {
 			dx -= moveSpeed;
 			if(dx < -maxSpeed) {
@@ -309,14 +323,17 @@ public class Player extends Object{
 	}
 	
 	public void hit(int damage) {
+		if(flinching) return;
+	
 		stop();
 		health -= damage;
 		if(health < 0) health = 0;
-
+		flinching = true;
+		flinchCount = 0;
 		if(facing) dx = -1;
 		else dx = 1;
 		dy = -3;
-
+		knockback = true;
 		falling = true;
 		jumping = false;
 	}
@@ -328,7 +345,13 @@ public class Player extends Object{
 		setPosition(xtemp, ytemp);
 		
 		if(dx == 0) x = (int)x;
-					
+		
+		if(flinching) {
+			flinchCount++;
+			if(flinchCount > 120) {
+				flinching = false;
+			}
+		}			
 			
 		if(currentAction == ATTACK || currentAction == HIGH_ATTACK || currentAction == LOW_ATTACK) {
 			if(animation.hasPlayedOnce()) {
@@ -369,7 +392,12 @@ public class Player extends Object{
 		}
 		
 		// SPRAWDZENIE ANIMACJI
-		if (hi_attack){
+		if(knockback) {
+			if(currentAction != KNOCKBACK) {
+				setAnimation(KNOCKBACK);
+			}
+		}
+		else if (hi_attack){
 			if (currentAction != HIGH_ATTACK){
 				setAnimation(HIGH_ATTACK);
 				attackRect.y = (int)y - 16;
@@ -424,8 +452,10 @@ public class Player extends Object{
 		swordAnimation.update();
 		
 		// ustawienie kierunku
-		if(right) facing = true;
-		if(left) facing = false;
+		if(!attack && !hi_attack && !low_attack && !knockback) {
+			if(right) facing = true;
+			if(left) facing = false;
+		}
 	}
 	
 	public void draw(Graphics2D g) {
@@ -434,6 +464,10 @@ public class Player extends Object{
 		// zeby rysowac warstwami, najpierw te co glebiej, potem te co blizej nas
 		
 		setMapPosition();
+		
+		if(flinching && !knockback) {
+			if(flinchCount % 10 < 5) return;
+		}
 		
 		if(facing) {
 			// jeżeli obrócony w prawo

@@ -50,9 +50,9 @@ public class Enemy extends Object {
 		}
 		
 		// draw collision box
-		Rectangle r = getRectangle();
+		/*Rectangle r = getRectangle();
 		r.x += xmap;
 		r.y += ymap;
-		g.draw(r);
+		g.draw(r);*/
 	}
 }

@@ -26,6 +26,9 @@ public class Player extends Object{
 	private int health;
 	private int maxHealth;
 	private int damage;
+	private boolean knockback;
+	private boolean flinching;
+	private long flinchCount;
 	
 	// ANIMACJE
 	private ArrayList<BufferedImage[]> sprites;
@@ -34,40 +37,42 @@ public class Player extends Object{
 	
 	//ilosc klatek animacji
 	private final int[] NUMFRAMES = {
-		1, 1, 1, 8, 4, 4, 4, 1
+		1, 1, 1, 8, 4, 4, 4, 1, 8
 	};
 	
 	//rozmiar klatki animacji
 	private final int[] FRAMEWIDTHS = {
-		46, 46, 46, 46, 46, 46, 46, 46
+		46, 46, 46, 46, 46, 46, 46, 46, 46
 	};
 	
 	//rozmiar klatki animacji
 	private final int[] FRAMEHEIGHTS = {
-		50, 50, 50, 50, 50, 50, 50, 50
+		50, 50, 50, 50, 50, 50, 50, 50, 50
 	};
 	
 	//opoznienie klatki, im mniejsze tym szybsza animacja
 	private final int[] SPRITEDELAYS = {
-		-1, -1, -1, 4, 6, 6, 6, -1
+		-1, -1, -1, 5, 5, 5, 5, -1, 4
 	};
+	
+	
 	
 	// KLATKI DLA MEICZA
 	private final int [] swordNUMFRAMES = {
-		0, 0, 0, 0, 3, 3, 3, 0
+		0, 0, 0, 0, 5, 5, 5, 0, 0
 	};
 	private final int[] swordFRAMEWIDTHS = {
-		60, 60, 60, 60, 60, 60, 60, 60
+		60, 60, 60, 60, 60, 60, 60, 60, 60
 	};
 	
 	//rozmiar klatki animacji
 	private final int[] swordFRAMEHEIGHTS = {
-		30, 30, 30, 30, 30, 30, 30, 30
+		30, 30, 30, 30, 30, 30, 30, 30, 30
 	};
 	
 	//opoznienie klatki, im mniejsze tym szybsza animacja
 	private final int[] swordSPRITEDELAYS = {
-		-1, -1, -1, -1, 6, 6, 6, -1
+		-1, -1, -1, -1, 5, 5, 5, -1, -1
 	};
 	
 	//klasa animacji
@@ -90,19 +95,23 @@ public class Player extends Object{
 	private static final int HIGH_ATTACK = 5;
 	private static final int LOW_ATTACK = 6;
 	private static final int SQUAT = 7;
+	private static final int KNOCKBACK = 8;
 	
 	public Player(TileMap tm) {
 	
 		super(tm);
 		
 		attackRect = new Rectangle(0, 0, 0, 0);
-		attackRect.width = 45;
-		attackRect.height = 20;
+		attackRect.width = 20;
+		attackRect.height = 10;
 				
 		alr = new Rectangle((int)x - 15, (int)y - 45, 45, 45);
 		cr = new Rectangle(0, 0, 0, 0);
 		cr.width = 50;
 		cr.height = 40;
+		
+		attackRectDraw = new Rectangle();
+		attackRectDraw = attackRect;
 		
 		//rozmiary gracza, do wyswietlenia
 		width = 45;
@@ -113,17 +122,19 @@ public class Player extends Object{
 		cheight = 45;
 		
 		//artybuty poruszania sie
-		moveSpeed = 3.0;
-		maxSpeed = 3.0;
-		stopSpeed = 1.6;
+		moveSpeed = 0.5;
+		maxSpeed = 2.8;
+		stopSpeed = 1.0;
 		fallSpeed = 0.2;
 		maxFallSpeed = 9.0;
-		jumpStart = -6;
+		jumpStart = -5.5;
 		stopJumpSpeed = 0.3;
-		doubleJumpStart = -6;
+		doubleJumpStart = -5;
 		
 		facing = true;
 		attack = false;
+		hi_attack = false;
+		low_attack = false;
 		
 		damage = 2;
 		health = maxHealth = 5;
@@ -153,37 +164,37 @@ public class Player extends Object{
 			}
 
 			// tutaj część dla szaty
-			int count2 = 0;
+			count = 0;
 			robeSprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < NUMFRAMES.length; i++) {
 				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
 				for(int j = 0; j < NUMFRAMES[i]; j++) {
 					bi[j] = spritesheet2.getSubimage(
 						j * FRAMEWIDTHS[i],
-						count2,
+						count,
 						FRAMEWIDTHS[i],
 						FRAMEHEIGHTS[i]
 					);
 				}
 				robeSprites.add(bi);
-				count2 += FRAMEHEIGHTS[i];
+				count += FRAMEHEIGHTS[i];
 			}	
 			
 			// tutaj czesc dla miecza
-			int count3 = 0;
+			count = 0;
 			swordSprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < swordNUMFRAMES.length; i++) {
 				BufferedImage[] bi = new BufferedImage[swordNUMFRAMES[i]];
 				for(int j = 0; j < swordNUMFRAMES[i]; j++) {
 					bi[j] = spritesheet3.getSubimage(
 						j * swordFRAMEWIDTHS[i],
-						count3,
+						count,
 						swordFRAMEWIDTHS[i],
 						swordFRAMEHEIGHTS[i]
 					);
 				}
 				swordSprites.add(bi);
-				count3 += swordFRAMEHEIGHTS[i];
+				count += swordFRAMEHEIGHTS[i];
 			}	
 		}
 		catch(Exception e) {
@@ -197,7 +208,10 @@ public class Player extends Object{
 	}
 	
 	public void setJumping(boolean b) {
-		if(b && !jumping && falling && !alreadyDoubleJump) { doubleJump = true; }
+		if(knockback) return;
+		if(b && !jumping && falling && !alreadyDoubleJump) {
+			doubleJump = true;
+		}
 		jumping = b;
 	}
 	
@@ -207,9 +221,22 @@ public class Player extends Object{
 	}
 	
 	public void setAttacking() {
-		if(jumping && !attack) hi_attack = true;
-		else if (squat && !attack) low_attack = true;
-		else attack = true;
+		if(knockback) return;
+		if(jumping && (!attack || !hi_attack) && !squat){
+			hi_attack = true;
+			attack = false;
+			low_attack = false;
+		}
+		else if (squat && (!attack || !low_attack) && !jumping && !falling){
+			hi_attack = false;
+			attack = false;
+			low_attack = true;
+		}
+		else if (!squat && !jumping && !falling && !attack && !low_attack && !hi_attack){
+			hi_attack = false;
+			attack = true;
+			low_attack = false;
+		}
 	}
 	
 	public void reset() {
@@ -219,12 +246,18 @@ public class Player extends Object{
 	}
 	
 	public void stop() {
-		left = right = jumping = squat = attack = false;
+		left = right = jumping = flinching = squat = attack = hi_attack = low_attack = false;
 	}
 	
 	private void getNextPosition() {
 		double maxSpeed = this.maxSpeed;
-
+		
+		if(knockback) {
+			dy += fallSpeed * 2;
+			if(!falling) knockback = false;
+			return;
+		}
+		
 		if(left) {
 			dx -= moveSpeed;
 			if(dx < -maxSpeed) {
@@ -292,14 +325,18 @@ public class Player extends Object{
 	}
 	
 	public void hit(int damage) {
+		if(flinching) return;
+		
 		stop();
 		health -= damage;
 		if(health < 0) health = 0;
+		flinching = true;
+		flinchCount = 0;
 
 		if(facing) dx = -1;
 		else dx = 1;
 		dy = -3;
-
+		knockback = true;
 		falling = true;
 		jumping = false;
 	}
@@ -311,7 +348,13 @@ public class Player extends Object{
 		setPosition(xtemp, ytemp);
 		
 		if(dx == 0) x = (int)x;
-					
+		
+		if(flinching) {
+			flinchCount++;		
+			if(flinchCount > 120) {
+				flinching = false;
+			}
+		}			
 			
 		if(currentAction == ATTACK || currentAction == HIGH_ATTACK || currentAction == LOW_ATTACK) {
 			if(animation.hasPlayedOnce()) {
@@ -320,18 +363,38 @@ public class Player extends Object{
 				low_attack = false;
 			}
 		}
+		
+		if (currentAction == KNOCKBACK){
+		
+			if (!animation.hasPlayedOnce()){
+				knockback = true;
+				if (dy == 0) dx = 0;
+			}
+		}
 			
 		for(int i = 0; i < enemies.size(); i++) {
 			
 			Enemy e = enemies.get(i);
 			
 			// sprawdzenie ataku, zadajemy obrazenia wrogowi
-			if(currentAction == ATTACK &&
-					animation.getFrame() == 3 && animation.getCount() == 0) {
+			if(currentAction == HIGH_ATTACK /*&&
+					animation.getFrame() == 2 && animation.getCount() == 0*/) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
-			}						
+			}
+			if(currentAction == ATTACK /*&&
+					animation.getFrame() == 2 && animation.getCount() == 0*/) {
+				if(e.intersects(attackRect)) {
+					e.hit(damage);
+				}
+			}
+			else if(currentAction == LOW_ATTACK /*&&
+					animation.getFrame() == 2 && animation.getCount() == 0*/) {
+				if(e.intersects(attackRect)) {
+					e.hit(damage);
+				}
+			}					
 			// kolizja z wrogiem, na niekorzysc gracza
 			if(!e.isDead() && intersects(e)) {
 				hit(e.getDamage());
@@ -340,28 +403,33 @@ public class Player extends Object{
 		}
 		
 		// SPRAWDZENIE ANIMACJI
-		if (hi_attack){
+		if(knockback) {
+			if(currentAction != KNOCKBACK) {
+				setAnimation(KNOCKBACK);
+			}
+		}
+		else if (hi_attack){
 			if (currentAction != HIGH_ATTACK){
 				setAnimation(HIGH_ATTACK);
-				attackRect.y = (int)y - 6;
+				attackRect.y = (int)y - 16;
 				if(facing) attackRect.x = (int)x + 10;
-				else attackRect.x = (int)x - 40;
+				else attackRect.x = (int)x - 35;
 			}
 		}
 		else if (attack){
 			if (currentAction != ATTACK){
 				setAnimation(ATTACK);
-				attackRect.y = (int)y - 6;
+				attackRect.y = (int)y - 16;
 				if(facing) attackRect.x = (int)x + 10;
-				else attackRect.x = (int)x - 40;
+				else attackRect.x = (int)x - 35;
 			}
 		}
 		else if (low_attack){
 			if (currentAction != LOW_ATTACK){
 				setAnimation(LOW_ATTACK);
-				attackRect.y = (int)y - 6;
+				attackRect.y = (int)y;
 				if(facing) attackRect.x = (int)x + 10;
-				else attackRect.x = (int)x - 40;
+				else attackRect.x = (int)x - 35;
 			}
 		}				
 		else if(dy < 0) {
@@ -395,8 +463,10 @@ public class Player extends Object{
 		swordAnimation.update();
 		
 		// ustawienie kierunku
-		if(right) facing = true;
-		if(left) facing = false;
+		if(!attack && !hi_attack && !low_attack && !knockback) {
+			if(right) facing = true;
+			if(left) facing = false;
+		}
 	}
 	
 	public void draw(Graphics2D g) {
@@ -406,12 +476,16 @@ public class Player extends Object{
 		
 		setMapPosition();
 		
+		if(flinching && !knockback) {
+			if(flinchCount % 10 < 5) return;
+		}
+		
 		if(facing) {
 			// jeżeli obrócony w prawo
 			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2),	(int)(y + ymap - height / 2), null );
-			g.drawImage( robeAnimation.getImage(), 	(int)(x + xmap- width / 2), 	(int)(y + ymap - height / 2), null );
+			g.drawImage( robeAnimation.getImage(), 	(int)(x + xmap - width / 2), 	(int)(y + ymap - height / 2), null );
 			
-			if (attack || hi_attack || low_attack){
+			if (attack || low_attack || hi_attack){
 				double new_y = 0;
 				
 				if (squat){
@@ -426,10 +500,10 @@ public class Player extends Object{
 		}
 		else {
 			// jeżeli obrócony w lewo
-			g.drawImage( animation.getImage(), 		(int)(x + xmap- width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
-			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap- width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
+			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
+			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 			
-			if (attack || hi_attack || low_attack){
+			if (attack || low_attack || hi_attack){
 				double new_y = 0;
 				
 				if (squat) {
@@ -444,11 +518,12 @@ public class Player extends Object{
 		}
 		
 		// collision box
-		Rectangle r = getRectangle();
+		/*Rectangle r = getRectangle();
 		r.x += xmap;
 		r.y += ymap;
-		g.draw(r);
+		g.draw(r);*/
 		
+		// collision box dla miecza, jak jest rysowany, to nie zadaje obrazen
 		/*attackRectDraw.x += xmap;
 		attackRectDraw.y += ymap;
 		g.draw(attackRectDraw);*/

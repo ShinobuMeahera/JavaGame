@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 public class Level1 extends GameState{
 
+	private Background back;
 	private ArrayList<Rectangle> tb;
 	private Player player;
 	private TileMap tileMap;
@@ -24,10 +25,10 @@ public class Level1 extends GameState{
 	}
 	
 	public void init() {
-		
+		back = new Background("tlo.png", 0);
 		// tilemap
-		tileMap = new TileMap(45);
-		tileMap.loadTiles("ruinstileset.png");
+		tileMap = new TileMap(30);
+		tileMap.loadTiles("tileset3.png");
 		tileMap.loadMap("level12.map");
 		tileMap.setPosition(400, 50);
 		tileMap.setBounds( tileMap.getWidth() - 1 * tileMap.getTileSize(), tileMap.getHeight() - 2 * tileMap.getTileSize(),	0, 0);
@@ -35,7 +36,7 @@ public class Level1 extends GameState{
 		
 		//player
 		player = new Player(tileMap);
-		player.setPosition(800, 150);	
+		player.setPosition(400, 150);	
 		
 		//takie ladne zielone intro
 		eventStart = true;
@@ -66,7 +67,7 @@ public class Level1 extends GameState{
 		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(340, 280);
+		es.setPosition(340, 200);
 		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
@@ -82,11 +83,13 @@ public class Level1 extends GameState{
 		handleInput();
 		if(eventStart) eventStart();
 		player.update();
-		
+		back.setPosition(tileMap.getx(), tileMap.gety());
 		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() );
 		tileMap.update();
 		tileMap.fixBounds();
 
+		if (player.gety() >= tileMap.getHeight()) gsm.setState(gsm.MENUSTATE); // jeżeli spadniemy to wraca do menu
+		
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy e = enemies.get(i);
 			e.update();
@@ -109,15 +112,21 @@ public class Level1 extends GameState{
 	public void draw(Graphics2D g) {
 		g.drawImage(background,0,0,GamePanel.WIDTH,  GamePanel.HEIGHT, null);
 		
-		tileMap.draw(g);
+		back.draw(g);
 		player.draw(g);
 		
 		for(int i = 0; i < enemies.size(); i++) { enemies.get(i).draw(g); }
 		 
+		 
+		 
+		
+		tileMap.draw(g);
 		g.setColor(java.awt.Color.GREEN);
 		for(int i = 0; i < tb.size(); i++) {
 			g.fill(tb.get(i));
 		}
+		
+		
 	}
 	
 	// taki event, tylko intro

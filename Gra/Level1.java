@@ -25,7 +25,7 @@ public class Level1 extends GameState{
 	}
 	
 	public void init() {
-		back = new Background("tlo.png", 0);
+		back = new Background("tlo.png", 0.2);
 		// tilemap
 		tileMap = new TileMap(30);
 		tileMap.loadTiles("tileset3.png");

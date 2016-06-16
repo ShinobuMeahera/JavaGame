@@ -60,7 +60,7 @@ public class MenuState extends GameState {
 		
 		// other
 		g.setFont(font2);
-		g.drawString("Dwa tysiunce szesnascie, kopirajt baj Pszemeg i Anyszka", 10, 300);
+		g.drawString("Dwa tysiunce szesnascie, kopirajt baj Pszemeg i Anyszka", 10, 250);
 		
 	}
 	

@@ -16,6 +16,8 @@ import javafx.scene.control.TextField;
  */
 public class NewMapController {
     
+    private Main mainApp;
+
     @FXML
     private TextField widthTextField;
     
@@ -45,6 +47,10 @@ public class NewMapController {
                 //canvas.setWidth (getWidth());
                
             }
+    }
+    
+    public void setMainApp(Main main) {
+        this.mainApp = main;
     }
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

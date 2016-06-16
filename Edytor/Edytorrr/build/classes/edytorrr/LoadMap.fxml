@@ -24,7 +24,7 @@
             <Insets left="20.0" />
          </padding>
       </Label>
-      <TextField prefHeight="17.0" prefWidth="103.0" translateY="40.0">
+      <TextField fx:id="nameTextField" prefHeight="17.0" prefWidth="103.0" translateY="40.0">
          <padding>
             <Insets left="20.0" />
          </padding>

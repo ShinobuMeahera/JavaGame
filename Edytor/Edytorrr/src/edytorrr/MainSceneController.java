@@ -5,6 +5,7 @@
  */
 package edytorrr;
 
+import static edytorrr.Main.main;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
@@ -22,6 +24,7 @@ public class MainSceneController implements Initializable {
     
     private NewMapController newMapCon;
     private LoadMapController loadMapCon;
+    
     @FXML
     private Label label;
     
@@ -29,7 +32,7 @@ public class MainSceneController implements Initializable {
     private Canvas canvas;
     
     @FXML
-    private Edytorrr mainApp;
+    private Main mainApp;
     
     @FXML
     public void newMapFunction(){
@@ -37,6 +40,8 @@ public class MainSceneController implements Initializable {
         try{
             newMap = FXMLLoader.load(getClass().getResource("NewMap.fxml"));
             Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(mainApp.getPrimaryStage());
             stage.setTitle("Creating New Map");
             stage.setScene(new Scene(newMap));
             stage.showAndWait();
@@ -51,16 +56,19 @@ public class MainSceneController implements Initializable {
         try{
             loadMap = FXMLLoader.load(getClass().getResource("LoadMap.fxml"));
             Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(mainApp.getPrimaryStage());
             stage.setTitle("Load Existing Map");
             stage.setScene(new Scene(loadMap));
-            stage.show();
+            
+            stage.showAndWait();
         }
         catch(IOException e){
             e.printStackTrace();
         }
     }
 
-    public void setMainApp(Edytorrr mainApp) {
+    public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
     }
     

@@ -1,7 +1,8 @@
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-
+import java.awt.Rectangle;
 import javax.imageio.ImageIO;
+import java.util.ArrayList;
 
 public class FireBall extends Object {
 	
@@ -11,6 +12,9 @@ public class FireBall extends Object {
 	private BufferedImage[] hitSprites;
 	protected Animation animation = new Animation();
 	private static boolean facingRight;
+	private Rectangle attackRect;
+	private int damage;
+	
 	
 	public FireBall(TileMap tm, boolean right) {
 		
@@ -19,11 +23,16 @@ public class FireBall extends Object {
 		moveSpeed = 3.8;
 		hit = false;
 		remove = false;
+		damage = 5;
 		
 		width = 30;
 		height = 15;
-		cwidth = 14;
+		cwidth = 28;
 		cheight = 14;
+		
+		attackRect = new Rectangle(0, 0, 0, 0);
+		attackRect.width = 28;
+		attackRect.height = 14;
 		
 		// load sprites
 		try {
@@ -83,13 +92,31 @@ public class FireBall extends Object {
 	public boolean isHit() { return hit; }
 	public boolean shouldRemove() { return remove; }
 	
-	public void update() {
+	public void update(ArrayList<Enemy> enemies) {
 		
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
 		
 		if(dx == 0 && !hit) {
 			setHit();
+		}
+		
+		for(int i = 0; i < enemies.size(); i++) {
+			
+			Enemy e = enemies.get(i);
+			
+			// sprawdzenie ataku, zadajemy obrazenia wrogowi
+			
+			if(e.intersects(attackRect)) {
+					e.hit(damage);
+					hit = true;
+			}
+			
+		}
+		if (!hit){
+			attackRect.y = (int)y - 7;
+			if(facingRight) attackRect.x = (int)x - 7;
+			else attackRect.x = (int)x - 20;
 		}
 		
 		animation.update();
@@ -107,6 +134,11 @@ public class FireBall extends Object {
 		else {
 			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2 + width), (int)(y + ymap - height / 2), -width, height, null );
 		}
+		
+		//Rectangle r = getRectangle();
+		/*attackRect.x += xmap;
+		attackRect.y += ymap;
+		g.draw(attackRect);*/
 	}
 	
 }

@@ -69,13 +69,14 @@ public class Level1 extends GameState{
 		enemies.add(es);*/
 		
 		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(340, 200);
-		enemies.add(es);
-		
-		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(600, 150);
 		enemies.add(es);
 		
+		es = new EnemySkeleton(tileMap, player);
+		es.setPosition(340, 200);
+		enemies.add(es);
+		
+				
 		/*eg = new EnemyGhost(tileMap, player);
 		eg.setPosition(2300, 200);
 		enemies.add(eg);*/
@@ -94,7 +95,7 @@ public class Level1 extends GameState{
 		
 		for(int i = 0; i < fireballs.size(); i++){
 			FireBall f = fireballs.get(i);
-			f.update();
+			f.update(enemies);
 			if (f.isHit() ){
 				fireballs.remove(i);
 				i--;

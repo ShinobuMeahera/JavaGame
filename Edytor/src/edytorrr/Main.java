@@ -13,9 +13,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import static javax.swing.Spring.height;
+import static javax.swing.Spring.width;
 
 /**
  *
@@ -26,6 +30,9 @@ import javafx.stage.Stage;
     private VBox rootLayout;
     private Stage primaryStage;
     private MainSceneController mController;
+    private WritableImage sprite;
+    public Image src = new Image("https://github.com/ShinobuMeahera/JavaGame/blob/master/Gra/tileset3.png?raw=true");
+    
     // mapa
     private int[][] map;
     private int tileSize;
@@ -54,6 +61,7 @@ import javafx.stage.Stage;
         primaryStage.show();
         mController = loader.getController();
         mController.setMainApp(this);
+        
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -122,6 +130,7 @@ import javafx.stage.Stage;
 		String[] tokens = line.split(delims);
 		for(int col = 0; col < numCols; col++) {
                     map[row][col] = Integer.parseInt(tokens[col]);
+     
 		}
             }
             br.close();
@@ -135,7 +144,7 @@ import javafx.stage.Stage;
                 System.out.println("Error reading file '");                  
             }
             catch(NullPointerException e){
-                System.out.println("NullPointer ii"); 
+                System.out.println("NullPointerExe"); 
             }
 	}
     public void setCanvas(int mode){ 
@@ -144,16 +153,28 @@ import javafx.stage.Stage;
         }
         else
             if(mode == 1){ // STARA MAPA 
+                
+                
+                int x;
+                int y; 
+                int k = 0;
                 mController.setCanvasParam(numCols*30, numRows*30);
                 System.out.println("zaladowane"); 
                     for(int j = 0; j<numRows; j++) 
                         for(int i = 0; i<numCols; i++){
-                        mController.print(i*30,j*30,(double)(map[j][i]*2)/100);
+                            y = (map[j][i]%30);
+                            x = (map[j][i]/30);
+                            System.out.println(x +"  "+ y + " " + k++);
+                            mController.print((i*30), (j*30), src, x, y);
+                            
                 }  
                   
             }
     }
-    
+    public void editMap(int x, int y, int val){
+        map[x][y] = val;
+    }
+  
     public static void main(String[] args) {
         launch(args);
     }

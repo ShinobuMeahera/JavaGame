@@ -52,8 +52,10 @@ public class Player extends Object{
 	
 	//opoznienie klatki, im mniejsze tym szybsza animacja
 	private final int[] SPRITEDELAYS = {
-		-1, -1, -1, 5, 5, 5, 5, -1, 5
+		-1, -1, -1, 5, 5, 5, 5, -1, 4
 	};
+	
+	
 	
 	// KLATKI DLA MEICZA
 	private final int [] swordNUMFRAMES = {
@@ -162,37 +164,37 @@ public class Player extends Object{
 			}
 
 			// tutaj część dla szaty
-			int count2 = 0;
+			count = 0;
 			robeSprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < NUMFRAMES.length; i++) {
 				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
 				for(int j = 0; j < NUMFRAMES[i]; j++) {
 					bi[j] = spritesheet2.getSubimage(
 						j * FRAMEWIDTHS[i],
-						count2,
+						count,
 						FRAMEWIDTHS[i],
 						FRAMEHEIGHTS[i]
 					);
 				}
 				robeSprites.add(bi);
-				count2 += FRAMEHEIGHTS[i];
+				count += FRAMEHEIGHTS[i];
 			}	
 			
 			// tutaj czesc dla miecza
-			int count3 = 0;
+			count = 0;
 			swordSprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < swordNUMFRAMES.length; i++) {
 				BufferedImage[] bi = new BufferedImage[swordNUMFRAMES[i]];
 				for(int j = 0; j < swordNUMFRAMES[i]; j++) {
 					bi[j] = spritesheet3.getSubimage(
 						j * swordFRAMEWIDTHS[i],
-						count3,
+						count,
 						swordFRAMEWIDTHS[i],
 						swordFRAMEHEIGHTS[i]
 					);
 				}
 				swordSprites.add(bi);
-				count3 += swordFRAMEHEIGHTS[i];
+				count += swordFRAMEHEIGHTS[i];
 			}	
 		}
 		catch(Exception e) {
@@ -324,12 +326,13 @@ public class Player extends Object{
 	
 	public void hit(int damage) {
 		if(flinching) return;
-	
+		
 		stop();
 		health -= damage;
 		if(health < 0) health = 0;
 		flinching = true;
 		flinchCount = 0;
+
 		if(facing) dx = -1;
 		else dx = 1;
 		dy = -3;
@@ -347,7 +350,7 @@ public class Player extends Object{
 		if(dx == 0) x = (int)x;
 		
 		if(flinching) {
-			flinchCount++;
+			flinchCount++;		
 			if(flinchCount > 120) {
 				flinching = false;
 			}
@@ -358,6 +361,14 @@ public class Player extends Object{
 				hi_attack = false;
 				attack = false;
 				low_attack = false;
+			}
+		}
+		
+		if (currentAction == KNOCKBACK){
+		
+			if (!animation.hasPlayedOnce()){
+				knockback = true;
+				if (dy == 0) dx = 0;
 			}
 		}
 			

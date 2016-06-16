@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 public class Level1 extends GameState{
 
+	private Background back;
 	private ArrayList<Rectangle> tb;
 	private Player player;
 	private TileMap tileMap;
@@ -24,10 +25,10 @@ public class Level1 extends GameState{
 	}
 	
 	public void init() {
-		
+		back = new Background("tlo.png", 0);
 		// tilemap
-		tileMap = new TileMap(38);
-		tileMap.loadTiles("tileset38.png");
+		tileMap = new TileMap(30);
+		tileMap.loadTiles("tileset3.png");
 		tileMap.loadMap("level12.map");
 		tileMap.setPosition(400, 50);
 		tileMap.setBounds( tileMap.getWidth() - 1 * tileMap.getTileSize(), tileMap.getHeight() - 2 * tileMap.getTileSize(),	0, 0);
@@ -35,7 +36,7 @@ public class Level1 extends GameState{
 		
 		//player
 		player = new Player(tileMap);
-		player.setPosition(700, 150);	
+		player.setPosition(400, 150);	
 		
 		//takie ladne zielone intro
 		eventStart = true;
@@ -82,7 +83,7 @@ public class Level1 extends GameState{
 		handleInput();
 		if(eventStart) eventStart();
 		player.update();
-		
+		back.setPosition(tileMap.getx(), tileMap.gety());
 		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() );
 		tileMap.update();
 		tileMap.fixBounds();
@@ -111,7 +112,7 @@ public class Level1 extends GameState{
 	public void draw(Graphics2D g) {
 		g.drawImage(background,0,0,GamePanel.WIDTH,  GamePanel.HEIGHT, null);
 		
-		
+		back.draw(g);
 		player.draw(g);
 		
 		for(int i = 0; i < enemies.size(); i++) { enemies.get(i).draw(g); }

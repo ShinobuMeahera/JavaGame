@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edytorrr.LoadMapController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="280.0" text="Load Existing Map" textAlignment="JUSTIFY" underline="true">
@@ -31,8 +30,8 @@
       </TextField>
       <HBox prefHeight="43.0" prefWidth="300.0" translateY="70.0">
          <children>
-            <Button mnemonicParsing="false" text="Accept" translateX="90.0" />
-            <Button mnemonicParsing="false" text="Cancel" translateX="105.0" />
+            <Button mnemonicParsing="false" onAction="#acceptButton" text="Accept" translateX="90.0" />
+            <Button mnemonicParsing="false" onAction="#cancelButton" text="Cancel" translateX="105.0" />
          </children>
       </HBox>
    </children>

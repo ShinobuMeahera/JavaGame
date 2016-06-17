@@ -17,7 +17,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-
+import javafx.scene.input.ScrollEvent;
 
 public class MainSceneController implements Initializable {
     
@@ -27,6 +27,7 @@ public class MainSceneController implements Initializable {
     private LoadMapController loadMapCon;
     private Main mainApp;
     private GraphicsContext gc;
+    private GraphicsContext gc2;
     public Image src2 = new Image("https://github.com/ShinobuMeahera/JavaGame/blob/master/Gra/tileset3.png?raw=true");
     private int id;
     @FXML
@@ -78,7 +79,7 @@ public class MainSceneController implements Initializable {
     public void print(int x,int y,Image img,int row, int col){
         gc.drawImage(img, col*30, row*30, 30, 30, x, y, 30, 30);
     }
-    @FXML
+    @FXML	
     private void refreshButton(){
         
     }
@@ -86,14 +87,29 @@ public class MainSceneController implements Initializable {
     private void leftCanvasMouse(MouseEvent event) {
         int x;
         int y;
-
-        x = (int)(event.getSceneX()-20)/35 +(int)((28*(scroll.getHvalue()))- (7*scroll.getHvalue()));
-        y = (int)(event.getSceneY()-108)/35;
+        int val = 0;
+        val = (int)(scroll.getHvalue()*22);
+        scroll.setHvalue(val/22.0);
+        x = (int)(event.getSceneX()-20)/30 + val;
+        y = (int)(event.getSceneY()-108)/30;
         id = y*30+x;
+        refreshLeft();
+        gc2.setStroke(Color.RED);
+        gc2.strokeRect(x*29,y*29,30,30);
         
+        leftLabel.setText("Tile : " + id);
+      
+        System.out.println("hval: " + val +" hval/30: " + val/30.0);
         System.out.println("x: " + x +" y: " + y);
-        System.out.println("x: " +scroll.getHvalue()  +" y: " +scroll.getVvalue() );
+        System.out.println("x: " +(int)(scroll.getHvalue()*30)  +" y: " +scroll.getVvalue() );
      //leftLabel.setText("Button Action\n");
+    }
+    
+    @FXML
+    private void scrollBar(ScrollEvent event){
+    	System.out.println("Scroll");
+    	scroll.setHvalue(((int)(scroll.getHvalue()*30))/30);
+    	
     }
      @FXML
     private void canvasMouse(MouseEvent event) {
@@ -108,18 +124,28 @@ public class MainSceneController implements Initializable {
         System.out.println("x: " + x +" y: " + y);
         //System.out.println("x: " +scroll.getHvalue()  +" y: " +scroll.getVvalue() );
     }
+    private void refreshLeft(){
+    	gc2 = canvas2.getGraphicsContext2D();
+    	gc2.setFill(Color.MAGENTA);      
+        gc2.fillRect(0,0,1000,1000);
+        gc2.setStroke(Color.WHITE);
+        gc2.setLineWidth(2);
+        for(int j = 0; j<30; j++) 
+            for(int i = 0; i<8; i++){
+                gc2.drawImage(src2, j*30, i*30, 30, 30, j*30, i*30, 30, 30);
+                gc2.strokeLine(29+30*j, 0, 29+30*j, 240);
+                
+            }
+        for(int i = 0; i<8;i++)
+        	gc2.strokeLine(0,29+30*i,900, 29+30*i);
+        
+        
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        gc = canvas.getGraphicsContext2D();
-     
-        GraphicsContext gc2 = canvas2.getGraphicsContext2D();
-        gc2.setFill(Color.color(1,0,1,0.8));      
-        gc2.fillRect(0,0,4000,4000);
-        for(int j = 0; j<30; j++) 
-            for(int i = 0; i<6; i++){
-                gc2.drawImage(src2, j*30, i*30, 30, 30, j*35+j, i*35+i, 35, 35);
-            }
+        scroll.setOnScrollFinished(this::scrollBar);
+        gc = canvas.getGraphicsContext2D(); 
+        refreshLeft();
        
     }
     

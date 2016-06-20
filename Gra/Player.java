@@ -127,7 +127,7 @@ public class Player extends Object{
 		try {
 			
 			BufferedImage spritesheet = ImageIO.read( getClass().getResourceAsStream("player-spritemap.png"	));
-			BufferedImage spritesheet2 = ImageIO.read(getClass().getResourceAsStream("robe02-spritemap.png"	));
+			BufferedImage spritesheet2 = ImageIO.read(getClass().getResourceAsStream("armor05-spritemap.png"	));
 			BufferedImage spritesheet3 = ImageIO.read(getClass().getResourceAsStream("sword-slash.png"		));
 			
 			//tutaj częśc dla człowieczka
@@ -179,7 +179,7 @@ public class Player extends Object{
 	}
 	
 	public boolean isFireballReady(){
-		if (fireballCooldown <= 0 && (!falling || jumping )&& !knockback) return true;
+		if (fireballCooldown <= 0 && (!falling || jumping )&& !knockback && !dashing) return true;
 		else return false;
 	}
 	

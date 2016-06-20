@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel implements Runnable, KeyListener{
 		
 	// rozmiary okna * skala, powiększenie w grze
-	public static final int WIDTH = 462;
-	public static final int HEIGHT = 260;
+	public static final int WIDTH = 640;
+	public static final int HEIGHT = 360;
 	public static final int SCALE = 2;
 	
 	// game thread

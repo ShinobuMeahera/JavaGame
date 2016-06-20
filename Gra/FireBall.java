@@ -135,11 +135,5 @@ public class FireBall extends Object {
 		else {
 			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2 + width), (int)(y + ymap - height / 2), -width, height, null );
 		}
-		
-		//Rectangle r = getRectangle();
-		/*attackRect.x += xmap;
-		attackRect.y += ymap;
-		g.draw(attackRect);*/
 	}
-	
 }

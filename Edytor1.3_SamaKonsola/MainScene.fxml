@@ -43,12 +43,12 @@
                      <children>
                         <Label layoutX="37.0" layoutY="36.0" text="Map Reload :" />
                         <Button layoutX="139.0" layoutY="32.0" mnemonicParsing="false" onAction="#refreshButton" text="Make" textAlignment="CENTER" />
-                        <ScrollPane fx:id="scroll" layoutX="18.0" layoutY="80.0" maxHeight="1.7976931348623157E308" prefHeight="248.0" prefWidth="242.0">
+                        <ScrollPane fx:id="scroll" onScroll="#scrollBar"  layoutX="18.0" layoutY="80.0" maxHeight="1.7976931348623157E308" prefHeight="248.0" prefWidth="242.0">
                            <content>
                               <Canvas fx:id="canvas2" height="233.0" onMouseClicked="#leftCanvasMouse" width="900.0" />
                            </content>
                         </ScrollPane>
-                        <Label layoutX="18.0" layoutY="331.0" prefHeight="32.0" prefWidth="124.0" text="Tile : ">
+                        <Label fx:id="leftLabel" layoutX="18.0" layoutY="331.0" prefHeight="32.0" prefWidth="124.0" text="Tile : ">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -60,7 +60,7 @@
                <children>
                   <ScrollPane layoutY="7.0" prefHeight="687.0" prefWidth="994.0">
                      <content>
-                        <Canvas fx:id="canvas" height="200.0" onMouseClicked="#canvasMouse" translateX="200.0" translateY="200.0" width="310.0" />
+                        <Canvas fx:id="canvas" height="200.0" onMousePressed="#canvasMouse" translateX="200.0" translateY="200.0" width="310.0" />
                      </content>
                   </ScrollPane>
                </children>

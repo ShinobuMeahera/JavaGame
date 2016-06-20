@@ -11,6 +11,7 @@ public class Enemy extends Object {
 	protected boolean remove;
 	protected boolean facingRight;
 	protected Animation animation;
+	protected int lastBreath;
 	
 	
 	public Enemy(TileMap tm) {
@@ -21,6 +22,10 @@ public class Enemy extends Object {
 	
 	public boolean isDead() {
 		return dead;
+	}
+	
+	public int getLastBreath(){
+		return lastBreath;
 	}
 	
 	public boolean shouldRemove() {
@@ -34,8 +39,10 @@ public class Enemy extends Object {
 	public void hit(int damage) {
 		health -= damage;
 		if(health < 0) health = 0;
-		if(health == 0) dead = true;
-		//if(dead) remove = true;
+		if(health == 0){
+			dead = true;
+		}
+
 	}
 	
 	public void update() {}

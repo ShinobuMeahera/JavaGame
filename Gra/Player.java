@@ -9,73 +9,56 @@ import javax.imageio.ImageIO;
 public class Player extends Object{
 	
 	private ArrayList<Enemy> enemies;
+	
 	// dostepne ruchy
 	protected boolean hi_attack;
 	protected boolean attack;
 	protected boolean low_attack;
-		
 	private boolean doubleJump;
 	private boolean alreadyDoubleJump;
 	private double doubleJumpStart;
+	private boolean teleporting;
+	private boolean dashing;
+	public boolean knockback;
+	private boolean flinching;
+	
+	//stuff do fireballa
+	public static boolean fireballShooted;
+	public int fireballCooldown;
+	public int maxFireballCooldown;
 	
 	// dynks do animacji
-	protected boolean facing = true;		// true - w prawo, false - w lewo
+	public boolean facing = true;		// true - w prawo, false - w lewo
 	protected int currentAction;
 	protected int previousAction;
 	
+	//takie drobne rzeczy gracza
 	private int health;
 	private int maxHealth;
 	private int damage;
-	private boolean knockback;
-	private boolean flinching;
+	
+	// rozne timery, do immoratala i do dasha
 	private long flinchCount;
+	private int dashTimer;
+	private int dashCooldown;
 	
 	// ANIMACJE
 	private ArrayList<BufferedImage[]> sprites;
 	private ArrayList<BufferedImage[]> robeSprites;
 	private ArrayList<BufferedImage[]> swordSprites;
 	
-	//ilosc klatek animacji
-	private final int[] NUMFRAMES = {
-		1, 1, 1, 8, 4, 4, 4, 1, 8
-	};
 	
-	//rozmiar klatki animacji
-	private final int[] FRAMEWIDTHS = {
-		46, 46, 46, 46, 46, 46, 46, 46, 46
-	};
+	private final int[] NUMFRAMES = { 	1, 1, 1, 8, 4, 4, 4, 1, 8 };
+	private final int[] FRAMEWIDTHS = {	46, 46, 46, 46, 46, 46, 46, 46, 46 };
+	private final int[] FRAMEHEIGHTS = { 50, 50, 50, 50, 50, 50, 50, 50, 50	};
+	private final int[] SPRITEDELAYS = { -1, -1, -1, 5, 5, 5, 5, -1, 4 };
 	
-	//rozmiar klatki animacji
-	private final int[] FRAMEHEIGHTS = {
-		50, 50, 50, 50, 50, 50, 50, 50, 50
-	};
+	private final int [] swordNUMFRAMES = {	0, 0, 0, 0, 5, 5, 5, 0, 0};
+	private final int[] swordFRAMEWIDTHS = { 60, 60, 60, 60, 60, 60, 60, 60, 60 };
+	private final int[] swordFRAMEHEIGHTS = {30, 30, 30, 30, 30, 30, 30, 30, 30	};
+	private final int[] swordSPRITEDELAYS = {-1, -1, -1, -1, 5, 5, 5, -1, -1};
 	
-	//opoznienie klatki, im mniejsze tym szybsza animacja
-	private final int[] SPRITEDELAYS = {
-		-1, -1, -1, 5, 5, 5, 5, -1, 4
-	};
-	
-	
-	
-	// KLATKI DLA MEICZA
-	private final int [] swordNUMFRAMES = {
-		0, 0, 0, 0, 5, 5, 5, 0, 0
-	};
-	private final int[] swordFRAMEWIDTHS = {
-		60, 60, 60, 60, 60, 60, 60, 60, 60
-	};
-	
-	//rozmiar klatki animacji
-	private final int[] swordFRAMEHEIGHTS = {
-		30, 30, 30, 30, 30, 30, 30, 30, 30
-	};
-	
-	//opoznienie klatki, im mniejsze tym szybsza animacja
-	private final int[] swordSPRITEDELAYS = {
-		-1, -1, -1, -1, 5, 5, 5, -1, -1
-	};
-	
-	//klasa animacji
+	//klasy animacji
 	protected Animation animation = new Animation();
 	protected Animation robeAnimation = new Animation();
 	protected Animation swordAnimation = new Animation();
@@ -84,9 +67,8 @@ public class Player extends Object{
 	private Rectangle attackRectDraw;
 	private Rectangle aur;
 	private Rectangle alr;
-	private Rectangle cr;
 	
-	// akce animacji, spojrz na obrazek
+	// akcje animacji, spojrz na obrazek
 	private static final int STAND = 0;
 	private static final int JUMPING = 1;
 	private static final int FALLING = 2;
@@ -96,7 +78,9 @@ public class Player extends Object{
 	private static final int LOW_ATTACK = 6;
 	private static final int SQUAT = 7;
 	private static final int KNOCKBACK = 8;
-	
+	private static final int DEAD = 9;
+	private static final int TELEPORTING = 10;
+
 	public Player(TileMap tm) {
 	
 		super(tm);
@@ -104,14 +88,8 @@ public class Player extends Object{
 		attackRect = new Rectangle(0, 0, 0, 0);
 		attackRect.width = 20;
 		attackRect.height = 10;
-				
+					
 		alr = new Rectangle((int)x - 15, (int)y - 45, 45, 45);
-		cr = new Rectangle(0, 0, 0, 0);
-		cr.width = 50;
-		cr.height = 40;
-		
-		attackRectDraw = new Rectangle();
-		attackRectDraw = attackRect;
 		
 		//rozmiary gracza, do wyswietlenia
 		width = 45;
@@ -120,6 +98,12 @@ public class Player extends Object{
 		// rozmiary collision boxa
 		cwidth = 20;
 		cheight = 45;
+		
+		//atrybuty dasha i fireballa
+		maxFireballCooldown = 50;
+		fireballShooted = false;
+		setFireballCooldown(maxFireballCooldown);
+		dashCooldown = 150;
 		
 		//artybuty poruszania sie
 		moveSpeed = 0.5;
@@ -138,12 +122,12 @@ public class Player extends Object{
 		
 		damage = 2;
 		health = maxHealth = 5;
-		
+				
 		// ładowanie sprajtow, ogolnie to powinny byc tak ustawione, że co linijka to inna animacja
 		try {
 			
 			BufferedImage spritesheet = ImageIO.read( getClass().getResourceAsStream("player-spritemap.png"	));
-			BufferedImage spritesheet2 = ImageIO.read(getClass().getResourceAsStream("robe02-spritemap.png"	));
+			BufferedImage spritesheet2 = ImageIO.read(getClass().getResourceAsStream("armor05-spritemap.png"	));
 			BufferedImage spritesheet3 = ImageIO.read(getClass().getResourceAsStream("sword-slash.png"		));
 			
 			//tutaj częśc dla człowieczka
@@ -151,14 +135,7 @@ public class Player extends Object{
 			sprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < NUMFRAMES.length; i++) {
 				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
-				for(int j = 0; j < NUMFRAMES[i]; j++) {
-					bi[j] = spritesheet.getSubimage(
-						j * FRAMEWIDTHS[i],
-						count,
-						FRAMEWIDTHS[i],
-						FRAMEHEIGHTS[i]
-					);
-				}
+				for(int j = 0; j < NUMFRAMES[i]; j++) { bi[j] = spritesheet.getSubimage( j * FRAMEWIDTHS[i], count,	FRAMEWIDTHS[i],	FRAMEHEIGHTS[i]);}
 				sprites.add(bi);
 				count += FRAMEHEIGHTS[i];
 			}
@@ -168,14 +145,7 @@ public class Player extends Object{
 			robeSprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < NUMFRAMES.length; i++) {
 				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
-				for(int j = 0; j < NUMFRAMES[i]; j++) {
-					bi[j] = spritesheet2.getSubimage(
-						j * FRAMEWIDTHS[i],
-						count,
-						FRAMEWIDTHS[i],
-						FRAMEHEIGHTS[i]
-					);
-				}
+				for(int j = 0; j < NUMFRAMES[i]; j++) { bi[j] = spritesheet2.getSubimage(j * FRAMEWIDTHS[i], count, FRAMEWIDTHS[i],	FRAMEHEIGHTS[i]	); }
 				robeSprites.add(bi);
 				count += FRAMEHEIGHTS[i];
 			}	
@@ -185,14 +155,7 @@ public class Player extends Object{
 			swordSprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < swordNUMFRAMES.length; i++) {
 				BufferedImage[] bi = new BufferedImage[swordNUMFRAMES[i]];
-				for(int j = 0; j < swordNUMFRAMES[i]; j++) {
-					bi[j] = spritesheet3.getSubimage(
-						j * swordFRAMEWIDTHS[i],
-						count,
-						swordFRAMEWIDTHS[i],
-						swordFRAMEHEIGHTS[i]
-					);
-				}
+				for(int j = 0; j < swordNUMFRAMES[i]; j++) { bi[j] = spritesheet3.getSubimage( j * swordFRAMEWIDTHS[i], count, swordFRAMEWIDTHS[i], swordFRAMEHEIGHTS[i]);}
 				swordSprites.add(bi);
 				count += swordFRAMEHEIGHTS[i];
 			}	
@@ -205,6 +168,24 @@ public class Player extends Object{
 	
 	public void init(ArrayList<Enemy> enemies) {
 		this.enemies = enemies;
+	}
+	
+	public void setFireballCooldown(int x){
+		fireballCooldown = x;
+	}
+	
+	public void setTeleporting(boolean b) {
+		teleporting = b;
+	}
+	
+	public boolean isFireballReady(){
+		if (fireballCooldown <= 0 && (!falling || jumping )&& !knockback && !dashing) return true;
+		else return false;
+	}
+	
+	public boolean isDashingReady(){
+		if (dashCooldown <= 0 && (!falling || jumping )&& !knockback) return true;
+		else return false;
 	}
 	
 	public void setJumping(boolean b) {
@@ -222,23 +203,33 @@ public class Player extends Object{
 	
 	public void setAttacking() {
 		if(knockback) return;
+		if(dashing) return;
+		
 		if(jumping && (!attack || !hi_attack) && !squat){
-			hi_attack = true;
+					hi_attack = true;
 			attack = false;
 			low_attack = false;
 		}
 		else if (squat && (!attack || !low_attack) && !jumping && !falling){
 			hi_attack = false;
 			attack = false;
-			low_attack = true;
+					low_attack = true;
 		}
 		else if (!squat && !jumping && !falling && !attack && !low_attack && !hi_attack){
 			hi_attack = false;
-			attack = true;
+						attack = true;
 			low_attack = false;
 		}
 	}
 	
+	public void setDashing() {
+		if(knockback) return;
+		if(!attack && !hi_attack  && !low_attack && !dashing) {
+			dashing = true;
+			dashTimer = 0;
+		}
+	}
+		
 	public void reset() {
 		facing = true;
 		currentAction = -1;
@@ -246,17 +237,17 @@ public class Player extends Object{
 	}
 	
 	public void stop() {
-		left = right = jumping = flinching = squat = attack = hi_attack = low_attack = false;
+		left = right = jumping = flinching = dashing = squat = attack = hi_attack = low_attack = false;
 	}
 	
 	private void getNextPosition() {
-		double maxSpeed = this.maxSpeed;
 		
 		if(knockback) {
 			dy += fallSpeed * 2;
 			if(!falling) knockback = false;
 			return;
 		}
+
 		
 		if(left) {
 			dx -= moveSpeed;
@@ -275,7 +266,7 @@ public class Player extends Object{
 				dx -= stopSpeed;
 				if(dx < 0) {
 					dx = 0;
-					
+						
 				}
 			}
 			else if(dx < 0) {
@@ -286,12 +277,19 @@ public class Player extends Object{
 			}
 		}
 		
-		if((attack || hi_attack || low_attack) && !(jumping || falling)) { dx = 0; }		
+		if((attack || hi_attack || low_attack || dashing) && !(jumping || falling)) { dx = 0; }		
 		
 		if(jumping && !falling) {
 			dy = jumpStart;
 			falling = true;
 			
+		}
+		
+		if(dashing) {
+			dashCooldown = 150;
+			dashTimer++;
+			if(facing) dx = moveSpeed * (10 - dashTimer * 0.04);
+			else dx = -moveSpeed * (10 - dashTimer * 0.04);
 		}
 		
 		if(doubleJump) {
@@ -342,12 +340,22 @@ public class Player extends Object{
 	}
 	
 	public void update() {
+	
 		boolean isFalling = falling;
 		getNextPosition();
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
-		
+				
 		if(dx == 0) x = (int)x;
+		if (maxFireballCooldown - fireballCooldown > 15) fireballShooted = false;
+		
+		if (fireballCooldown < 0) fireballCooldown = 0;
+		else fireballCooldown--;
+		
+		if (dashCooldown < 0) dashCooldown = 0;
+		else dashCooldown--;
+		
+		if (dashing && dashTimer > 40) dashing = false;
 		
 		if(flinching) {
 			flinchCount++;		
@@ -371,26 +379,23 @@ public class Player extends Object{
 				if (dy == 0) dx = 0;
 			}
 		}
-			
+				
 		for(int i = 0; i < enemies.size(); i++) {
 			
 			Enemy e = enemies.get(i);
 			
 			// sprawdzenie ataku, zadajemy obrazenia wrogowi
-			if(currentAction == HIGH_ATTACK /*&&
-					animation.getFrame() == 2 && animation.getCount() == 0*/) {
+			if( currentAction == HIGH_ATTACK ) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
 			}
-			if(currentAction == ATTACK /*&&
-					animation.getFrame() == 2 && animation.getCount() == 0*/) {
+			if( currentAction == ATTACK ) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
 			}
-			else if(currentAction == LOW_ATTACK /*&&
-					animation.getFrame() == 2 && animation.getCount() == 0*/) {
+			else if( currentAction == LOW_ATTACK ) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
@@ -403,7 +408,12 @@ public class Player extends Object{
 		}
 		
 		// SPRAWDZENIE ANIMACJI
-		if(knockback) {
+		if(teleporting) {
+			if(currentAction != TELEPORTING) {
+				setAnimation(TELEPORTING);
+			}
+		}
+		else if(knockback) {
 			if(currentAction != KNOCKBACK) {
 				setAnimation(KNOCKBACK);
 			}
@@ -442,6 +452,11 @@ public class Player extends Object{
 				setAnimation(FALLING);
 			}
 		}
+		else if(dashing) {
+			if(currentAction != WALKING) {
+				setAnimation(WALKING);
+			}
+		}
 		else if(left || right) {
 			if(currentAction != WALKING) {
 				setAnimation(WALKING);
@@ -456,14 +471,13 @@ public class Player extends Object{
 			setAnimation(STAND);
 		}
 		
-		
 		//aktualizacja animacji
 		animation.update();
 		robeAnimation.update();
 		swordAnimation.update();
 		
 		// ustawienie kierunku
-		if(!attack && !hi_attack && !low_attack && !knockback) {
+		if(!attack && !hi_attack && !low_attack && !knockback && !dashing) {
 			if(right) facing = true;
 			if(left) facing = false;
 		}
@@ -485,48 +499,39 @@ public class Player extends Object{
 			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2),	(int)(y + ymap - height / 2), null );
 			g.drawImage( robeAnimation.getImage(), 	(int)(x + xmap - width / 2), 	(int)(y + ymap - height / 2), null );
 			
-			if (attack || low_attack || hi_attack){
-				double new_y = 0;
-				
-				if (squat){
-					new_y = y+ ymap -(height/2) + 10;
+			if (!fireballShooted){
+				if (attack || low_attack || hi_attack){
+					double new_y = 0;
+					
+					if (squat){
+						new_y = y+ ymap -(height/2) + 10;
+					}
+					else {
+						new_y = y+ ymap -height/2;
+					}
+					
+					g.drawImage( swordAnimation.getImage(),	(int)(x + xmap- width / 2),	(int)(new_y), null );
 				}
-				else {
-					new_y = y+ ymap -height/2;
-				}
-				
-				g.drawImage( swordAnimation.getImage(),	(int)(x + xmap- width / 2),	(int)(new_y), null );
 			}
 		}
 		else {
 			// jeżeli obrócony w lewo
 			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
-			
-			if (attack || low_attack || hi_attack){
-				double new_y = 0;
-				
-				if (squat) {
-					new_y = y + ymap - (height / 2) + 10;
+			if (!fireballShooted){
+				if (attack || low_attack || hi_attack){
+					double new_y = 0;
+					
+					if (squat) {
+						new_y = y + ymap - (height / 2) + 10;
+					}
+					else {
+						new_y = y + ymap - height / 2;
+					}
+					
+					g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2 + width), (int)(new_y), -60,	30,	null );
 				}
-				else {
-					new_y = y + ymap - height / 2;
-				}
-				
-				g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2 + width), (int)(new_y), -60,	30,	null );
 			}
 		}
-		
-		// collision box
-		/*Rectangle r = getRectangle();
-		r.x += xmap;
-		r.y += ymap;
-		g.draw(r);*/
-		
-		// collision box dla miecza, jak jest rysowany, to nie zadaje obrazen
-		/*attackRectDraw.x += xmap;
-		attackRectDraw.y += ymap;
-		g.draw(attackRectDraw);*/
-
 	}
 }

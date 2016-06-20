@@ -30,7 +30,7 @@ public class EnemyGhost extends Enemy {
 		player = p;
 		
 		health = maxHealth = 1;
-		
+		lastBreath = 5;
 		width = 25;
 		height = 40;
 		
@@ -68,68 +68,78 @@ public class EnemyGhost extends Enemy {
 	
 	public void update() {
 		
-		if(!active) {
-			if(Math.abs(player.getx() - x) < GamePanel.WIDTH) active = true;
-			return;
-		}
 		
-		
-		getNextPosition();
-		checkTileMapCollision();
-		setPosition(xtemp, ytemp);
-		
-		if(player.getx() < x) facingRight = false;
-		else facingRight = true;
-		
-		// idle
-		if(step == 0) {
-			if(currentAction != IDLE) {
-				currentAction = IDLE;
-				animation.setDelay(-1);
-			}
-			attackTick++;
-			if(attackTick >= attackDelay && Math.abs(player.getx() - x) < 60) {
-				step++;
-				attackTick = 0;
-			}
-		}
-		// jump away
-		if(step == 1) {
-			if(currentAction != JUMPING) {
-				currentAction = JUMPING;
-				animation.setDelay(-1);
-			}
-			jumping = true;
-			if(facingRight) left = true;
-			else right = true;
-			if(falling) {
-				step++;
-			}
-		}
-		// attack
-		if(step == 2) {
-			if(dy > 0 && currentAction != ATTACKING) {
-				currentAction = ATTACKING;
+		if (dead) {
+			
+			lastBreath--;
+			
 
+			if (lastBreath <= 0) remove = true;
+		}
+		else{
+			if(!active) {
+				if(Math.abs(player.getx() - x) < GamePanel.WIDTH) active = true;
+				return;
 			}
-			if(currentAction == ATTACKING && animation.hasPlayedOnce()) {
-				step++;
-				currentAction = JUMPING;
+			
+			
+			getNextPosition();
+			checkTileMapCollision();
+			setPosition(xtemp, ytemp);
+			
+			if(player.getx() < x) facingRight = false;
+			else facingRight = true;
+			
+			// idle
+			if(step == 0) {
+				if(currentAction != IDLE) {
+					currentAction = IDLE;
+					animation.setDelay(-1);
+				}
+				attackTick++;
+				if(attackTick >= attackDelay && Math.abs(player.getx() - x) < 60) {
+					step++;
+					attackTick = 0;
+				}
+			}
+			// jump away
+			if(step == 1) {
+				if(currentAction != JUMPING) {
+					currentAction = JUMPING;
+					animation.setDelay(-1);
+				}
+				jumping = true;
+				if(facingRight) left = true;
+				else right = true;
+				if(falling) {
+					step++;
+				}
+			}
+			// attack
+			if(step == 2) {
+				if(dy > 0 && currentAction != ATTACKING) {
+					currentAction = ATTACKING;
 
+				}
+				if(currentAction == ATTACKING && animation.hasPlayedOnce()) {
+					step++;
+					currentAction = JUMPING;
+
+				}
 			}
+			// done attacking
+			if(step == 3) {
+				if(dy == 0) step++;
+			}
+			// land
+			if(step == 4) {
+				step = 0;
+				left = right = jumping = false;
+			}
+			
+			// update animation
+			animation.update();
 		}
-		// done attacking
-		if(step == 3) {
-			if(dy == 0) step++;
-		}
-		// land
-		if(step == 4) {
-			step = 0;
-			left = right = jumping = false;
-		}
-		
-		// update animation
-		animation.update();
 	}
 	
 	public void draw(Graphics2D g) {

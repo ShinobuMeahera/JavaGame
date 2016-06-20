@@ -89,7 +89,11 @@ public class Background {
 	}
 	
 	public void draw(Graphics2D g) {
-		g.drawImage(image, (int)x, (int)y, null);
+		for ( int i = 0; i < 5; i++){
+			for (int j = 0; j < 4; j++){
+				g.drawImage(image, (int)x+width*i, height*j+(int)y, null);
+			}
+		}
 		
 		if(x < 0) {
 			g.drawImage(image, (int)x + GamePanel.WIDTH, (int)y, null);

@@ -30,14 +30,13 @@ public class Level1 extends GameState{
 		// tilemap
 		tileMap = new TileMap(30);
 		tileMap.loadTiles("tileset3.png");
-		tileMap.loadMap("level12.map");
-		tileMap.setPosition(400, 50);
-		tileMap.setBounds( tileMap.getWidth() - 1 * tileMap.getTileSize(), tileMap.getHeight() - 2 * tileMap.getTileSize(),	0, 0);
+		tileMap.loadMap("level15.map");
+		tileMap.setPosition(400, 600);
 		tileMap.setTween(0.05);
 		
 		//player
 		player = new Player(tileMap);
-		player.setPosition(400, 150);	
+		player.setPosition(400, 250);	
 		fireballs = new ArrayList<FireBall>();
 		
 		//takie ladne zielone intro
@@ -85,13 +84,13 @@ public class Level1 extends GameState{
 	public void update() {
 		handleInput();
 		if(eventStart) eventStart();
-		player.update();
 		back.setPosition(tileMap.getx(), tileMap.gety());
+		player.update();
 		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() );
 		tileMap.update();
 		tileMap.fixBounds();
 
-		if (player.gety() >= tileMap.getHeight()) gsm.setState(gsm.MENUSTATE); // jeżeli spadniemy to wraca do menu
+		//if (player.gety() >= tileMap.getHeight()) gsm.setState(gsm.MENUSTATE); // jeżeli spadniemy to wraca do menu
 		
 		for(int i = 0; i < fireballs.size(); i++){
 			FireBall f = fireballs.get(i);
@@ -120,9 +119,12 @@ public class Level1 extends GameState{
 		player.setRight(Keys.keyState[Keys.RIGHT]);
 		player.setDown(Keys.keyState[Keys.DOWN]);
 		if(Keys.isPressed(Keys.ENTER)) player.setAttacking();
-		if(Keys.isPressed(Keys.BUTTON2)) player.setDashing();
 		if(Keys.isPressed(Keys.ESCAPE)) gsm.setPaused(true);
 		
+		if(Keys.isPressed(Keys.BUTTON2)){
+			if (player.isDashingReady()) player.setDashing();
+		}
+
 		if(Keys.isPressed(Keys.BUTTON1)) {
 			if ( player.isFireballReady()){
 				fb = new FireBall(tileMap, player.facing);
@@ -137,7 +139,7 @@ public class Level1 extends GameState{
 	}
 	
 	public void draw(Graphics2D g) {
-		g.drawImage(background,0,0,GamePanel.WIDTH,  GamePanel.HEIGHT, null);
+		//g.drawImage(background,0,0,GamePanel.WIDTH,  GamePanel.HEIGHT, null);
 		
 		back.draw(g);
 		player.draw(g);

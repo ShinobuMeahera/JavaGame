@@ -120,6 +120,7 @@ public class Level1 extends GameState{
 		player.setRight(Keys.keyState[Keys.RIGHT]);
 		player.setDown(Keys.keyState[Keys.DOWN]);
 		if(Keys.isPressed(Keys.ENTER)) player.setAttacking();
+		if(Keys.isPressed(Keys.BUTTON2)) player.setDashing();
 		if(Keys.isPressed(Keys.ESCAPE)) gsm.setPaused(true);
 		
 		if(Keys.isPressed(Keys.BUTTON1)) {

@@ -32,7 +32,10 @@ public class Player extends Object{
 	public boolean knockback;
 	private boolean flinching;
 	private long flinchCount;
-		
+	private boolean teleporting;
+	private boolean dashing;
+	private int dashTimer;
+	
 	// ANIMACJE
 	private ArrayList<BufferedImage[]> sprites;
 	private ArrayList<BufferedImage[]> robeSprites;
@@ -99,6 +102,8 @@ public class Player extends Object{
 	private static final int LOW_ATTACK = 6;
 	private static final int SQUAT = 7;
 	private static final int KNOCKBACK = 8;
+	private static final int DEAD = 9;
+	private static final int TELEPORTING = 10;
 
 	public Player(TileMap tm) {
 	
@@ -116,7 +121,7 @@ public class Player extends Object{
 		cr = new Rectangle(0, 0, 0, 0);
 		cr.width = 50;
 		cr.height = 40;
-		
+
 		attackRectDraw = new Rectangle();
 		attackRectDraw = attackRect;
 		
@@ -218,6 +223,10 @@ public class Player extends Object{
 		fireballCooldown = x;
 	}
 	
+	public void setTeleporting(boolean b) {
+		teleporting = b;
+	}
+	
 	public boolean isFireballReady(){
 		if (fireballCooldown <= 0 && (!falling || jumping )&& !knockback) return true;
 		else return false;
@@ -238,6 +247,8 @@ public class Player extends Object{
 	
 	public void setAttacking() {
 		if(knockback) return;
+		if(dashing) return;
+		
 		if(jumping && (!attack || !hi_attack) && !squat){
 					hi_attack = true;
 			attack = false;
@@ -255,6 +266,14 @@ public class Player extends Object{
 		}
 	}
 	
+	public void setDashing() {
+		if(knockback) return;
+		if(!attack && !hi_attack && !dashing) {
+			dashing = true;
+			dashTimer = 0;
+		}
+	}
+		
 	public void reset() {
 		facing = true;
 		currentAction = -1;
@@ -262,17 +281,19 @@ public class Player extends Object{
 	}
 	
 	public void stop() {
-		left = right = jumping = flinching = squat = attack = hi_attack = low_attack = false;
+		left = right = jumping = flinching = dashing = squat = attack = hi_attack = low_attack = false;
 	}
 	
 	private void getNextPosition() {
-		double maxSpeed = this.maxSpeed;
 		
 		if(knockback) {
 			dy += fallSpeed * 2;
 			if(!falling) knockback = false;
 			return;
 		}
+		
+		//double maxSpeed = this.maxSpeed;
+		//if(dashing) maxSpeed *= 1.75;
 		
 		if(left) {
 			dx -= moveSpeed;
@@ -302,12 +323,21 @@ public class Player extends Object{
 			}
 		}
 		
-		if((attack || hi_attack || low_attack) && !(jumping || falling)) { dx = 0; }		
+		if((attack || hi_attack || low_attack || dashing) && !(jumping || falling)) { dx = 0; }		
 		
 		if(jumping && !falling) {
 			dy = jumpStart;
 			falling = true;
 			
+		}
+		
+		if(dashing) {
+			if (dashTimer > 50) dashing = false;
+			else{
+				dashTimer++;
+				if(facing) dx = moveSpeed * (10 - dashTimer * 0.07);
+				else dx = -moveSpeed * (10 - dashTimer * 0.07);
+			}
 		}
 		
 		if(doubleJump) {
@@ -364,7 +394,6 @@ public class Player extends Object{
 		setPosition(xtemp, ytemp);
 		
 		if(dx == 0) x = (int)x;
-		
 		if (maxFireballCooldown - fireballCooldown > 15) fireballShooted = false;
 		if (fireballCooldown < 0){
 			fireballCooldown = 0;
@@ -393,7 +422,13 @@ public class Player extends Object{
 				if (dy == 0) dx = 0;
 			}
 		}
-			
+		
+		/*if(dashing) {
+			if(animation.hasPlayedOnce()) {
+				dashing = false;
+			}
+		}*/
+		
 		for(int i = 0; i < enemies.size(); i++) {
 			
 			Enemy e = enemies.get(i);
@@ -422,7 +457,12 @@ public class Player extends Object{
 		}
 		
 		// SPRAWDZENIE ANIMACJI
-		if(knockback) {
+		if(teleporting) {
+			if(currentAction != TELEPORTING) {
+				setAnimation(TELEPORTING);
+			}
+		}
+		else if(knockback) {
 			if(currentAction != KNOCKBACK) {
 				setAnimation(KNOCKBACK);
 			}
@@ -459,6 +499,11 @@ public class Player extends Object{
 		else if(dy > 0) {
 			if(currentAction != FALLING) {
 				setAnimation(FALLING);
+			}
+		}
+		else if(dashing && (left || right)) {
+			if(currentAction != WALKING) {
+				setAnimation(WALKING);
 			}
 		}
 		else if(left || right) {

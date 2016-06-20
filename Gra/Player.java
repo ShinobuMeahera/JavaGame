@@ -239,18 +239,18 @@ public class Player extends Object{
 	public void setAttacking() {
 		if(knockback) return;
 		if(jumping && (!attack || !hi_attack) && !squat){
-			hi_attack = true;
+					hi_attack = true;
 			attack = false;
 			low_attack = false;
 		}
 		else if (squat && (!attack || !low_attack) && !jumping && !falling){
 			hi_attack = false;
 			attack = false;
-			low_attack = true;
+					low_attack = true;
 		}
 		else if (!squat && !jumping && !falling && !attack && !low_attack && !hi_attack){
 			hi_attack = false;
-			attack = true;
+						attack = true;
 			low_attack = false;
 		}
 	}
@@ -365,7 +365,7 @@ public class Player extends Object{
 		
 		if(dx == 0) x = (int)x;
 		
-		if (maxFireballCooldown - fireballCooldown > 10) fireballShooted = false;
+		if (maxFireballCooldown - fireballCooldown > 15) fireballShooted = false;
 		if (fireballCooldown < 0){
 			fireballCooldown = 0;
 		}

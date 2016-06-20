@@ -42,9 +42,7 @@ public class Enemy extends Object {
 		if(health == 0){
 			dead = true;
 		}
-		/*if(dead){
-			if (lastBreath <= 0) remove = true;
-		}*/
+
 	}
 	
 	public void update() {}

@@ -60,13 +60,13 @@ public class Level1 extends GameState{
 		EnemySkeleton es;
 		EnemyGhost eg;
 		
-		/*es = new EnemySkeleton(tileMap, player);
+		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(1425, 50);
 		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(2500, 100);
-		enemies.add(es);*/
+		es.setPosition(2094, 115);
+		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(600, 150);
@@ -77,9 +77,9 @@ public class Level1 extends GameState{
 		enemies.add(es);
 		
 				
-		/*eg = new EnemyGhost(tileMap, player);
-		eg.setPosition(2300, 200);
-		enemies.add(eg);*/
+		eg = new EnemyGhost(tileMap, player);
+		eg.setPosition(1240, 200);
+		enemies.add(eg);
 	}
 	
 	public void update() {
@@ -90,7 +90,7 @@ public class Level1 extends GameState{
 		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() );
 		tileMap.update();
 		tileMap.fixBounds();
-		
+
 		if (player.gety() >= tileMap.getHeight()) gsm.setState(gsm.MENUSTATE); // jeżeli spadniemy to wraca do menu
 		
 		for(int i = 0; i < fireballs.size(); i++){
@@ -105,7 +105,6 @@ public class Level1 extends GameState{
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy e = enemies.get(i);
 			e.update();
-			System.out.println(e.getLastBreath());
 			if(e.shouldRemove()){
 				enemies.remove(i);
 				i--;

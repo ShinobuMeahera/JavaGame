@@ -81,6 +81,7 @@ public class FireBall extends Object {
 		if(facingRight) dx = moveSpeed;
 		else dx = -moveSpeed;
 	}
+	
 	public void setHit() {
 		if(hit) return;
 		hit = true;
@@ -142,21 +143,3 @@ public class FireBall extends Object {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -37,9 +37,12 @@ public class MainSceneController implements Initializable {
 
     private int id;
     int x;
+    int lastX;
     int y;
+    int i = 0;
     int mapScrollHValue = 0;
     int mapScrollVValue = 0;
+    private boolean ctrl = false;
 
     @FXML
     private Canvas canvas;
@@ -145,14 +148,21 @@ public class MainSceneController implements Initializable {
 
     }
 
-    private void xyPos(MouseEvent event){
+    private boolean xyPos(MouseEvent event){
         mapScrollHValue = (int)(mainScroll.getHvalue()*(mainApp.numCols-33));
         mapScrollVValue = (int)(mainScroll.getVvalue()*(mainApp.numRows-22.3));
         mainScroll.setHvalue(mapScrollHValue/(double)(mainApp.numCols-33));
         mainScroll.setVvalue(mapScrollVValue/(double)(mainApp.numRows-22.3));
 
+        lastX = x;
+
         x = (int)(event.getSceneX()-286)/ 30 + mapScrollHValue;
         y = (int)(event.getSceneY()-34)/ 30 + mapScrollVValue;
+
+        if(lastX != x)
+            return true;
+        else
+            return false;
     }
     @FXML
     private void mouse(MouseEvent event){
@@ -163,22 +173,31 @@ public class MainSceneController implements Initializable {
         gc.setStroke(Color.MAGENTA);
         gc.strokeRect(x*30,y*30,30,30);
         canvas.setOnMousePressed(this::canvasMouse);
+        if(ctrl == false);
+            i = 0;
 
     }
     @FXML
-    private void canvasKey(KeyEvent event){
+    private void mainKey(KeyEvent event){
         if(event.isControlDown()){
-
-            System.out.println("lol");
+            ctrl = true;
         }
+        else
+            ctrl = false;
     }
 
     @FXML
     private void canvasMouse(MouseEvent event) {
 
+        if(xyPos(event))
+            if(ctrl == true)
+                i += 1;
+            else
+                i = 0;
+
         if(event.isPrimaryButtonDown()) {
 
-            mainApp.editMap(y, x, id);
+            mainApp.editMap(y, x, (id + i));
         }
         else
         if(event.isSecondaryButtonDown()) {
@@ -189,6 +208,7 @@ public class MainSceneController implements Initializable {
         xyPos(event);
         mainApp.setCanvas(1);
         System.out.println("x: " + x +" y: " + y);
+        System.out.println("x: " + x +" y: " + y + " " + i);
 
     }
     private void refreshLeft(){

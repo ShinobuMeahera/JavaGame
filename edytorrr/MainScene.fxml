@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="720.0" maxWidth="1280.0" minHeight="720.0" minWidth="1280.0" onKeyPressed="#mainKey" onKeyReleased="#mainKey" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JavaGame.edytorrr.MainSceneController">
+<VBox maxHeight="720.0" maxWidth="1280.0" minHeight="720.0" minWidth="1280.0" onKeyPressed="#mainKeyPress" onKeyReleased="#mainKeyRel" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JavaGame.edytorrr.MainSceneController">
     <children>
         <MenuBar>
             <menus>

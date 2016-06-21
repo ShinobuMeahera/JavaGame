@@ -23,7 +23,7 @@ public class Main extends Application {
     private VBox rootLayout;
     private Stage primaryStage;
     private MainSceneController mController;
-    public Image src = new Image("https://github.com/ShinobuMeahera/JavaGame/blob/master/Gra/tileset3.png?raw=true");
+    public Image src;
     
     // mapa
     private int[][] map;
@@ -35,6 +35,12 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+        try{
+            src = new Image(new FileInputStream("tileset3.png"));
+        }
+        catch(Exception e){
+            System.out.print("Brak src2");
+        }
         this.primaryStage = stage;
         initRootLayout();
     }

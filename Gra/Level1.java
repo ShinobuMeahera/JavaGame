@@ -16,6 +16,10 @@ public class Level1 extends GameState{
 	private BufferedImage background = null;
 	private ArrayList<Enemy> enemies;
 	private ArrayList<FireBall> fireballs;
+	private BufferedImage hpBar = null;
+	private BufferedImage mpBar = null;
+	private BufferedImage staBar = null;
+	private BufferedImage hudBar = null;
 	
 	private int eventCount = 0;
 	private boolean eventStart;
@@ -27,6 +31,7 @@ public class Level1 extends GameState{
 	
 	public void init() {
 		back = new Background("tlo.png", 0.2);
+
 		// tilemap
 		tileMap = new TileMap(30);
 		tileMap.loadTiles("tileset3.png");
@@ -36,7 +41,7 @@ public class Level1 extends GameState{
 		
 		//player
 		player = new Player(tileMap);
-		player.setPosition(400, 250);	
+		player.setPosition(400, 100);	
 		fireballs = new ArrayList<FireBall>();
 		
 		//takie ladne zielone intro
@@ -51,6 +56,10 @@ public class Level1 extends GameState{
 		
 		try{
 			background = ImageIO.read( getClass().getResourceAsStream("background.png"));
+			hpBar = ImageIO.read( getClass().getResourceAsStream("hp-bar.png"));
+			mpBar = ImageIO.read( getClass().getResourceAsStream("fireball-bar.png"));
+			staBar = ImageIO.read( getClass().getResourceAsStream("dash-bar.png"));
+			hudBar = ImageIO.read( getClass().getResourceAsStream("hud.png"));
 		} catch (Exception e){}
 	}
 	
@@ -142,12 +151,18 @@ public class Level1 extends GameState{
 		//g.drawImage(background,0,0,GamePanel.WIDTH,  GamePanel.HEIGHT, null);
 		
 		back.draw(g);
+		
 		player.draw(g);
 		for(int i = 0; i < fireballs.size(); i++) { fireballs.get(i).draw(g); }
 		for(int i = 0; i < enemies.size(); i++) { enemies.get(i).draw(g); }
 		 
-		 
 		tileMap.draw(g);
+		
+		g.drawImage(hpBar, (player.getHealth()*2) - 75, 25, null);
+		g.drawImage(mpBar, (player.getMana()) - 75, 25+16, null);
+		g.drawImage(staBar, (player.getSta()/2) - 75, 25+32, null);
+		g.drawImage(hudBar, 0, 23, null);
+		
 		g.setColor(java.awt.Color.GREEN);
 		for(int i = 0; i < tb.size(); i++) {
 			g.fill(tb.get(i));

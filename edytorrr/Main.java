@@ -50,7 +50,7 @@ public class Main extends Application {
 
         Scene mScene = new Scene(rootLayout);
         primaryStage.setScene(mScene);
-        primaryStage.setTitle("Map Editor 1.3");
+        primaryStage.setTitle("Map Editor 2.0");
         primaryStage.show();
         mController = loader.getController();
         mController.setMainApp(this);

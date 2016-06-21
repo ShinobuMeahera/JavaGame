@@ -43,7 +43,9 @@ public class MainSceneController implements Initializable {
     int x;
     int lastX;
     int y;
+    int lastY;
     int i = 0;
+    int j = 0;
     int mapScrollHValue = 0;
     int mapScrollVValue = 0;
     int [] mouseLastPos = {0,0};
@@ -167,21 +169,27 @@ public class MainSceneController implements Initializable {
 
     }
 
-    private boolean xyPos(MouseEvent event){
+    private int xyPos(MouseEvent event){
         mapScrollHValue = (int)(mainScroll.getHvalue()*(mainApp.numCols-33));
         mapScrollVValue = (int)(mainScroll.getVvalue()*(mainApp.numRows-22.3));
         mainScroll.setHvalue(mapScrollHValue/(double)(mainApp.numCols-33));
         mainScroll.setVvalue(mapScrollVValue/(double)(mainApp.numRows-22.3));
 
         lastX = x;
+        lastY = y;
 
         x = (int)(event.getSceneX()-286)/ 30 + mapScrollHValue;
         y = (int)(event.getSceneY()-34)/ 30 + mapScrollVValue;
 
         if(lastX != x)
-            return true;
+            return 1;
         else
-            return false;
+        if(lastY != y)
+            return 2;
+        else
+            return 0;
+
+
     }
     @FXML
     private void mouse(MouseEvent event){
@@ -192,8 +200,11 @@ public class MainSceneController implements Initializable {
         gc.setStroke(Color.MAGENTA);
         gc.strokeRect(x*30,y*30,30,30);
         canvas.setOnMousePressed(this::canvasMouse);
-        if(zKey == false)
+        if(zKey == false){
             i = 0;
+            j = 0;
+        }
+
         if(xKey == false){
             mouseLastPos[0] = 0;
             mouseLastPos[1] = 0;
@@ -240,8 +251,8 @@ public class MainSceneController implements Initializable {
     }
     @FXML
     private void canvasMouse(MouseEvent event) {
-
-        if(xyPos(event)) {
+    int xyTemp;
+        if( (xyTemp = xyPos(event)) == 1) {
             if (zKey == true)
                 if(loopButton.isSelected() == true && (i >= (iMax-1)) )
                     i = 0;
@@ -249,11 +260,20 @@ public class MainSceneController implements Initializable {
                     i += 1;
             else
                 i = 0;
+        }else
+        if(xyTemp == 2) {
+            if (zKey == true)
+                if(loopButton.isSelected() == true && (j >= (iMax-1)) )
+                    j = 0;
+                else
+                    j += 1;
+            else
+                j = 0;
         }
 
         if(event.isPrimaryButtonDown()) {
 
-            mainApp.editMap(y, x, (id + i));
+            mainApp.editMap(y, x, (id + i)+(30*j));
         }
         else
         if(event.isSecondaryButtonDown()) {

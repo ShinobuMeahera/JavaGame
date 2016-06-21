@@ -547,7 +547,7 @@ public class Player extends Object{
 						new_y = y+ ymap -height/2;
 					}
 					
-					g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2),	(int)(new_y), null );
+					g.drawImage( swordAnimation.getImage(),	(int)(x + xmap- width / 2),	(int)(new_y), null );
 				}
 			}
 		}
@@ -556,7 +556,10 @@ public class Player extends Object{
 
 			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
-				
+			for(int i = 0; i < energyParticles.size(); i++) {
+				energyParticles.get(i).draw(g);
+			}
+		
 			if (!fireballShooted){
 				if (attack || low_attack || hi_attack){
 					double new_y = 0;

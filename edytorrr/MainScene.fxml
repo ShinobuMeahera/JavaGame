@@ -7,8 +7,10 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -64,6 +66,14 @@
                            </font>
                         </Label>
                         <Button layoutX="112.0" layoutY="396.0" mnemonicParsing="false" onMouseClicked="#sizeChange" prefHeight="25.0" prefWidth="152.0" text="Zmien" />
+                        <Label layoutX="14.0" layoutY="452.0" prefHeight="19.0" prefWidth="79.0" text="Zapetlanie :  ">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Slider fx:id="loopControl" disable="true" layoutX="104.0" layoutY="454.0" onMouseReleased="#loopEnable" prefHeight="14.0" prefWidth="111.0" />
+                        <Label fx:id="loopLabel" layoutX="159.0" layoutY="468.0" text="0" />
+                        <ToggleButton fx:id="loopButton" layoutX="223.0" layoutY="448.0" mnemonicParsing="false" onMouseClicked="#loopEnable" prefHeight="25.0" prefWidth="41.0" text="On" />
                             </children></AnchorPane>
                     </content>
                 </ScrollPane>

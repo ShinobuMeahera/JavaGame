@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static javafx.scene.input.KeyCode.Z;
+import static javafx.scene.input.KeyCode.X;
+
 public class MainSceneController implements Initializable {
 
 
@@ -42,7 +45,9 @@ public class MainSceneController implements Initializable {
     int i = 0;
     int mapScrollHValue = 0;
     int mapScrollVValue = 0;
-    private boolean ctrl = false;
+    int [] mouseLastPos = {0,0};
+    private boolean zKey = false;
+    private boolean xKey = false;
 
     @FXML
     private Canvas canvas;
@@ -173,27 +178,52 @@ public class MainSceneController implements Initializable {
         gc.setStroke(Color.MAGENTA);
         gc.strokeRect(x*30,y*30,30,30);
         canvas.setOnMousePressed(this::canvasMouse);
-        if(ctrl == false);
+        if(zKey == false)
             i = 0;
+        if(xKey == false){
+            mouseLastPos[0] = 0;
+            mouseLastPos[1] = 0;
+        }
 
     }
     @FXML
-    private void mainKey(KeyEvent event){
-        if(event.isControlDown()){
-            ctrl = true;
+    private void mainKeyPress(KeyEvent event){
+        if(event.getCode() == Z){
+            zKey = true;
+            System.out.println("Z key Pressed");
         }
-        else
-            ctrl = false;
+
+        if(event.getCode() == X){
+            xKey = true;
+            System.out.println("X key Pressed");
+        }
+
+
+    }
+
+    @FXML
+    private void mainKeyRel(KeyEvent event){
+        if(event.getCode() == Z){
+            zKey = false;
+            System.out.println("Z key Released");
+        }
+
+        if(event.getCode() == X){
+            xKey = false;
+            System.out.println("X key Released");
+        }
+
     }
 
     @FXML
     private void canvasMouse(MouseEvent event) {
 
-        if(xyPos(event))
-            if(ctrl == true)
+        if(xyPos(event)) {
+            if (zKey == true)
                 i += 1;
             else
                 i = 0;
+        }
 
         if(event.isPrimaryButtonDown()) {
 
@@ -204,11 +234,29 @@ public class MainSceneController implements Initializable {
 
             mainApp.editMap(y, x, 0);
         }
-
+        if (xKey == true) {
+            if(mouseLastPos[0] == 0 && mouseLastPos[1] == 0) {
+                mouseLastPos[0] = x;
+                mouseLastPos[1] = y;
+            }
+            else{
+                for(int  iy = 0; iy <= Math.abs(mouseLastPos[1] - y); iy++) {
+                    for (int ix = 0; ix <= Math.abs(mouseLastPos[0] - x); ix++) {
+                        mainApp.editMap(mouseLastPos[1]- iy, mouseLastPos[0] + ix, (id + i));
+                        System.out.print("Petla X  :" + ix + "  d :" + Math.abs(mouseLastPos[0] - x));
+                    }
+                }
+            }
+        }
+        else{
+            mouseLastPos[0] = 0;
+            mouseLastPos[1] = 0;
+        }
         xyPos(event);
         mainApp.setCanvas(1);
         System.out.println("x: " + x +" y: " + y);
         System.out.println("x: " + x +" y: " + y + " " + i);
+        System.out.println("Z  " + zKey + " x " + xKey);
 
     }
     private void refreshLeft(){

@@ -89,7 +89,7 @@ public class Background {
 	}
 	
 	public void draw(Graphics2D g) {
-		for ( int i = 0; i < 5; i++){
+		for ( int i = 0; i < 6; i++){
 			for (int j = 0; j < 4; j++){
 				g.drawImage(image, (int)x+width*i, height*j+(int)y, null);
 			}

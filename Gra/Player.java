@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 public class Player extends Object{
 	
 	private ArrayList<Enemy> enemies;
+	private ArrayList<EnergyParticle> energyParticles;
 	
 	// dostepne ruchy
 	protected boolean hi_attack;
@@ -48,15 +49,15 @@ public class Player extends Object{
 	private ArrayList<BufferedImage[]> swordSprites;
 	
 	
-	private final int[] NUMFRAMES = { 	1, 1, 1, 8, 4, 4, 4, 1, 8 };
-	private final int[] FRAMEWIDTHS = {	46, 46, 46, 46, 46, 46, 46, 46, 46 };
-	private final int[] FRAMEHEIGHTS = { 50, 50, 50, 50, 50, 50, 50, 50, 50	};
-	private final int[] SPRITEDELAYS = { -1, -1, -1, 5, 5, 5, 5, -1, 4 };
+	private final int[] NUMFRAMES = { 	1, 1, 1, 8, 4, 4, 4, 1, 8, 1, 6 };
+	private final int[] FRAMEWIDTHS = {	46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46 };
+	private final int[] FRAMEHEIGHTS = { 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50	};
+	private final int[] SPRITEDELAYS = { -1, -1, -1, 5, 5, 5, 5, -1, 4, -1, 5 };
 	
-	private final int [] swordNUMFRAMES = {	0, 0, 0, 0, 5, 5, 5, 0, 0};
-	private final int[] swordFRAMEWIDTHS = { 60, 60, 60, 60, 60, 60, 60, 60, 60 };
-	private final int[] swordFRAMEHEIGHTS = {30, 30, 30, 30, 30, 30, 30, 30, 30	};
-	private final int[] swordSPRITEDELAYS = {-1, -1, -1, -1, 5, 5, 5, -1, -1};
+	private final int [] swordNUMFRAMES = {	0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0};
+	private final int[] swordFRAMEWIDTHS = { 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60};
+	private final int[] swordFRAMEHEIGHTS = {30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30	};
+	private final int[] swordSPRITEDELAYS = {-1, -1, -1, -1, 5, 5, 5, -1, -1, -1, -1};
 	
 	//klasy animacji
 	protected Animation animation = new Animation();
@@ -100,10 +101,10 @@ public class Player extends Object{
 		cheight = 45;
 		
 		//atrybuty dasha i fireballa
-		maxFireballCooldown = 50;
+		maxFireballCooldown = 0;
 		fireballShooted = false;
 		setFireballCooldown(maxFireballCooldown);
-		dashCooldown = 150;
+		dashCooldown = 0;
 		
 		//artybuty poruszania sie
 		moveSpeed = 0.5;
@@ -121,7 +122,7 @@ public class Player extends Object{
 		low_attack = false;
 		
 		damage = 2;
-		health = maxHealth = 5;
+		health = maxHealth = 50;
 				
 		// ładowanie sprajtow, ogolnie to powinny byc tak ustawione, że co linijka to inna animacja
 		try {
@@ -163,11 +164,13 @@ public class Player extends Object{
 		catch(Exception e) {
 			e.printStackTrace();
 		}	
+		energyParticles = new ArrayList<EnergyParticle>();
 		setAnimation(STAND);
 	}	
 	
-	public void init(ArrayList<Enemy> enemies) {
+	public void init(ArrayList<Enemy> enemies, ArrayList<EnergyParticle> energyParticles) {
 		this.enemies = enemies;
+		this.energyParticles = energyParticles;
 	}
 	
 	public void setFireballCooldown(int x){
@@ -179,12 +182,12 @@ public class Player extends Object{
 	}
 	
 	public boolean isFireballReady(){
-		if (fireballCooldown <= 0 && (!falling || jumping )&& !knockback && !dashing) return true;
+		if (fireballCooldown >= 100 && (!falling || jumping )&& !knockback && !dashing) return true;
 		else return false;
 	}
 	
 	public boolean isDashingReady(){
-		if (dashCooldown <= 0 && (!falling || jumping )&& !knockback) return true;
+		if (dashCooldown >= 200 && (!falling || jumping )&& !knockback) return true;
 		else return false;
 	}
 	
@@ -199,6 +202,16 @@ public class Player extends Object{
 	public void setDead() {
 		health = 0;
 		stop();
+	}
+	
+	public int getHealth(){
+		return health;
+	}
+	public int getMana(){
+		return fireballCooldown;
+	}
+	public int getSta(){
+		return dashCooldown;
 	}
 	
 	public void setAttacking() {
@@ -224,7 +237,7 @@ public class Player extends Object{
 	
 	public void setDashing() {
 		if(knockback) return;
-		if(!attack && !hi_attack  && !low_attack && !dashing) {
+		if(!attack && !hi_attack  && !low_attack && !dashing && (left || right) && !squat) {
 			dashing = true;
 			dashTimer = 0;
 		}
@@ -286,7 +299,7 @@ public class Player extends Object{
 		}
 		
 		if(dashing) {
-			dashCooldown = 150;
+			dashCooldown = 0;
 			dashTimer++;
 			if(facing) dx = moveSpeed * (10 - dashTimer * 0.04);
 			else dx = -moveSpeed * (10 - dashTimer * 0.04);
@@ -296,6 +309,14 @@ public class Player extends Object{
 			dy = doubleJumpStart;
 			alreadyDoubleJump = true;
 			doubleJump = false;
+			for(int i = 0; i < 6; i++) {
+				energyParticles.add(
+					new EnergyParticle(
+						tileMap,
+						x,
+						y + cheight / 4,
+						EnergyParticle.DOWN));
+			}
 		}
 		
 		if(!falling) alreadyDoubleJump = false;
@@ -347,13 +368,13 @@ public class Player extends Object{
 		setPosition(xtemp, ytemp);
 				
 		if(dx == 0) x = (int)x;
-		if (maxFireballCooldown - fireballCooldown > 15) fireballShooted = false;
+		if (fireballCooldown > 15) fireballShooted = false;
 		
-		if (fireballCooldown < 0) fireballCooldown = 0;
-		else fireballCooldown--;
+		if (fireballCooldown >= 100) fireballCooldown = 100;
+		else fireballCooldown++;
 		
-		if (dashCooldown < 0) dashCooldown = 0;
-		else dashCooldown--;
+		if (dashCooldown >= 200) dashCooldown = 200;
+		else dashCooldown++;
 		
 		if (dashing && dashTimer > 40) dashing = false;
 		
@@ -363,7 +384,15 @@ public class Player extends Object{
 				flinching = false;
 			}
 		}			
-			
+		
+		for(int i = 0; i < energyParticles.size(); i++) {
+			energyParticles.get(i).update();
+			if(energyParticles.get(i).shouldRemove()) {
+				energyParticles.remove(i);
+				i--;
+			}
+		}
+		
 		if(currentAction == ATTACK || currentAction == HIGH_ATTACK || currentAction == LOW_ATTACK) {
 			if(animation.hasPlayedOnce()) {
 				hi_attack = false;
@@ -377,6 +406,7 @@ public class Player extends Object{
 			if (!animation.hasPlayedOnce()){
 				knockback = true;
 				if (dy == 0) dx = 0;
+				
 			}
 		}
 				
@@ -416,6 +446,11 @@ public class Player extends Object{
 		else if(knockback) {
 			if(currentAction != KNOCKBACK) {
 				setAnimation(KNOCKBACK);
+			}
+		}
+		else if(health == 0) {
+			if(currentAction != DEAD) {
+				setAnimation(DEAD);
 			}
 		}
 		else if (hi_attack){
@@ -489,7 +524,9 @@ public class Player extends Object{
 		// zeby rysowac warstwami, najpierw te co glebiej, potem te co blizej nas
 		
 		setMapPosition();
-		
+		for(int i = 0; i < energyParticles.size(); i++) {
+			energyParticles.get(i).draw(g);
+		}
 		if(flinching && !knockback) {
 			if(flinchCount % 10 < 5) return;
 		}
@@ -516,8 +553,13 @@ public class Player extends Object{
 		}
 		else {
 			// jeżeli obrócony w lewo
+
 			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
+			for(int i = 0; i < energyParticles.size(); i++) {
+				energyParticles.get(i).draw(g);
+			}
+		
 			if (!fireballShooted){
 				if (attack || low_attack || hi_attack){
 					double new_y = 0;

@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -29,6 +30,7 @@ public class Main extends Application {
     protected int tileSize = 30;
     public int numRows;
     public int numCols;
+    public File mapa;
 	
     
     @Override
@@ -81,45 +83,44 @@ public class Main extends Application {
     }
     public void loadMap(){
         Parent loadMap;
-        try{
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("LoadMap.fxml"));
 
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(getPrimaryStage());
-            stage.setTitle("Load Existing Map");
-            stage.setScene(new Scene(loader.load()));
-            
-            LoadMapController controller = loader.getController();
-            controller.setStage(stage);
-            controller.setApp(this);
-            
-            stage.showAndWait();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setTitle("Load Map");
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"))
+        );
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("map", "*.map"),
+                new FileChooser.ExtensionFilter("Map", "*.Map")
+        );
+        mapa =  fileChooser.showOpenDialog(primaryStage);
+        System.out.println("Wybrano plik");
+        openMap();
+
     }
-    public void openMap(String fileName) {
+    public void openMap() {
         try {
-            
-            FileReader fileReader =  new FileReader(fileName);
+            int numColsWork = 0;
+            int numRowsWork = 0;
+            FileReader fileReader =  new FileReader(mapa);
 
             BufferedReader br = new BufferedReader(fileReader);
 			
             //piersza linia odpowiada za szerokosc mapy
-            numCols = Integer.parseInt(br.readLine());
+            numColsWork = Integer.parseInt(br.readLine());
             //druga linia odpowiada za ilosc wierszy, czyli nasza wysokosc mapy
-            numRows = Integer.parseInt(br.readLine());
-            
-            map = new int[numRows][numCols];
+            numRowsWork = Integer.parseInt(br.readLine());
+            numCols = numColsWork ;
+            numRows = numRowsWork ;
+            System.out.println(numCols + " " +  numRows);
+            map = new int[numRowsWork][numColsWork];
 			
             String delims = "\\s+";
-            for(int row = 0; row < numRows; row++) {
+            for(int row = 0; row < numRowsWork; row++) {
 		    String line = br.readLine();
 		    String[] tokens = line.split(delims);
-		    for(int col = 0; col < numCols; col++) {
+		    for(int col = 0; col < numColsWork; col++) {
                     map[row][col] = Integer.parseInt(tokens[col]);
      
 		    }
@@ -190,6 +191,25 @@ public class Main extends Application {
         catch(NullPointerException e){
             System.out.println("NullPointerExe");
         }
+
+    }
+    public void changeSize(int x, int y){
+        int [][] mapTemp = map;
+
+        map = new int[y][x];
+
+        for(int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                map[row][col] = mapTemp[row][col];
+            }
+        }
+        for(int row = numRows; row < y; row++) {
+            for (int col = numCols; col < x; col++) {
+                map[row][col] = 0;
+            }
+        }
+        numCols = x;
+        numRows = y;
 
     }
     public static void main(String[] args) {

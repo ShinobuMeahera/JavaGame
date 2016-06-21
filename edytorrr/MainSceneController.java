@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InterfaceAddress;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -48,6 +49,7 @@ public class MainSceneController implements Initializable {
     int [] mouseLastPos = {0,0};
     private boolean zKey = false;
     private boolean xKey = false;
+    int iMax;
 
     @FXML
     private Canvas canvas;
@@ -59,7 +61,13 @@ public class MainSceneController implements Initializable {
     private Button leftButton;
 
     @FXML
+    private ToggleButton loopButton;
+
+    @FXML
     private Label leftLabel;
+
+    @FXML
+    private Label loopLabel;
 
     @FXML
     private TextField hSize;
@@ -73,6 +81,8 @@ public class MainSceneController implements Initializable {
     @FXML
     private ScrollPane mainScroll;
 
+    @FXML
+    private Slider loopControl;
 
     @FXML
     public void newMapFunction(){
@@ -81,6 +91,8 @@ public class MainSceneController implements Initializable {
     @FXML
     public void loadMapFunction(){
         mainApp.loadMap();
+        hSize.setText(Integer.toString(mainApp.numCols));
+        vSize.setText(Integer.toString(mainApp.numRows));
     }
 
     @FXML
@@ -122,6 +134,8 @@ public class MainSceneController implements Initializable {
     @FXML
     private void sizeChange(){
         mainApp.changeSize(Integer.parseInt(hSize.getText().toString()), Integer.parseInt(vSize.getText().toString()));
+        hSize.setText(Integer.toString(mainApp.numCols));
+        vSize.setText(Integer.toString(mainApp.numRows));
         System.out.println("Zmieniona rozmiar");
     }
 
@@ -214,13 +228,25 @@ public class MainSceneController implements Initializable {
         }
 
     }
+    @FXML
+    private void loopEnable(){
+        if(loopButton.isSelected())
+            loopControl.setDisable(false);
+        else
+            loopControl.setDisable(true);
 
+        iMax = (int) loopControl.getValue();
+        loopLabel.setText(Integer.toString(iMax));
+    }
     @FXML
     private void canvasMouse(MouseEvent event) {
 
         if(xyPos(event)) {
             if (zKey == true)
-                i += 1;
+                if(loopButton.isSelected() == true && (i >= (iMax-1)) )
+                    i = 0;
+                else
+                    i += 1;
             else
                 i = 0;
         }
@@ -287,6 +313,8 @@ public class MainSceneController implements Initializable {
         catch(Exception e){
             System.out.print("Brak src2");
         }
+        loopControl.setMin(2);
+        loopControl.setMax(6);
         scroll.setOnScrollFinished(this::scrollBar);
         gc = canvas.getGraphicsContext2D();
         refreshLeft();

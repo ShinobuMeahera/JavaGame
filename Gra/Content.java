@@ -8,7 +8,8 @@ public class Content {
 	public static BufferedImage[][] EnemySkeleton = load("enemy-skeleton-spritemap.png", 36, 48);
 	public static BufferedImage[][] EnemySkeletonDead = load("enemy-skeleton-dead-spritemap.png", 36, 48);
 	public static BufferedImage[][] EnemyGhost = load("enemy-ghost-spritemap.png", 25, 35);
-	public static BufferedImage[][] EnergyParticle = load("EnergyParticle.gif", 5, 5);
+	public static BufferedImage[][] EnergyParticle = load("energy-particle.png", 5, 5);
+	public static BufferedImage[][] EnemyBoss1 = load("boss-1.png", 57*2, 88*2);
 	
 	public static BufferedImage[][] load(String s, int w, int h) {
 		BufferedImage[][] ret;

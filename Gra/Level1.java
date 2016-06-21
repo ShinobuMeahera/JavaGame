@@ -75,6 +75,7 @@ public class Level1 extends GameState{
 		enemies.clear();
 		EnemySkeleton es;
 		EnemyGhost eg;
+		EnemyBoss1 eb;
 		
 		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(550, 2150);
@@ -93,9 +94,16 @@ public class Level1 extends GameState{
 		enemies.add(es);
 		
 				
+				
 		eg = new EnemyGhost(tileMap, player);
 		eg.setPosition(1720, 2250);
 		enemies.add(eg);
+		
+		
+		
+		eb = new EnemyBoss1(tileMap, player);
+		eb.setPosition(2550, 1700);
+		enemies.add(eb);
 	}
 	
 	public void update() {
@@ -108,12 +116,23 @@ public class Level1 extends GameState{
 		if(eventStart) eventStart();
 		if(eventDead) eventDead();
 		
-		System.out.println(player.getx() + " " + player.gety()); 
 		back.setPosition(tileMap.getx(), tileMap.gety());
 		
 		player.update();
+<<<<<<< HEAD
 		
 		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() );
+=======
+		if (player.getx() > 2240 && player.gety() > 1530 && player.gety() < 1870){
+			tileMap.setPosition(
+				GamePanel.WIDTH / 2 - player.getx()-200,
+				GamePanel.HEIGHT / 2 - player.gety()+100); // TUTAJ USTAWIAMY WIDOK
+		}
+		else tileMap.setPosition(
+			GamePanel.WIDTH / 2 - player.getx()-(50*player.setViewLeftRight()),
+			GamePanel.HEIGHT / 2 - player.gety()-(100*player.setViewDown())); // TUTAJ USTAWIAMY WIDOK
+			
+>>>>>>> GameEditBranch--Przemek
 		tileMap.update();
 		tileMap.fixBounds();
 		
@@ -173,10 +192,10 @@ public class Level1 extends GameState{
 		 
 		tileMap.draw(g);
 		
-		g.drawImage(hpBar, (player.getHealth()*2) - 75, 25, null);
-		g.drawImage(mpBar, (player.getMana()) - 75, 25+16, null);
-		g.drawImage(staBar, (player.getSta()/2) - 75, 25+32, null);
-		g.drawImage(hudBar, 0, 23, null);
+		g.drawImage(hpBar, (player.getHealth()*2) - 75, 15, null);
+		g.drawImage(mpBar, (player.getMana()) - 75, 15+16, null);
+		g.drawImage(staBar, (player.getSta()/2) - 75, 15+32, null);
+		g.drawImage(hudBar, 0, 13, null);
 		
 		g.setColor(java.awt.Color.GREEN);
 		for(int i = 0; i < tb.size(); i++) {

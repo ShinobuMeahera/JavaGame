@@ -113,7 +113,7 @@ public class Level1 extends GameState{
 		
 		player.update();
 		
-		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() );
+		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() ); // TUTAJ USTAWIAMY WIDOK
 		tileMap.update();
 		tileMap.fixBounds();
 		

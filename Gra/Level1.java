@@ -39,7 +39,7 @@ public class Level1 extends GameState{
 		tileMap = new TileMap(30);
 		tileMap.loadTiles("tileset3.png");
 		tileMap.loadMap("level15.map");
-		tileMap.setPosition(400, 1600);
+		tileMap.setPosition(0, 0);
 		tileMap.setTween(0.05);
 		
 		//player
@@ -164,7 +164,6 @@ public class Level1 extends GameState{
 	}
 	
 	public void draw(Graphics2D g) {
-		//g.drawImage(background,0,0,GamePanel.WIDTH,  GamePanel.HEIGHT, null);
 		
 		back.draw(g);
 		

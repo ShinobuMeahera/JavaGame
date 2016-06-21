@@ -104,7 +104,7 @@ public class Player extends Object{
 		maxFireballCooldown = 0;
 		fireballShooted = false;
 		setFireballCooldown(maxFireballCooldown);
-		dashCooldown = 0;
+		dashCooldown = 40;
 		
 		//artybuty poruszania sie
 		moveSpeed = 0.5;
@@ -182,12 +182,12 @@ public class Player extends Object{
 	}
 	
 	public boolean isFireballReady(){
-		if (fireballCooldown >= 100 && (!falling || jumping )&& !knockback && !dashing) return true;
+		if (fireballCooldown >= 100 && (falling || jumping  || !left || !right) && !knockback && !dashing) return true;
 		else return false;
 	}
 	
 	public boolean isDashingReady(){
-		if (dashCooldown >= 200 && (!falling || jumping )&& !knockback) return true;
+		if (dashCooldown >= 200 && (falling || jumping || left || right)&& !knockback) return true;
 		else return false;
 	}
 	
@@ -218,7 +218,7 @@ public class Player extends Object{
 		if(knockback) return;
 		if(dashing) return;
 		
-		if(jumping && (!attack || !hi_attack) && !squat){
+		if( ( jumping  || falling ) && (!attack || !hi_attack) && !squat){
 					hi_attack = true;
 			attack = false;
 			low_attack = false;
@@ -237,7 +237,7 @@ public class Player extends Object{
 	
 	public void setDashing() {
 		if(knockback) return;
-		if(!attack && !hi_attack  && !low_attack && !dashing && (left || right) && !squat) {
+		if(!attack && !hi_attack  && !low_attack && !dashing && (left || right || jumping || falling) && !squat) {
 			dashing = true;
 			dashTimer = 0;
 		}

@@ -51,7 +51,7 @@ public class EnergyParticle extends Object {
 		x += dx;
 		y += dy;
 		count++;
-		if(count == 60) remove = true;
+		if(count == 25) remove = true;
 	}
 	
 	public boolean shouldRemove() { return remove; }

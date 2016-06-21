@@ -343,6 +343,16 @@ public class Player extends Object{
 		height = FRAMEHEIGHTS[currentAction];
 	}
 	
+	public int setViewLeftRight(){
+		if (facing) return 1;
+		else return -1;
+	}
+	
+	public int setViewDown(){
+		if (squat) return 1;
+		else return 0;
+	}
+	
 	public void hit(int damage) {
 		if(flinching) return;
 		

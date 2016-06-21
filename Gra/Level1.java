@@ -108,12 +108,11 @@ public class Level1 extends GameState{
 		if(eventStart) eventStart();
 		if(eventDead) eventDead();
 		
-		System.out.println(player.getx() + " " + player.gety()); 
 		back.setPosition(tileMap.getx(), tileMap.gety());
 		
 		player.update();
 		
-		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() ); // TUTAJ USTAWIAMY WIDOK
+		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx()-(50*player.setViewLeftRight()), GamePanel.HEIGHT / 2 - player.gety()-(100*player.setViewDown())); // TUTAJ USTAWIAMY WIDOK
 		tileMap.update();
 		tileMap.fixBounds();
 		

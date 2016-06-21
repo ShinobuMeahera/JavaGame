@@ -100,10 +100,10 @@ public class Player extends Object{
 		cheight = 45;
 		
 		//atrybuty dasha i fireballa
-		maxFireballCooldown = 50;
+		maxFireballCooldown = 0;
 		fireballShooted = false;
 		setFireballCooldown(maxFireballCooldown);
-		dashCooldown = 150;
+		dashCooldown = 0;
 		
 		//artybuty poruszania sie
 		moveSpeed = 0.5;
@@ -121,7 +121,7 @@ public class Player extends Object{
 		low_attack = false;
 		
 		damage = 2;
-		health = maxHealth = 5;
+		health = maxHealth = 50;
 				
 		// ładowanie sprajtow, ogolnie to powinny byc tak ustawione, że co linijka to inna animacja
 		try {
@@ -179,12 +179,12 @@ public class Player extends Object{
 	}
 	
 	public boolean isFireballReady(){
-		if (fireballCooldown <= 0 && (!falling || jumping )&& !knockback && !dashing) return true;
+		if (fireballCooldown >= 100 && (!falling || jumping )&& !knockback && !dashing) return true;
 		else return false;
 	}
 	
 	public boolean isDashingReady(){
-		if (dashCooldown <= 0 && (!falling || jumping )&& !knockback) return true;
+		if (dashCooldown >= 200 && (!falling || jumping )&& !knockback) return true;
 		else return false;
 	}
 	
@@ -199,6 +199,16 @@ public class Player extends Object{
 	public void setDead() {
 		health = 0;
 		stop();
+	}
+	
+	public int getHealth(){
+		return health;
+	}
+	public int getMana(){
+		return fireballCooldown;
+	}
+	public int getSta(){
+		return dashCooldown;
 	}
 	
 	public void setAttacking() {
@@ -224,7 +234,7 @@ public class Player extends Object{
 	
 	public void setDashing() {
 		if(knockback) return;
-		if(!attack && !hi_attack  && !low_attack && !dashing) {
+		if(!attack && !hi_attack  && !low_attack && !dashing && (left || right) && !squat) {
 			dashing = true;
 			dashTimer = 0;
 		}
@@ -286,7 +296,7 @@ public class Player extends Object{
 		}
 		
 		if(dashing) {
-			dashCooldown = 150;
+			dashCooldown = 0;
 			dashTimer++;
 			if(facing) dx = moveSpeed * (10 - dashTimer * 0.04);
 			else dx = -moveSpeed * (10 - dashTimer * 0.04);
@@ -347,13 +357,13 @@ public class Player extends Object{
 		setPosition(xtemp, ytemp);
 				
 		if(dx == 0) x = (int)x;
-		if (maxFireballCooldown - fireballCooldown > 15) fireballShooted = false;
+		if (fireballCooldown > 15) fireballShooted = false;
 		
-		if (fireballCooldown < 0) fireballCooldown = 0;
-		else fireballCooldown--;
+		if (fireballCooldown >= 100) fireballCooldown = 100;
+		else fireballCooldown++;
 		
-		if (dashCooldown < 0) dashCooldown = 0;
-		else dashCooldown--;
+		if (dashCooldown >= 200) dashCooldown = 200;
+		else dashCooldown++;
 		
 		if (dashing && dashTimer > 40) dashing = false;
 		

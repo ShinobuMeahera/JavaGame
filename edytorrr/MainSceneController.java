@@ -101,6 +101,12 @@ public class MainSceneController implements Initializable {
     public void saveMapFunction(){
         mainApp.saveMap("level15.map");
     }
+
+    @FXML
+    public void saveAsMapFunction(){
+        mainApp.saveAsMap();
+    }
+
     @FXML
     public void closeFunction(){
         System.exit(1);
@@ -181,7 +187,7 @@ public class MainSceneController implements Initializable {
         x = (int)(event.getSceneX()-286)/ 30 + mapScrollHValue;
         y = (int)(event.getSceneY()-34)/ 30 + mapScrollVValue;
 
-        if(lastX != x)
+        if(lastX !=  x)
             return 1;
         else
         if(lastY != y)
@@ -252,6 +258,8 @@ public class MainSceneController implements Initializable {
     @FXML
     private void canvasMouse(MouseEvent event) {
     int xyTemp;
+
+
         if( (xyTemp = xyPos(event)) == 1) {
             if (zKey == true)
                 if(loopButton.isSelected() == true && (i >= (iMax-1)) )

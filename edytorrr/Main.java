@@ -101,7 +101,7 @@ public class Main extends Application {
                 new FileChooser.ExtensionFilter("Map", "*.Map")
         );
         mapa =  fileChooser.showOpenDialog(primaryStage);
-        System.out.println("Wybrano plik");
+        System.out.println("Wybrano plik do zalodowania");
         openMap();
 
     }
@@ -124,12 +124,12 @@ public class Main extends Application {
 			
             String delims = "\\s+";
             for(int row = 0; row < numRowsWork; row++) {
-		    String line = br.readLine();
-		    String[] tokens = line.split(delims);
-		    for(int col = 0; col < numColsWork; col++) {
-                    map[row][col] = Integer.parseInt(tokens[col]);
-     
-		    }
+                String line = br.readLine();
+                String[] tokens = line.split(delims);
+                for(int col = 0; col < numColsWork; col++) {
+                        map[row][col] = Integer.parseInt(tokens[col]);
+
+                }
             }
             br.close();
             setCanvas(1);
@@ -154,8 +154,8 @@ public class Main extends Application {
                 
                 
                 int x;
-                int y; 
-                int k = 0;
+                int y;
+
                 mController.setCanvasParam(numCols*tileSize, numRows*tileSize);
                 //System.out.println("zaladowane");
                     for(int j = 0; j<numRows; j++) 
@@ -181,6 +181,7 @@ public class Main extends Application {
             bw.newLine();
             bw.write(Integer.toString(numRows));
             bw.newLine();
+
             for(int row = 0; row < numRows; row++) {
                 for(int col = 0; col < numCols; col++) {
                     bw.write(Integer.toString(map[row][col]));
@@ -199,6 +200,26 @@ public class Main extends Application {
         }
 
     }
+    public void saveAsMap(){
+        File saveFile;
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setTitle("Save as ...");
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"))
+        );
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("map", "*.map"),
+                new FileChooser.ExtensionFilter("Map", "*.Map")
+        );
+        saveFile =  fileChooser.showSaveDialog(primaryStage);
+        saveMap(saveFile.getPath());
+
+
+        System.out.println("Wybrano plik do zalodowania");
+
+    }
+
     public void changeSize(int x, int y){
         int [][] mapTemp = map;
 

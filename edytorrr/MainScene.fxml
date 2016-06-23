@@ -7,6 +7,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
@@ -24,6 +25,9 @@
                         <MenuItem mnemonicParsing="false" onAction="#newMapFunction" text="New Map" />
                         <MenuItem mnemonicParsing="false" onAction="#loadMapFunction" text="Load Map" />
                   <MenuItem mnemonicParsing="false" onAction="#saveMapFunction" text="Save Map" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveAsMapFunction" text="Save as..." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#closeFunction" text="Close" />
                     </items>
                 </Menu>

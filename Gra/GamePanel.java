@@ -15,9 +15,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 		
 	public static Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 	// rozmiary okna * skala, powiększenie w grze
-	public static final double SCALE = 2.5;
-	public static final int WIDTH = (int) dim.getWidth()/SCALE;
-	public static final int HEIGHT = (int) dim.getHeight()/SCALE;
+	public static final int SCALE = 2;
+	public static final int WIDTH = (int) dim.getWidth()/ SCALE;
+	public static final int HEIGHT = (int) dim.getHeight()/ SCALE;
 	
 	
 	// game thread

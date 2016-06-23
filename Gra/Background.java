@@ -11,8 +11,8 @@ public class Background {
 	private double dx;
 	private double dy;
 	
-	public double width;
-	public double height;
+	public int width;
+	public int height;
 	
 	private double xscale;
 	private double yscale;
@@ -29,8 +29,8 @@ public class Background {
 		try {
 			image = ImageIO.read( getClass().getResourceAsStream(s)	);
 			
-			width = (double)image.getWidth();
-			height = (double)image.getHeight();
+			width = image.getWidth();
+			height = image.getHeight();
 			xscale = d1;
 			yscale = d2;
 			
@@ -91,8 +91,8 @@ public class Background {
 	}
 	
 	public void draw(Graphics2D g) {
-		for ( int i = 0; i < (GamePanel.WIDTH/width); i++){
-			for (int j = 0; j < (GamePanel.HEIGHT/height); j++){
+		for ( int i = 0; i < 8; i++){
+			for (int j = 0; j < 7; j++){
 				g.drawImage(image,
 				(int)(x + width*i),
 				(int)(y+ height*j),

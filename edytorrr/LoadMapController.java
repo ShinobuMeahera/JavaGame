@@ -27,7 +27,7 @@ public class LoadMapController {
     private void acceptButton(){
         if(nameTextField.getText() != null){
 
-            mainApp.openMap("level15.map");
+            //mainApp.openMap("C:\\Users\\Shinobu Meahera\\Desktop\\level15.map");
             newMapStage.close();
             }
     }

@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -23,24 +22,17 @@ public class Main extends Application {
     private VBox rootLayout;
     private Stage primaryStage;
     private MainSceneController mController;
-    public Image src;
+    public Image src = new Image("https://github.com/ShinobuMeahera/JavaGame/blob/master/Gra/tileset3.png?raw=true");
     
     // mapa
     private int[][] map;
     protected int tileSize = 30;
     public int numRows;
     public int numCols;
-    public File mapa;
 	
     
     @Override
     public void start(Stage stage) throws Exception {
-        try{
-            src = new Image(new FileInputStream("tileset3.png"));
-        }
-        catch(Exception e){
-            System.out.print("Brak src2");
-        }
         this.primaryStage = stage;
         initRootLayout();
     }
@@ -56,7 +48,7 @@ public class Main extends Application {
 
         Scene mScene = new Scene(rootLayout);
         primaryStage.setScene(mScene);
-        primaryStage.setTitle("Map Editor 2.0");
+        primaryStage.setTitle("Map Editor 1.3");
         primaryStage.show();
         mController = loader.getController();
         mController.setMainApp(this);
@@ -89,44 +81,45 @@ public class Main extends Application {
     }
     public void loadMap(){
         Parent loadMap;
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("LoadMap.fxml"));
 
-        FileChooser fileChooser = new FileChooser();
-
-        fileChooser.setTitle("Load Map");
-        fileChooser.setInitialDirectory(
-                new File(System.getProperty("user.home"))
-        );
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("map", "*.map"),
-                new FileChooser.ExtensionFilter("Map", "*.Map")
-        );
-        mapa =  fileChooser.showOpenDialog(primaryStage);
-        System.out.println("Wybrano plik");
-        openMap();
-
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(getPrimaryStage());
+            stage.setTitle("Load Existing Map");
+            stage.setScene(new Scene(loader.load()));
+            
+            LoadMapController controller = loader.getController();
+            controller.setStage(stage);
+            controller.setApp(this);
+            
+            stage.showAndWait();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
     }
-    public void openMap() {
+    public void openMap(String fileName) {
         try {
-            int numColsWork = 0;
-            int numRowsWork = 0;
-            FileReader fileReader =  new FileReader(mapa);
+            
+            FileReader fileReader =  new FileReader(fileName);
 
             BufferedReader br = new BufferedReader(fileReader);
 			
             //piersza linia odpowiada za szerokosc mapy
-            numColsWork = Integer.parseInt(br.readLine());
+            numCols = Integer.parseInt(br.readLine());
             //druga linia odpowiada za ilosc wierszy, czyli nasza wysokosc mapy
-            numRowsWork = Integer.parseInt(br.readLine());
-            numCols = numColsWork ;
-            numRows = numRowsWork ;
-            System.out.println(numCols + " " +  numRows);
-            map = new int[numRowsWork][numColsWork];
+            numRows = Integer.parseInt(br.readLine());
+            
+            map = new int[numRows][numCols];
 			
             String delims = "\\s+";
-            for(int row = 0; row < numRowsWork; row++) {
+            for(int row = 0; row < numRows; row++) {
 		    String line = br.readLine();
 		    String[] tokens = line.split(delims);
-		    for(int col = 0; col < numColsWork; col++) {
+		    for(int col = 0; col < numCols; col++) {
                     map[row][col] = Integer.parseInt(tokens[col]);
      
 		    }
@@ -197,25 +190,6 @@ public class Main extends Application {
         catch(NullPointerException e){
             System.out.println("NullPointerExe");
         }
-
-    }
-    public void changeSize(int x, int y){
-        int [][] mapTemp = map;
-
-        map = new int[y][x];
-
-        for(int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                map[row][col] = mapTemp[row][col];
-            }
-        }
-        for(int row = numRows; row < y; row++) {
-            for (int col = numCols; col < x; col++) {
-                map[row][col] = 0;
-            }
-        }
-        numCols = x;
-        numRows = y;
 
     }
     public static void main(String[] args) {

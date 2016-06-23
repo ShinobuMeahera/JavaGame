@@ -5,28 +5,22 @@
  */
 package JavaGame.edytorrr;
 
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.InterfaceAddress;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import static javafx.scene.input.KeyCode.Z;
-import static javafx.scene.input.KeyCode.X;
 
 public class MainSceneController implements Initializable {
 
@@ -37,21 +31,14 @@ public class MainSceneController implements Initializable {
     private Main mainApp;
     private GraphicsContext gc;
     private GraphicsContext gc2;
-    public  Image src2 ;
-
+    public Image src2 = new Image("https://github.com/ShinobuMeahera/JavaGame/blob/master/Gra/tileset3.png?raw=true");
     private int id;
     int x;
     int lastX;
     int y;
-    int lastY;
     int i = 0;
-    int j = 0;
-    int mapScrollHValue = 0;
-    int mapScrollVValue = 0;
-    int [] mouseLastPos = {0,0};
-    private boolean zKey = false;
-    private boolean xKey = false;
-    int iMax;
+    int mainMapval = 0;
+    private boolean ctrl = false;
 
     @FXML
     private Canvas canvas;
@@ -63,19 +50,7 @@ public class MainSceneController implements Initializable {
     private Button leftButton;
 
     @FXML
-    private ToggleButton loopButton;
-
-    @FXML
     private Label leftLabel;
-
-    @FXML
-    private Label loopLabel;
-
-    @FXML
-    private TextField hSize;
-
-    @FXML
-    private TextField vSize;
 
     @FXML
     private ScrollPane scroll;
@@ -83,8 +58,6 @@ public class MainSceneController implements Initializable {
     @FXML
     private ScrollPane mainScroll;
 
-    @FXML
-    private Slider loopControl;
 
     @FXML
     public void newMapFunction(){
@@ -93,8 +66,6 @@ public class MainSceneController implements Initializable {
     @FXML
     public void loadMapFunction(){
         mainApp.loadMap();
-        hSize.setText(Integer.toString(mainApp.numCols));
-        vSize.setText(Integer.toString(mainApp.numRows));
     }
 
     @FXML
@@ -118,7 +89,7 @@ public class MainSceneController implements Initializable {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         gc.setFill(Color.BLACK);
-        gc.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+        gc.fillRect(0,0,4000,4000);
         //System.out.println(canvas.getHeight() + " " + canvas.getWidth());
         //System.out.println(canvas.getLayoutX()+ " " + canvas.getLayoutY());
     }
@@ -131,14 +102,6 @@ public class MainSceneController implements Initializable {
     @FXML
     private void refreshButton(){
 
-    }
-
-    @FXML
-    private void sizeChange(){
-        mainApp.changeSize(Integer.parseInt(hSize.getText().toString()), Integer.parseInt(vSize.getText().toString()));
-        hSize.setText(Integer.toString(mainApp.numCols));
-        vSize.setText(Integer.toString(mainApp.numRows));
-        System.out.println("Zmieniona rozmiar");
     }
 
     @FXML
@@ -169,27 +132,16 @@ public class MainSceneController implements Initializable {
 
     }
 
-    private int xyPos(MouseEvent event){
-        mapScrollHValue = (int)(mainScroll.getHvalue()*(mainApp.numCols-33));
-        mapScrollVValue = (int)(mainScroll.getVvalue()*(mainApp.numRows-22.3));
-        mainScroll.setHvalue(mapScrollHValue/(double)(mainApp.numCols-33));
-        mainScroll.setVvalue(mapScrollVValue/(double)(mainApp.numRows-22.3));
-
+    private boolean xyPos(MouseEvent event){
+        mainMapval = (int)(mainScroll.getHvalue()*(mainApp.numCols-33));
+        mainScroll.setHvalue(mainMapval/(double)(mainApp.numCols-33));
         lastX = x;
-        lastY = y;
-
-        x = (int)(event.getSceneX()-286)/ 30 + mapScrollHValue;
-        y = (int)(event.getSceneY()-34)/ 30 + mapScrollVValue;
-
+        x = (int)(event.getSceneX()-286)/ 30 + mainMapval;
+        y = (int)(event.getSceneY()-234)/ 30;
         if(lastX != x)
-            return 1;
+            return true;
         else
-        if(lastY != y)
-            return 2;
-        else
-            return 0;
-
-
+            return false;
     }
     @FXML
     private void mouse(MouseEvent event){
@@ -200,109 +152,46 @@ public class MainSceneController implements Initializable {
         gc.setStroke(Color.MAGENTA);
         gc.strokeRect(x*30,y*30,30,30);
         canvas.setOnMousePressed(this::canvasMouse);
-        if(zKey == false){
+        if(ctrl == false);
             i = 0;
-            j = 0;
-        }
-
-        if(xKey == false){
-            mouseLastPos[0] = 0;
-            mouseLastPos[1] = 0;
-        }
 
     }
     @FXML
-    private void mainKeyPress(KeyEvent event){
-        if(event.getCode() == Z){
-            zKey = true;
-            System.out.println("Z key Pressed");
+    private void mainKey(KeyEvent event){
+        if(event.isControlDown()){
+            ctrl = true;
         }
-
-        if(event.getCode() == X){
-            xKey = true;
-            System.out.println("X key Pressed");
-        }
-
-
-    }
-
-    @FXML
-    private void mainKeyRel(KeyEvent event){
-        if(event.getCode() == Z){
-            zKey = false;
-            System.out.println("Z key Released");
-        }
-
-        if(event.getCode() == X){
-            xKey = false;
-            System.out.println("X key Released");
-        }
-
-    }
-    @FXML
-    private void loopEnable(){
-        if(loopButton.isSelected())
-            loopControl.setDisable(false);
         else
-            loopControl.setDisable(true);
+            ctrl = false;
 
-        iMax = (int) loopControl.getValue();
-        loopLabel.setText(Integer.toString(iMax));
     }
+
     @FXML
     private void canvasMouse(MouseEvent event) {
-    int xyTemp;
-        if( (xyTemp = xyPos(event)) == 1) {
-            if (zKey == true)
-                if(loopButton.isSelected() == true && (i >= (iMax-1)) )
-                    i = 0;
-                else
-                    i += 1;
+
+        if(xyPos(event))
+            if(ctrl == true)
+                i += 1;
             else
                 i = 0;
-        }else
-        if(xyTemp == 2) {
-            if (zKey == true)
-                if(loopButton.isSelected() == true && (j >= (iMax-1)) )
-                    j = 0;
-                else
-                    j += 1;
-            else
-                j = 0;
-        }
+
 
         if(event.isPrimaryButtonDown()) {
 
-            mainApp.editMap(y, x, (id + i)+(30*j));
+            mainApp.editMap(y, x, (id + i));
+
         }
         else
         if(event.isSecondaryButtonDown()) {
 
             mainApp.editMap(y, x, 0);
         }
-        if (xKey == true) {
-            if(mouseLastPos[0] == 0 && mouseLastPos[1] == 0) {
-                mouseLastPos[0] = x;
-                mouseLastPos[1] = y;
-            }
-            else{
-                for(int  iy = 0; iy <= Math.abs(mouseLastPos[1] - y); iy++) {
-                    for (int ix = 0; ix <= Math.abs(mouseLastPos[0] - x); ix++) {
-                        mainApp.editMap(mouseLastPos[1]- iy, mouseLastPos[0] + ix, (id + i));
-                        System.out.print("Petla X  :" + ix + "  d :" + Math.abs(mouseLastPos[0] - x));
-                    }
-                }
-            }
-        }
-        else{
-            mouseLastPos[0] = 0;
-            mouseLastPos[1] = 0;
-        }
-        xyPos(event);
+
+
+
+
         mainApp.setCanvas(1);
-        System.out.println("x: " + x +" y: " + y);
         System.out.println("x: " + x +" y: " + y + " " + i);
-        System.out.println("Z  " + zKey + " x " + xKey);
 
     }
     private void refreshLeft(){
@@ -327,14 +216,6 @@ public class MainSceneController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try{
-            src2 = new Image(new FileInputStream("tileset3.png"));
-        }
-        catch(Exception e){
-            System.out.print("Brak src2");
-        }
-        loopControl.setMin(2);
-        loopControl.setMax(6);
         scroll.setOnScrollFinished(this::scrollBar);
         gc = canvas.getGraphicsContext2D();
         refreshLeft();

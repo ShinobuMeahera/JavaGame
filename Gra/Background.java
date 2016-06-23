@@ -11,8 +11,8 @@ public class Background {
 	private double dx;
 	private double dy;
 	
-	private int width;
-	private int height;
+	public double width;
+	public double height;
 	
 	private double xscale;
 	private double yscale;
@@ -27,17 +27,19 @@ public class Background {
 	
 	public Background(String s, double d1, double d2) {
 		try {
-			image = ImageIO.read(
-				getClass().getResourceAsStream(s)
-			);
-			width = image.getWidth();
-			height = image.getHeight();
+			image = ImageIO.read( getClass().getResourceAsStream(s)	);
+			
+			width = (double)image.getWidth();
+			height = (double)image.getHeight();
 			xscale = d1;
 			yscale = d2;
+			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 	
 	public Background(String s, double ms, int x, int y, int w, int h) {
@@ -89,23 +91,26 @@ public class Background {
 	}
 	
 	public void draw(Graphics2D g) {
-		for ( int i = 0; i < 6; i++){
-			for (int j = 0; j < 4; j++){
-				g.drawImage(image, (int)x+width*i, height*j+(int)y, null);
+		for ( int i = 0; i < (GamePanel.WIDTH/width); i++){
+			for (int j = 0; j < (GamePanel.HEIGHT/height); j++){
+				g.drawImage(image,
+				(int)(x + width*i),
+				(int)(y+ height*j),
+				null);
 			}
 		}
 		
 		if(x < 0) {
-			g.drawImage(image, (int)x + GamePanel.WIDTH, (int)y, null);
+			g.drawImage(image, (int)x + (int)GamePanel.WIDTH, (int)y, null);
 		}
 		if(x > 0) {
-			g.drawImage(image, (int)x - GamePanel.WIDTH, (int)y, null);
+			g.drawImage(image, (int)x - (int)GamePanel.WIDTH, (int)y, null);
 		}
 		if(y < 0) {
-			g.drawImage(image, (int)x, (int)y + GamePanel.HEIGHT, null);
+			g.drawImage(image, (int)x, (int)y + (int)GamePanel.HEIGHT, null);
 		}
 		if(y > 0) {
-			g.drawImage(image, (int)x, (int)y - GamePanel.HEIGHT, null);
+			g.drawImage(image, (int)x, (int)y - (int)GamePanel.HEIGHT, null);
 		}
 	}
 	

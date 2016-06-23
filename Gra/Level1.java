@@ -13,7 +13,7 @@ public class Level1 extends GameState{
 	private Player player;
 	private TileMap tileMap;
 	private FireBall fireball;
-	private BufferedImage background = null;
+	//private BufferedImage background = null;
 	private ArrayList<Enemy> enemies;
 	private ArrayList<FireBall> fireballs;
 	private ArrayList<EnergyParticle> energyParticles;
@@ -21,6 +21,7 @@ public class Level1 extends GameState{
 	private BufferedImage mpBar = null;
 	private BufferedImage staBar = null;
 	private BufferedImage hudBar = null;
+	private EnemyBoss1 eb;
 	
 	private int eventCount = 0;
 	private boolean eventStart;
@@ -63,7 +64,7 @@ public class Level1 extends GameState{
 		populateEnemies();
 		
 		try{
-			background = ImageIO.read( getClass().getResourceAsStream("background.png"));
+			//background = ImageIO.read( getClass().getResourceAsStream("background.png"));
 			hpBar = ImageIO.read( getClass().getResourceAsStream("hp-bar.png"));
 			mpBar = ImageIO.read( getClass().getResourceAsStream("fireball-bar.png"));
 			staBar = ImageIO.read( getClass().getResourceAsStream("dash-bar.png"));
@@ -75,7 +76,6 @@ public class Level1 extends GameState{
 		enemies.clear();
 		EnemySkeleton es;
 		EnemyGhost eg;
-		EnemyBoss1 eb;
 		
 		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(550, 2150);
@@ -157,7 +157,7 @@ public class Level1 extends GameState{
 		player.setLeft(Keys.keyState[Keys.LEFT]);
 		player.setRight(Keys.keyState[Keys.RIGHT]);
 		player.setDown(Keys.keyState[Keys.DOWN]);
-		if(Keys.isPressed(Keys.ENTER)) player.setAttacking();
+		if(Keys.isPressed(Keys.BUTTON3)) player.setAttacking();
 		if(Keys.isPressed(Keys.ESCAPE)) gsm.setPaused(true);
 		
 		if(Keys.isPressed(Keys.BUTTON2)){
@@ -178,6 +178,9 @@ public class Level1 extends GameState{
 	}
 	
 	public void draw(Graphics2D g) {
+		g.setColor(java.awt.Color.GREEN);
+		Rectangle r = new Rectangle(0,0,GamePanel.WIDTH,GamePanel.HEIGHT);
+		g.fill(r);
 		
 		back.draw(g);
 		
@@ -192,10 +195,13 @@ public class Level1 extends GameState{
 		g.drawImage(staBar, (player.getSta()/2) - 75, 15+32, null);
 		g.drawImage(hudBar, 0, 13, null);
 		
+		eb.drawHPBar(g);
+		
 		g.setColor(java.awt.Color.GREEN);
 		for(int i = 0; i < tb.size(); i++) {
 			g.fill(tb.get(i));
 		}
+		
 		
 		
 	}

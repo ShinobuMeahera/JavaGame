@@ -5,16 +5,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 // PLIK GOTOWY
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements Runnable, KeyListener{
 		
+	public static Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 	// rozmiary okna * skala, powiększenie w grze
-	public static final int WIDTH = 640;
-	public static final int HEIGHT = 360;
-	public static final int SCALE = 2;
+	public static final double SCALE = 2.5;
+	public static final int WIDTH = (int) dim.getWidth()/SCALE;
+	public static final int HEIGHT = (int) dim.getHeight()/SCALE;
+	
 	
 	// game thread
 	private Thread thread;
@@ -31,7 +35,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 		
 	public GamePanel() {
 		super();
-		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setFocusable(true);
 		requestFocus();
 	}
@@ -47,7 +51,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 	
 	private void init() {
 		
-		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage((int)WIDTH, (int)HEIGHT, BufferedImage.TYPE_INT_RGB);
 		g = (Graphics2D) image.getGraphics();
 				
 		running = true;
@@ -99,7 +103,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 	private void drawToScreen() {
 		Graphics g2 = getGraphics();
 		
-		g2.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+		g2.drawImage(image, 0, 0,(int) (WIDTH * SCALE), (int)(HEIGHT  * SCALE), null);
 		g2.dispose();
 		
 	}

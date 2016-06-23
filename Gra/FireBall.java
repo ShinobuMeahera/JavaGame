@@ -13,8 +13,7 @@ public class FireBall extends Object {
 	protected Animation animation = new Animation();
 	private static boolean facingRight;
 	private Rectangle attackRect;
-	private int damage;
-	
+	private int damage;	
 	
 	public FireBall(TileMap tm, boolean right) {
 		

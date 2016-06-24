@@ -27,7 +27,7 @@ public class Main extends Application {
     
     // mapa
     private int[][] map;
-    protected int tileSize = 30;
+    public int tileSize = 30;
     public int numRows;
     public int numCols;
     public File mapa;
@@ -102,6 +102,7 @@ public class Main extends Application {
         );
         mapa =  fileChooser.showOpenDialog(primaryStage);
         System.out.println("Wybrano plik do zalodowania");
+        System.out.println(mapa.getPath());
         openMap();
 
     }

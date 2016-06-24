@@ -15,6 +15,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
@@ -51,7 +52,17 @@ public class MainSceneController implements Initializable {
     int [] mouseLastPos = {0,0};
     private boolean zKey = false;
     private boolean xKey = false;
+    private int tileSize = 30;
     int iMax;
+
+    @FXML
+    private MenuItem saveMenuItem;
+
+    @FXML
+    private AnchorPane controlBar;
+
+    @FXML
+    private MenuItem saveAsMenuItem;
 
     @FXML
     private Canvas canvas;
@@ -87,19 +98,40 @@ public class MainSceneController implements Initializable {
     private Slider loopControl;
 
     @FXML
+    private Slider scaleSlider;
+
+    @FXML
     public void newMapFunction(){
         mainApp.newMap();
     }
-    @FXML
-    public void loadMapFunction(){
-        mainApp.loadMap();
+
+    private void hudEnable(){
         hSize.setText(Integer.toString(mainApp.numCols));
         vSize.setText(Integer.toString(mainApp.numRows));
+        saveMenuItem.setDisable(false);
+        saveAsMenuItem.setDisable(false);
+        controlBar.setDisable(false);
     }
 
     @FXML
+    public void loadMapFunction(){
+        mainApp.loadMap();
+        hudEnable();
+    }
+
+    @FXML
+    public void scaleView(){
+        tileSize= (int)((30*scaleSlider.getValue())/100);
+        mainApp.tileSize = tileSize;
+        mainApp.setCanvas(1);
+        scaleSlider.setValue((tileSize/30.0)*100);
+        System.out.println(tileSize);
+
+        System.out.println((scaleSlider.getValue())/100);
+    }
+    @FXML
     public void saveMapFunction(){
-        mainApp.saveMap("level15.map");
+        mainApp.saveMap(mainApp.mapa.getPath());
     }
 
     @FXML
@@ -125,13 +157,13 @@ public class MainSceneController implements Initializable {
 
         gc.setFill(Color.BLACK);
         gc.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
-        //System.out.println(canvas.getHeight() + " " + canvas.getWidth());
+        System.out.println(canvas.getHeight() + " " + canvas.getWidth());
         //System.out.println(canvas.getLayoutX()+ " " + canvas.getLayoutY());
     }
 
     @FXML
     public void print(int x,int y,Image img,int row, int col){
-        gc.drawImage(img, col*30, row*30, 30, 30, x, y, 30, 30);
+        gc.drawImage(img, col*30, row*30, 30, 30, x, y, tileSize, tileSize);
     }
 
     @FXML
@@ -176,16 +208,16 @@ public class MainSceneController implements Initializable {
     }
 
     private int xyPos(MouseEvent event){
-        mapScrollHValue = (int)(mainScroll.getHvalue()*(mainApp.numCols-33));
-        mapScrollVValue = (int)(mainScroll.getVvalue()*(mainApp.numRows-22.3));
-        mainScroll.setHvalue(mapScrollHValue/(double)(mainApp.numCols-33));
-        mainScroll.setVvalue(mapScrollVValue/(double)(mainApp.numRows-22.3));
+        mapScrollHValue = (int)(mainScroll.getHvalue()*(mainApp.numCols-33/(scaleSlider.getValue()/100)));
+        mapScrollVValue = (int)(mainScroll.getVvalue()*(mainApp.numRows-22.3/(scaleSlider.getValue()/100)));
+        mainScroll.setHvalue(mapScrollHValue/(double)(mainApp.numCols-33/(scaleSlider.getValue()/100)));
+        mainScroll.setVvalue(mapScrollVValue/(double)(mainApp.numRows-22.3/(scaleSlider.getValue()/100)));
 
         lastX = x;
         lastY = y;
 
-        x = (int)(event.getSceneX()-286)/ 30 + mapScrollHValue;
-        y = (int)(event.getSceneY()-34)/ 30 + mapScrollVValue;
+        x = (int)(event.getSceneX()-286)/ tileSize + mapScrollHValue;
+        y = (int)(event.getSceneY()-34)/ tileSize + mapScrollVValue;
 
         if(lastX !=  x)
             return 1;
@@ -204,7 +236,7 @@ public class MainSceneController implements Initializable {
 
         mainApp.setCanvas(1);
         gc.setStroke(Color.MAGENTA);
-        gc.strokeRect(x*30,y*30,30,30);
+        gc.strokeRect(x*tileSize,y*tileSize,tileSize,tileSize);
         canvas.setOnMousePressed(this::canvasMouse);
         if(zKey == false){
             i = 0;
@@ -281,7 +313,7 @@ public class MainSceneController implements Initializable {
 
         if(event.isPrimaryButtonDown()) {
 
-            mainApp.editMap(y, x, (id + i)+(30*j));
+            mainApp.editMap(y, x, (id + i)+(tileSize*j));
         }
         else
         if(event.isSecondaryButtonDown()) {

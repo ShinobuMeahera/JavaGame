@@ -24,9 +24,9 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#newMapFunction" text="New Map" />
                         <MenuItem mnemonicParsing="false" onAction="#loadMapFunction" text="Load Map" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveMapFunction" text="Save Map" />
+                  <MenuItem fx:id="saveMenuItem" disable="true" mnemonicParsing="false" onAction="#saveMapFunction" text="Save Map" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveAsMapFunction" text="Save as..." />
+                  <MenuItem fx:id="saveAsMenuItem" disable="true" mnemonicParsing="false" onAction="#saveAsMapFunction" text="Save as..." />
                   <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#closeFunction" text="Close" />
                     </items>
@@ -47,7 +47,7 @@
             <items>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
                     <content>
-                        <AnchorPane prefHeight="693.0" prefWidth="278.0">
+                        <AnchorPane fx:id="controlBar" disable="true" prefHeight="693.0" prefWidth="278.0">
                             <children>
                                 <Label layoutX="37.0" layoutY="36.0" text="Map Reload :" />
                                 <Button layoutX="139.0" layoutY="32.0" mnemonicParsing="false" onAction="#refreshButton" text="Make" textAlignment="CENTER" />
@@ -78,6 +78,7 @@
                         <Slider fx:id="loopControl" disable="true" layoutX="104.0" layoutY="454.0" onMouseReleased="#loopEnable" prefHeight="14.0" prefWidth="111.0" />
                         <Label fx:id="loopLabel" layoutX="159.0" layoutY="468.0" text="0" />
                         <ToggleButton fx:id="loopButton" layoutX="223.0" layoutY="448.0" mnemonicParsing="false" onMouseClicked="#loopEnable" prefHeight="25.0" prefWidth="41.0" text="On" />
+                        <Slider fx:id="scaleSlider" layoutX="54.0" layoutY="511.0" onMouseDragged="#scaleView" onMouseReleased="#scaleView" />
                             </children></AnchorPane>
                     </content>
                 </ScrollPane>

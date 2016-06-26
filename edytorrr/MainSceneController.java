@@ -55,6 +55,7 @@ public class MainSceneController implements Initializable {
     private int tileSize = 30;
     int iMax;
 
+
     @FXML
     private MenuItem saveMenuItem;
 
@@ -83,6 +84,9 @@ public class MainSceneController implements Initializable {
     private Label loopLabel;
 
     @FXML
+    private Label scaleLabel;
+
+    @FXML
     private TextField hSize;
 
     @FXML
@@ -101,11 +105,10 @@ public class MainSceneController implements Initializable {
     private Slider scaleSlider;
 
     @FXML
-    public void newMapFunction(){
-        mainApp.newMap();
+    public void newMapFunction(){ mainApp.newMap();
     }
 
-    private void hudEnable(){
+    public void hudEnable(){
         hSize.setText(Integer.toString(mainApp.numCols));
         vSize.setText(Integer.toString(mainApp.numRows));
         saveMenuItem.setDisable(false);
@@ -116,7 +119,7 @@ public class MainSceneController implements Initializable {
     @FXML
     public void loadMapFunction(){
         mainApp.loadMap();
-        hudEnable();
+
     }
 
     @FXML
@@ -126,7 +129,7 @@ public class MainSceneController implements Initializable {
         mainApp.setCanvas(1);
         scaleSlider.setValue((tileSize/30.0)*100);
         System.out.println(tileSize);
-
+        scaleLabel.setText(Integer.toString(tileSize));
         System.out.println((scaleSlider.getValue())/100);
     }
     @FXML
@@ -167,8 +170,8 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void refreshButton(){
-
+    private void reloadButton(){
+        mainApp.openMap();
     }
 
     @FXML
@@ -176,6 +179,7 @@ public class MainSceneController implements Initializable {
         mainApp.changeSize(Integer.parseInt(hSize.getText().toString()), Integer.parseInt(vSize.getText().toString()));
         hSize.setText(Integer.toString(mainApp.numCols));
         vSize.setText(Integer.toString(mainApp.numRows));
+        mainApp.setCanvas(1);
         System.out.println("Zmieniona rozmiar");
     }
 
@@ -208,16 +212,17 @@ public class MainSceneController implements Initializable {
     }
 
     private int xyPos(MouseEvent event){
-        mapScrollHValue = (int)(mainScroll.getHvalue()*(mainApp.numCols-33/(scaleSlider.getValue()/100)));
-        mapScrollVValue = (int)(mainScroll.getVvalue()*(mainApp.numRows-22.3/(scaleSlider.getValue()/100)));
-        mainScroll.setHvalue(mapScrollHValue/(double)(mainApp.numCols-33/(scaleSlider.getValue()/100)));
-        mainScroll.setVvalue(mapScrollVValue/(double)(mainApp.numRows-22.3/(scaleSlider.getValue()/100)));
+        mapScrollHValue = (int)(mainScroll.getHvalue()*(int)((mainApp.numCols-32/(scaleSlider.getValue()/100))));
+        mapScrollVValue = (int)(mainScroll.getVvalue()*(int)((mainApp.numRows-23/(scaleSlider.getValue()/100))));
+        mainScroll.setHvalue(mapScrollHValue/(double)(mainApp.numCols-32/(scaleSlider.getValue()/100)));
+        mainScroll.setVvalue(mapScrollVValue/(double)(mainApp.numRows-23/(scaleSlider.getValue()/100)));
 
         lastX = x;
         lastY = y;
 
-        x = (int)(event.getSceneX()-286)/ tileSize + mapScrollHValue;
-        y = (int)(event.getSceneY()-34)/ tileSize + mapScrollVValue;
+        x = (int)(event.getSceneX()-302)/ tileSize + mapScrollHValue;
+        y = (int)(event.getSceneY()-27)/ tileSize + mapScrollVValue;
+        System.out.println("x : " + (event.getSceneX()-302) + "y : " + (event.getSceneY()-27));
 
         if(lastX !=  x)
             return 1;
@@ -259,7 +264,7 @@ public class MainSceneController implements Initializable {
         if(event.getCode() == X){
             xKey = true;
             System.out.println("X key Pressed");
-        }
+        } 
 
 
     }
@@ -373,8 +378,7 @@ public class MainSceneController implements Initializable {
         catch(Exception e){
             System.out.print("Brak src2");
         }
-        loopControl.setMin(2);
-        loopControl.setMax(6);
+
         scroll.setOnScrollFinished(this::scrollBar);
         gc = canvas.getGraphicsContext2D();
         refreshLeft();

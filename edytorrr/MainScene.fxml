@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="720.0" maxWidth="1280.0" minHeight="720.0" minWidth="1280.0" onKeyPressed="#mainKeyPress" onKeyReleased="#mainKeyRel" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JavaGame.edytorrr.MainSceneController">
+<VBox maxHeight="730.0" maxWidth="1280.0" minHeight="720.0" minWidth="1280.0" onKeyPressed="#mainKeyPress" onKeyReleased="#mainKeyRel" prefHeight="730.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JavaGame.edytorrr.MainSceneController">
     <children>
         <MenuBar>
             <menus>
@@ -43,14 +43,14 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <SplitPane dividerPositions="0.23244147157190637" pickOnBounds="false" prefHeight="701.0" prefWidth="1280.0">
+        <SplitPane dividerPositions="0.23244147157190637" focusTraversable="false" pickOnBounds="false" prefHeight="701.0" prefWidth="1280.0">
             <items>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
                     <content>
                         <AnchorPane fx:id="controlBar" disable="true" prefHeight="693.0" prefWidth="278.0">
                             <children>
                                 <Label layoutX="37.0" layoutY="36.0" text="Map Reload :" />
-                                <Button layoutX="139.0" layoutY="32.0" mnemonicParsing="false" onAction="#refreshButton" text="Make" textAlignment="CENTER" />
+                                <Button layoutX="139.0" layoutY="32.0" mnemonicParsing="false" onAction="#reloadButton" text="Make" textAlignment="CENTER" />
                                 <ScrollPane fx:id="scroll" layoutX="18.0" layoutY="80.0" maxHeight="1.7976931348623157E308" onScroll="#scrollBar" prefHeight="196.0" prefWidth="242.0">
                                     <content>
                                         <Canvas fx:id="canvas2" height="180.0" onMouseClicked="#leftCanvasMouse" width="900.0" />
@@ -75,18 +75,20 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Slider fx:id="loopControl" disable="true" layoutX="104.0" layoutY="454.0" onMouseReleased="#loopEnable" prefHeight="14.0" prefWidth="111.0" />
-                        <Label fx:id="loopLabel" layoutX="159.0" layoutY="468.0" text="0" />
+                        <Slider fx:id="loopControl" disable="true" layoutX="104.0" layoutY="454.0" majorTickUnit="6.0" max="6.0" min="2.0" minorTickCount="2" onMouseReleased="#loopEnable" prefHeight="14.0" prefWidth="111.0" showTickLabels="true" showTickMarks="true" value="2.0" />
+                        <Label fx:id="loopLabel" layoutX="156.0" layoutY="473.0" text="2" />
                         <ToggleButton fx:id="loopButton" layoutX="223.0" layoutY="448.0" mnemonicParsing="false" onMouseClicked="#loopEnable" prefHeight="25.0" prefWidth="41.0" text="On" />
-                        <Slider fx:id="scaleSlider" layoutX="54.0" layoutY="511.0" onMouseDragged="#scaleView" onMouseReleased="#scaleView" />
+                        <Slider fx:id="scaleSlider" layoutX="103.0" layoutY="497.0" onMouseDragged="#scaleView" onMouseReleased="#scaleView" prefHeight="14.0" prefWidth="163.0" showTickMarks="true" value="100.0" />
+                        <Label layoutX="14.0" layoutY="495.0" text="Skaluj widok : " />
+                        <Label fx:id="scaleLabel" layoutX="178.0" layoutY="512.0" text="30" />
                             </children></AnchorPane>
                     </content>
                 </ScrollPane>
                 <AnchorPane prefHeight="589.0" prefWidth="978.0">
                     <children>
-                        <ScrollPane fx:id="mainScroll" layoutY="7.0" prefHeight="687.0" prefWidth="994.0">
+                        <ScrollPane fx:id="mainScroll" hbarPolicy="ALWAYS" prefHeight="705.0" prefWidth="975.0" vbarPolicy="ALWAYS">
                             <content>
-                                <Canvas fx:id="canvas" height="200.0" onMouseDragged="#canvasMouse" onMouseMoved="#mouse" width="310.0" />
+                                <Canvas fx:id="canvas" onMouseDragged="#canvasMouse" onMouseMoved="#mouse" />
                             </content>
                         </ScrollPane>
                     </children>

@@ -47,9 +47,12 @@ public class NewMapController {
     @FXML
     private void acceptButton(){
         if(getHeight() != 0 && getWidth() != 0 && getName() != null){
-               // canvas.setHeight (getHeight());
-                //canvas.setWidth (getWidth());
-                newMapStage.close();
+               // canvas.setHeight ();
+                //canvas.setWidth ();
+            System.out.println("x : " + getWidth() + "y : " + getWidth());
+            System.out.println("Name : " + getName());
+            mainApp.createNewMap(getWidth(), getHeight(), getName());
+            newMapStage.close();
                
             }
     }

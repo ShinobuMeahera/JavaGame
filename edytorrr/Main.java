@@ -26,7 +26,7 @@ public class Main extends Application {
     public Image src;
     
     // mapa
-    private int[][] map;
+    private int[][] map = new int[0][0];
     public int tileSize = 30;
     public int numRows;
     public int numCols;
@@ -81,6 +81,7 @@ public class Main extends Application {
             
             NewMapController controller = loader.getController();
             controller.setStage(stage);
+            controller.setApp(this);
             stage.showAndWait();
         }
         catch(IOException e){
@@ -101,9 +102,23 @@ public class Main extends Application {
                 new FileChooser.ExtensionFilter("Map", "*.Map")
         );
         mapa =  fileChooser.showOpenDialog(primaryStage);
+        if(mapa == null)
+            return;
         System.out.println("Wybrano plik do zalodowania");
         System.out.println(mapa.getPath());
+
         openMap();
+
+    }
+    public void createNewMap(int x, int y, String name){
+        mapa = new File(name);
+        numRows = 0;
+        numCols = 0;
+        map = new int[0][0];
+        changeSize(x,y);
+        setCanvas(1);
+
+        mController.hudEnable();
 
     }
     public void openMap() {
@@ -133,6 +148,7 @@ public class Main extends Application {
                 }
             }
             br.close();
+            mController.hudEnable();
             setCanvas(1);
 			
             }
@@ -216,6 +232,7 @@ public class Main extends Application {
         saveFile =  fileChooser.showSaveDialog(primaryStage);
         saveMap(saveFile.getPath());
 
+        mapa = saveFile;
 
         System.out.println("Wybrano plik do zalodowania");
 
@@ -223,11 +240,17 @@ public class Main extends Application {
 
     public void changeSize(int x, int y){
         int [][] mapTemp = map;
+        int rowDiff = 0;
+        int colDiff = 0;
 
         map = new int[y][x];
+        if(numRows > y)
+            rowDiff = numRows - y;
+        if(numCols > x)
+            colDiff = numCols - x;
 
-        for(int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
+        for(int row = 0; row < numRows - rowDiff; row++) {
+            for (int col = 0; col < numCols - colDiff; col++) {
                 map[row][col] = mapTemp[row][col];
             }
         }

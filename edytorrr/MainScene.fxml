@@ -31,16 +31,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#closeFunction" text="Close" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
             </menus>
         </MenuBar>
         <SplitPane dividerPositions="0.23244147157190637" focusTraversable="false" pickOnBounds="false" prefHeight="701.0" prefWidth="1280.0">

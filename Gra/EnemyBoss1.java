@@ -3,6 +3,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import java.awt.Font;
 
 // PLIK GOTOWY
 
@@ -20,12 +21,20 @@ public class EnemyBoss1 extends Enemy {
 	private double b;
 	private int currentAction;
 	private boolean playerCatch;
+	private int szerokosc;
 	
+	private double hp_max;
+	private double hp;
+	private double maxHp;
+	private final Font font = new Font("Viner Hand ITC", Font.PLAIN, 18);
 	public EnemyBoss1(TileMap tm, Player p) {
 		
 		super(tm);
 		player = p;
-		health = maxHealth = 100;
+		
+		health =  50;
+		maxHealth = 50;
+		
 		lastBreath = 5;
 		width = 57*2;
 		height = 88*2;
@@ -62,14 +71,16 @@ public class EnemyBoss1 extends Enemy {
 		tick++;
 		eventCount++;
 		
+		hp = (double)health;
+		maxHp = (double)maxHealth;
+		
+		hp_max = hp/maxHp;
+		
 		if (eventCount % 50 == 0){
 			
 		}
 		if (dead) {
-			
 			lastBreath--;
-			
-
 			if (lastBreath <= 0) remove = true;
 		}
 		
@@ -132,22 +143,23 @@ public class EnemyBoss1 extends Enemy {
 		
 		// update animation
 		animation.update();
+				
 	}
 	
 	public void draw(Graphics2D g) {
 		super.draw(g);
-		if (playerCatch){
-			g.drawImage(hpBar, 70, 72, health*10/2, 8, null);
-
-		}
 	}
 	
 	public void drawHPBar(Graphics2D g){
+	if (dead) return;
+	
 	if (playerCatch){
-
-			g.drawImage(hpBarOutline, 68, 70, 504, 12, null);
 			
-			g.drawString("Andromalius", GamePanel.WIDTH/2, 60);
+			g.drawImage(hpBar, 72, 122, (int)((GamePanel.WIDTH-142)*hp_max ), 14, null);
+			g.drawImage(hpBarOutline, 0+70, 0+120, GamePanel.WIDTH-140, 16, null);
+			
+			g.setFont(font);
+			g.drawString("Andromalius", GamePanel.WIDTH/2-20, 105);
 		}
 	}
 }

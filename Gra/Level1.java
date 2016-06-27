@@ -3,6 +3,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import java.lang.String;
 
 // PLIK GOTOWY
 
@@ -13,7 +14,6 @@ public class Level1 extends GameState{
 	private Player player;
 	private TileMap tileMap;
 	private FireBall fireball;
-	//private BufferedImage background = null;
 	private ArrayList<Enemy> enemies;
 	private ArrayList<FireBall> fireballs;
 	private ArrayList<EnergyParticle> energyParticles;
@@ -34,18 +34,18 @@ public class Level1 extends GameState{
 	}
 	
 	public void init() {
-		back = new Background("tlo.png", 0.2);
+		back = new Background("tlo.png", 0.5);
 
 		// tilemap
 		tileMap = new TileMap(30);
 		tileMap.loadTiles("tileset3.png");
-		tileMap.loadMap("level15.map");
+		tileMap.loadMap("Mapy/level15.map");
 		tileMap.setPosition(0, 0);
 		tileMap.setTween(0.05);
 		
 		//player
 		player = new Player(tileMap);
-		player.setPosition(720, 2130);	
+		player.setPosition(180, 1115);	
 		fireballs = new ArrayList<FireBall>();
 		
 		//takie ladne zielone intro
@@ -64,7 +64,6 @@ public class Level1 extends GameState{
 		populateEnemies();
 		
 		try{
-			//background = ImageIO.read( getClass().getResourceAsStream("background.png"));
 			hpBar = ImageIO.read( getClass().getResourceAsStream("hp-bar.png"));
 			mpBar = ImageIO.read( getClass().getResourceAsStream("fireball-bar.png"));
 			staBar = ImageIO.read( getClass().getResourceAsStream("dash-bar.png"));
@@ -78,22 +77,33 @@ public class Level1 extends GameState{
 		EnemyGhost eg;
 		
 		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(550, 2150);
+		es.setPosition(660, 1175);
 		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(920, 2220);
+		es.setPosition(1035, 1118);
 		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(1200, 2220);
+		es.setPosition(808, 1118);
 		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(340, 200);
 		enemies.add(es);
 		
-				
+		es = new EnemySkeleton(tileMap, player);
+		es.setPosition(1764, 1088);
+		enemies.add(es);
+		
+		
+		eg = new EnemyGhost(tileMap, player);
+		eg.setPosition(1464, 1088);
+		enemies.add(eg);
+
+		eg = new EnemyGhost(tileMap, player);
+		eg.setPosition(1956, 1088);
+		enemies.add(eg);		
 				
 		eg = new EnemyGhost(tileMap, player);
 		eg.setPosition(1720, 2250);
@@ -131,6 +141,7 @@ public class Level1 extends GameState{
 		tileMap.update();
 		tileMap.fixBounds();
 		
+		System.out.println(player.getx() + " " + player.gety());
 		for(int i = 0; i < fireballs.size(); i++){
 			FireBall f = fireballs.get(i);
 			f.update(enemies);
@@ -139,6 +150,8 @@ public class Level1 extends GameState{
 				i--;
 			}
 		}
+		
+		
 		
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy e = enemies.get(i);
@@ -196,6 +209,11 @@ public class Level1 extends GameState{
 		g.drawImage(hudBar, 0, 13, null);
 		
 		eb.drawHPBar(g);
+		
+		/*try {
+			String tekst = new String(String.parseString(player.moveSpeed));
+			g.drawString(tekst, GamePanel.WIDTH-150, 50);
+		} catch (Exception e){}*/
 		
 		g.setColor(java.awt.Color.GREEN);
 		for(int i = 0; i < tb.size(); i++) {

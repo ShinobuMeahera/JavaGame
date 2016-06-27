@@ -19,15 +19,22 @@ public class MenuState extends GameState {
 	
 	private Font font;
 	private Font font2;
+	private double b;
+	private int tick;
+	private double yPos;
 	
 	public MenuState(GameStateManager gsm) {
 		
 		super(gsm);
 			// titles and fonts
 			titleColor = Color.WHITE;
-			titleFont = new Font("Times New Roman", Font.PLAIN, 28);
+			titleFont = new Font("Viner Hand ITC", Font.PLAIN, 28);
 			font = new Font("Arial", Font.PLAIN, 14);
-			font2 = new Font("Arial", Font.PLAIN, 10);	
+			font2 = new Font("Arial", Font.PLAIN, 10);
+
+		tick = 0;
+		b = Math.random() * 0.06 + 0.07;
+		yPos = (GamePanel.HEIGHT/2 - 100);
 	}
 	
 	public void init() {}
@@ -35,6 +42,8 @@ public class MenuState extends GameState {
 	public void update() {
 		// check keys
 		handleInput();
+		tick++;
+		yPos += Math.sin(b * tick);
 	}
 	
 	public void draw(Graphics2D g) {
@@ -46,13 +55,13 @@ public class MenuState extends GameState {
 		// draw title
 		g.setColor(titleColor);
 		g.setFont(titleFont);
-		g.drawString("SUPER PROJEKT GEJM", GamePanel.WIDTH/2 - 150, GamePanel.HEIGHT/2 - 50);
+		g.drawString("ANDORMALIUS", GamePanel.WIDTH/2 - 150, (int)yPos);
 		
 		// draw menu options
 		g.setFont(font);
 		g.setColor(Color.WHITE);
-		g.drawString("Zaciuraj paru pojebuff", 	GamePanel.WIDTH/2 - 100, 	GamePanel.HEIGHT/2);
-		g.drawString("Wykurwiaj w sina dal", 	GamePanel.WIDTH/2 - 100,	GamePanel.HEIGHT/2 + 30);
+		g.drawString("Graj", 	GamePanel.WIDTH/2 - 100, 	GamePanel.HEIGHT/2);
+		g.drawString("Zakoncz", 	GamePanel.WIDTH/2 - 100,	GamePanel.HEIGHT/2 + 30);
 		
 		// draw point
 		if(currentChoice == 0) g.fillRect(		GamePanel.WIDTH/2 - 120, GamePanel.HEIGHT/2 - 5, 		5, 5);
@@ -60,7 +69,7 @@ public class MenuState extends GameState {
 		
 		// other
 		g.setFont(font2);
-		g.drawString("Dwa tysiunce szesnascie, kopirajt baj Pszemeg i Anyszka", 10, 250);
+		g.drawString("Dwa tysiunce szesnascie, kopirajt baj Pszemeg i Anyszka", 10, GamePanel.HEIGHT-50);
 		
 	}
 	

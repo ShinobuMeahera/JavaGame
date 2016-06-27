@@ -27,6 +27,7 @@ public class EnemyBoss1 extends Enemy {
 	private double hp;
 	private double maxHp;
 	private final Font font = new Font("Viner Hand ITC", Font.PLAIN, 18);
+	
 	public EnemyBoss1(TileMap tm, Player p) {
 		
 		super(tm);
@@ -151,15 +152,15 @@ public class EnemyBoss1 extends Enemy {
 	}
 	
 	public void drawHPBar(Graphics2D g){
-	if (dead) return;
+		if (dead) return;
 	
-	if (playerCatch){
+		if (playerCatch){
 			
 			g.drawImage(hpBar, 72, 122, (int)((GamePanel.WIDTH-142)*hp_max ), 14, null);
 			g.drawImage(hpBarOutline, 0+70, 0+120, GamePanel.WIDTH-140, 16, null);
 			
 			g.setFont(font);
 			g.drawString("Andromalius", GamePanel.WIDTH/2-20, 105);
+			}
 		}
-	}
 }

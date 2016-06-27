@@ -25,7 +25,7 @@ public class Main extends Application {
     private MainSceneController mController;
     public Image src;
     
-    // mapa
+
     private int[][] map = new int[0][0];
     public int tileSize = 30;
     public int numRows;
@@ -50,16 +50,16 @@ public class Main extends Application {
     }
     private void initRootLayout(){
         try{
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource("MainScene.fxml"));
-        rootLayout = (VBox) loader.load();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("MainScene.fxml"));
+            rootLayout = (VBox) loader.load();
 
-        Scene mScene = new Scene(rootLayout);
-        primaryStage.setScene(mScene);
-        primaryStage.setTitle("Map Editor 2.0");
-        primaryStage.show();
-        mController = loader.getController();
-        mController.setMainApp(this);
+            Scene mScene = new Scene(rootLayout);
+            primaryStage.setScene(mScene);
+            primaryStage.setTitle("Map Editor 2.0");
+            primaryStage.show();
+            mController = loader.getController();
+            mController.setMainApp(this);
         
         }
         catch (IOException e) {
@@ -102,8 +102,9 @@ public class Main extends Application {
                 new FileChooser.ExtensionFilter("Map", "*.Map")
         );
         mapa =  fileChooser.showOpenDialog(primaryStage);
-        if(mapa == null)
+        if(mapa == null) {
             return;
+        }
         System.out.println("Wybrano plik do zalodowania");
         System.out.println(mapa.getPath());
 
@@ -174,7 +175,7 @@ public class Main extends Application {
                 int y;
 
                 mController.setCanvasParam(numCols*tileSize, numRows*tileSize);
-                //System.out.println("zaladowane");
+
                     for(int j = 0; j<numRows; j++) 
                         for(int i = 0; i<numCols; i++){
                             y = (map[j][i]%30);
@@ -188,6 +189,7 @@ public class Main extends Application {
     public void editMap(int x, int y, int val){
         map[x][y] = val;
     }
+
     public void saveMap(String fileName){
 
         try {
@@ -217,6 +219,7 @@ public class Main extends Application {
         }
 
     }
+
     public void saveAsMap(){
         File saveFile;
         FileChooser fileChooser = new FileChooser();
@@ -230,11 +233,15 @@ public class Main extends Application {
                 new FileChooser.ExtensionFilter("Map", "*.Map")
         );
         saveFile =  fileChooser.showSaveDialog(primaryStage);
+
+        if(saveFile == null){
+            return; //wychodzi z funkcji jesli niewybrano pliku i anulowano
+        }
         saveMap(saveFile.getPath());
 
         mapa = saveFile;
 
-        System.out.println("Wybrano plik do zalodowania");
+        System.out.println("Zapisano plik");
 
     }
 
@@ -263,6 +270,7 @@ public class Main extends Application {
         numRows = y;
 
     }
+
     public static void main(String[] args) {
         launch(args);
     }

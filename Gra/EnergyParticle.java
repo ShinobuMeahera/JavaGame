@@ -7,17 +7,16 @@ public class EnergyParticle extends Object {
 	private boolean remove;
 	
 	private BufferedImage[] sprites;
-	protected Animation animation = new Animation();
 	
 	public static int UP = 0;
 	public static int LEFT = 1;
 	public static int DOWN = 2;
 	public static int RIGHT = 3;
-	private boolean facingRight;
 	
 	public EnergyParticle(TileMap tm, double x, double y, int dir) {
 		
 		super(tm);
+		animation = new Animation();
 		
 		facingRight = true;
 		this.x = x;
@@ -57,13 +56,7 @@ public class EnergyParticle extends Object {
 	public boolean shouldRemove() { return remove; }
 	
 	public void draw(Graphics2D g) {
-		setMapPosition();
-		if(facingRight) {
-			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2), 		(int)(y + ymap - height / 2), null );
-		}
-		else {
-			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2 + width), (int)(y + ymap - height / 2), -width, height, null );
-		}
+		super.draw(g);
 	}
 	
 }

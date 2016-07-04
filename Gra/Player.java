@@ -29,7 +29,7 @@ public class Player extends Object{
 	public int maxFireballCooldown;
 	
 	// dynks do animacji
-	public boolean facing = true;		// true - w prawo, false - w lewo
+	//public boolean facingRight = true;		// true - w prawo, false - w lewo
 	protected int currentAction;
 	protected int previousAction;
 	
@@ -60,7 +60,7 @@ public class Player extends Object{
 	private final int[] swordSPRITEDELAYS = {-1, -1, -1, -1, 5, 5, 5, -1, -1, -1, -1};
 	
 	//klasy animacji
-	protected Animation animation = new Animation();
+	protected Animation bodyAnimation = new Animation();
 	protected Animation robeAnimation = new Animation();
 	protected Animation swordAnimation = new Animation();
 	
@@ -116,7 +116,7 @@ public class Player extends Object{
 		stopJumpSpeed = 0.3;
 		doubleJumpStart = -5;
 		
-		facing = true;
+		facingRight = true;
 		attack = false;
 		hi_attack = false;
 		low_attack = false;
@@ -213,6 +213,9 @@ public class Player extends Object{
 	public int getSta(){
 		return dashCooldown;
 	}
+	public boolean getFacing(){
+		return facingRight;
+	}
 	
 	public void setAttacking() {
 		if(knockback) return;
@@ -244,7 +247,7 @@ public class Player extends Object{
 	}
 		
 	public void reset() {
-		facing = true;
+		facingRight = true;
 		currentAction = -1;
 		stop();
 	}
@@ -301,7 +304,7 @@ public class Player extends Object{
 		if(dashing) {
 			dashCooldown = 0;
 			dashTimer++;
-			if(facing) dx = moveSpeed * (10 - dashTimer * 0.04);
+			if(facingRight) dx = moveSpeed * (10 - dashTimer * 0.04);
 			else dx = -moveSpeed * (10 - dashTimer * 0.04);
 		}
 		
@@ -331,11 +334,11 @@ public class Player extends Object{
 	private void setAnimation(int i) {
 		currentAction = i;
 		
-		animation.setFrames(sprites.get(currentAction));
+		bodyAnimation.setFrames(sprites.get(currentAction));
 		robeAnimation.setFrames(robeSprites.get(currentAction));
 		swordAnimation.setFrames(swordSprites.get(currentAction));
 		
-		animation.setDelay(SPRITEDELAYS[currentAction]);
+		bodyAnimation.setDelay(SPRITEDELAYS[currentAction]);
 		robeAnimation.setDelay(SPRITEDELAYS[currentAction]);
 		swordAnimation.setDelay(swordSPRITEDELAYS[currentAction]);
 	
@@ -344,7 +347,7 @@ public class Player extends Object{
 	}
 	
 	public int setViewLeftRight(){
-		if (facing) return 1;
+		if (facingRight) return 1;
 		else return -1;
 	}
 	
@@ -362,7 +365,7 @@ public class Player extends Object{
 		flinching = true;
 		flinchCount = 0;
 
-		if(facing) dx = -1;
+		if(facingRight) dx = -1;
 		else dx = 1;
 		dy = -3;
 		knockback = true;
@@ -404,7 +407,7 @@ public class Player extends Object{
 		}
 		
 		if(currentAction == ATTACK || currentAction == HIGH_ATTACK || currentAction == LOW_ATTACK) {
-			if(animation.hasPlayedOnce()) {
+			if(bodyAnimation.hasPlayedOnce()) {
 				hi_attack = false;
 				attack = false;
 				low_attack = false;
@@ -413,7 +416,7 @@ public class Player extends Object{
 		
 		if (currentAction == KNOCKBACK){
 		
-			if (!animation.hasPlayedOnce()){
+			if (!bodyAnimation.hasPlayedOnce()){
 				knockback = true;
 				if (dy == 0) dx = 0;
 				
@@ -467,7 +470,7 @@ public class Player extends Object{
 			if (currentAction != HIGH_ATTACK){
 				setAnimation(HIGH_ATTACK);
 				attackRect.y = (int)y - 16;
-				if(facing) attackRect.x = (int)x + 10;
+				if(facingRight) attackRect.x = (int)x + 10;
 				else attackRect.x = (int)x - 35;
 			}
 		}
@@ -475,7 +478,7 @@ public class Player extends Object{
 			if (currentAction != ATTACK){
 				setAnimation(ATTACK);
 				attackRect.y = (int)y - 16;
-				if(facing) attackRect.x = (int)x + 10;
+				if(facingRight) attackRect.x = (int)x + 10;
 				else attackRect.x = (int)x - 35;
 			}
 		}
@@ -483,7 +486,7 @@ public class Player extends Object{
 			if (currentAction != LOW_ATTACK){
 				setAnimation(LOW_ATTACK);
 				attackRect.y = (int)y;
-				if(facing) attackRect.x = (int)x + 10;
+				if(facingRight) attackRect.x = (int)x + 10;
 				else attackRect.x = (int)x - 35;
 			}
 		}				
@@ -517,17 +520,18 @@ public class Player extends Object{
 		}
 		
 		//aktualizacja animacji
-		animation.update();
+		bodyAnimation.update();
 		robeAnimation.update();
 		swordAnimation.update();
 		
 		// ustawienie kierunku
 		if(!attack && !hi_attack && !low_attack && !knockback && !dashing) {
-			if(right) facing = true;
-			if(left) facing = false;
+			if(right) facingRight = true;
+			if(left) facingRight = false;
 		}
 	}
 	
+	@Override
 	public void draw(Graphics2D g) {
 	
 		//rysowanie animacji, najpierw czlowieczek, potem szata, ogolnie zasada taka
@@ -541,9 +545,9 @@ public class Player extends Object{
 			if(flinchCount % 10 < 5) return;
 		}
 		
-		if(facing) {
+		if(facingRight) {
 			// jeżeli obrócony w prawo
-			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2),	(int)(y + ymap - height / 2), null );
+			g.drawImage( bodyAnimation.getImage(), 		(int)(x + xmap - width / 2),	(int)(y + ymap - height / 2), null );
 			g.drawImage( robeAnimation.getImage(), 	(int)(x + xmap - width / 2), 	(int)(y + ymap - height / 2), null );
 			
 			if (!fireballShooted){
@@ -564,7 +568,7 @@ public class Player extends Object{
 		else {
 			// jeżeli obrócony w lewo
 
-			g.drawImage( animation.getImage(), 		(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
+			g.drawImage( bodyAnimation.getImage(), 		(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
 				
 			if (!fireballShooted){

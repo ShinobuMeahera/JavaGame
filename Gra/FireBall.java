@@ -10,15 +10,15 @@ public class FireBall extends Object {
 	private boolean remove;
 	private BufferedImage[] sprites;
 	private BufferedImage[] hitSprites;
-	protected Animation animation = new Animation();
-	private static boolean facingRight;
 	private Rectangle attackRect;
 	private int damage;	
 	
 	public FireBall(TileMap tm, boolean right) {
 		
 		super(tm);
-				
+		
+		animation = new Animation();
+		
 		moveSpeed = 3.8;
 		hit = false;
 		remove = false;
@@ -127,12 +127,6 @@ public class FireBall extends Object {
 	}
 	
 	public void draw(Graphics2D g) {
-		setMapPosition();
-		if(facingRight) {
-			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2), 		(int)(y + ymap - height / 2), null );
-		}
-		else {
-			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2 + width), (int)(y + ymap - height / 2), -width, height, null );
-		}
+		super.draw(g);
 	}
 }

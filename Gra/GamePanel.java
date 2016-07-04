@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
-import java.awt.Dimension;
 import java.awt.Toolkit;
 
 // PLIK GOTOWY

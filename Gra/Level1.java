@@ -3,7 +3,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import java.lang.String;
 
 // PLIK GOTOWY
 
@@ -179,8 +178,8 @@ public class Level1 extends GameState{
 
 		if(Keys.isPressed(Keys.BUTTON1)) {
 			if ( player.isFireballReady()){
-				fb = new FireBall(tileMap, player.facing);
-				fb.shootFireball(player.getx(), player.gety(), player.facing);
+				fb = new FireBall(tileMap, player.getFacing());
+				fb.shootFireball(player.getx(), player.gety(), player.getFacing());
 				fireballs.add(fb);
 								
 				player.fireballShooted = true;

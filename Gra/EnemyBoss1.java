@@ -1,7 +1,5 @@
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import java.awt.Font;
 
@@ -9,19 +7,13 @@ import java.awt.Font;
 
 public class EnemyBoss1 extends Enemy {
 	
-	private BufferedImage[] sprites;
 	private BufferedImage hpBar;
 	private BufferedImage hpBarOutline;
-	private Player player;
-	private boolean active;
 	private int eventCount;
 	
 	private int tick;
-	private double a;
 	private double b;
-	private int currentAction;
 	private boolean playerCatch;
-	private int szerokosc;
 	
 	private double hp_max;
 	private double hp;

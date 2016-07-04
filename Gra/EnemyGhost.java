@@ -1,15 +1,9 @@
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import javax.imageio.ImageIO;
 
 // PLIK GOTOWY
 
 public class EnemyGhost extends Enemy {
 	
-	private BufferedImage[] sprites;
-	private Player player;
 	private boolean active;
 	
 	private boolean jumping;

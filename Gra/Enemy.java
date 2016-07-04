@@ -1,4 +1,4 @@
-import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 //PLIK GOTOWY
 
@@ -9,9 +9,10 @@ public class Enemy extends Object {
 	protected boolean dead;
 	protected int damage;
 	protected boolean remove;
-	protected boolean facingRight;
-	protected Animation animation;
 	protected int lastBreath;
+	protected Player player;
+	
+	protected BufferedImage[] sprites;
 	
 	
 	public Enemy(TileMap tm) {
@@ -42,24 +43,11 @@ public class Enemy extends Object {
 		if(health == 0){
 			dead = true;
 		}
-
 	}
 	
 	public void update() {}
 	
 	public void draw(java.awt.Graphics2D g) {
-		setMapPosition();
-		if(facingRight) {
-			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2), 		(int)(y + ymap - height / 2), null );
-		}
-		else {
-			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2 + width), (int)(y + ymap - height / 2), -width, height, null );
-		}
-		
-		// draw collision box
-		/*Rectangle r = getRectangle();
-		r.x += xmap;
-		r.y += ymap;
-		g.draw(r);*/
+		super.draw(g);
 	}
 }

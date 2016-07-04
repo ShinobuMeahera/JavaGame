@@ -15,6 +15,8 @@ public abstract class Object {
 	protected double y;
 	protected double dx;
 	protected double dy;
+	protected boolean facingRight;
+	protected Animation animation;
 	
 	// wymiary
 	protected int width;
@@ -52,9 +54,7 @@ public abstract class Object {
 	protected double maxFallSpeed;
 	protected double jumpStart;
 	protected double stopJumpSpeed;
-	
 
-	
 	
 	// konstruktor
 	public Object(TileMap tm) {
@@ -206,4 +206,20 @@ public abstract class Object {
 				y + ymap + height < 0 ||
 				y + ymap - height > GamePanel.HEIGHT;
 	}	
+	
+	public void draw(java.awt.Graphics2D g) {
+		setMapPosition();
+		if(facingRight) {
+			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2), 		(int)(y + ymap - height / 2), null );
+		}
+		else {
+			g.drawImage( animation.getImage(), (int)(x + xmap - width / 2 + width), (int)(y + ymap - height / 2), -width, height, null );
+		}
+		
+		// draw collision box
+		/*Rectangle r = getRectangle();
+		r.x += xmap;
+		r.y += ymap;
+		g.draw(r);*/
+	}
 }

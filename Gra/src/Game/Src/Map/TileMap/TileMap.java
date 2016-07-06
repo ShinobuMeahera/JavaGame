@@ -1,8 +1,10 @@
 package Game.Src.Map.TileMap;
 
 import Game.Src.Start.GamePanel;
+import java.awt.Rectangle;
+import Game.Src.Control.DebugInfo;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -223,6 +225,10 @@ public class TileMap {
 				int c = rc % numTilesAcross;
 				
 				g.drawImage( tiles[r][c].getImage(), (int)x + col * tileSize, (int)y + row * tileSize, null );
+
+				Rectangle rec = new Rectangle((int)x + col * tileSize, (int)y + row * tileSize, 30, 30 );
+				if (DebugInfo.getStatus() && rc>59) g.draw(rec);
+
 			}
 		}
 	}

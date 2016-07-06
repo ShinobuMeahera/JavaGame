@@ -98,8 +98,8 @@ public class Background {
 	}
 	
 	public void draw(Graphics2D g) {
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 7; j++) {
+		for (int i = 0; i < GamePanel.WIDTH/width * GamePanel.SCALE; i++) {
+			for (int j = 0; j < GamePanel.HEIGHT/height* GamePanel.SCALE; j++) {
 				g.drawImage(image,
 						(int) (x + width * i),
 						(int) (y + height * j),

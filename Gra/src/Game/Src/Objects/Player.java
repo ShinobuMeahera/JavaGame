@@ -1,6 +1,7 @@
 package Game.Src.Objects;
 
 import Game.Src.Control.Animation;
+import Game.Src.Control.DebugInfo;
 import Game.Src.Map.TileMap.TileMap;
 import Game.Src.Objects.Enemies.Enemy;
 import Game.Src.Objects.Projectiles.EnergyParticle;
@@ -541,7 +542,10 @@ public class Player extends ParentObject{
 			if(left) facingRight = false;
 		}
 	}
-	
+
+	public void drawHUD(Graphics2D g){
+
+	}
 	@Override
 	public void draw(Graphics2D g) {
 	
@@ -596,6 +600,13 @@ public class Player extends ParentObject{
 					g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2 + width), (int)(new_y), -60,	30,	null );
 				}
 			}
+		}
+
+		if (DebugInfo.debugReady) {
+			Rectangle r = getRectangle();
+			r.x += xmap;
+			r.y += ymap;
+			g.draw(r);
 		}
 	}
 }

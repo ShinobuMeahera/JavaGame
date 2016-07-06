@@ -1,6 +1,7 @@
 package Game.Src.Map.Level1;
 
 import Game.Src.Control.Background;
+import Game.Src.Control.HUD;
 import Game.Src.Control.Keys;
 import Game.Src.Map.TileMap.TileMap;
 import Game.Src.Objects.Enemies.Enemy;
@@ -12,6 +13,7 @@ import Game.Src.Objects.Projectiles.EnergyParticle;
 import Game.Src.Objects.Projectiles.FireBall;
 import Game.Src.Start.GamePanel;
 import Game.Src.Map.GameStateManager;
+import Game.Src.Control.DebugInfo;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,13 +25,10 @@ import java.util.ArrayList;
 
 public class Level1 extends Game.Src.Map.GameState{
 
-	private static final String TILESET = "/Game/Src/Assets/tileset3.png";
+	private static final String TILESET = "/Game/Src/Map/Level1/tileset.png";
 	private static final String LEVEL = "/Game/Src/Map/Level1/level1.map";
 	private static final String BACKGROUND = "/Game/Src/Assets/tlo.png";
-	private static final String HPBAR = "/Game/Src/Assets/hp-bar.png";
-	private static final String FIREBAR = "/Game/Src/Assets/fireball-bar.png";
-	private static final String DASHBAR = "/Game/Src/Assets/dash-bar.png";
-	private static final String HUD = "/Game/Src/Assets/hud.png";
+
 
 	private Background back;
 	private ArrayList<Rectangle> tb;
@@ -39,11 +38,10 @@ public class Level1 extends Game.Src.Map.GameState{
 	private ArrayList<Enemy> enemies;
 	private ArrayList<FireBall> fireballs;
 	private ArrayList<EnergyParticle> energyParticles;
-	private BufferedImage hpBar = null;
-	private BufferedImage mpBar = null;
-	private BufferedImage staBar = null;
-	private BufferedImage hudBar = null;
+	private HUD hud;
+
 	private EnemyBoss1 eb;
+	private DebugInfo debug;
 	
 	private int eventCount = 0;
 	private boolean eventStart;
@@ -84,17 +82,10 @@ public class Level1 extends Game.Src.Map.GameState{
 		// init player
 		player.init(enemies, energyParticles);
 		populateEnemies();
-		
-		try{
-			hpBar = ImageIO.read( getClass().getResourceAsStream(HPBAR));
-			mpBar = ImageIO.read( getClass().getResourceAsStream(FIREBAR));
-			staBar = ImageIO.read( getClass().getResourceAsStream(DASHBAR));
-			hudBar = ImageIO.read( getClass().getResourceAsStream(HUD));
-		} catch (Exception e){
-			e.printStackTrace();
-			System.out.println("Error loading graphics from LEVEL_1 - HUD.");
-			System.exit(0);
-		}
+
+		debug = new DebugInfo(tileMap, player);
+		hud = new HUD(tileMap);
+		hud.init(player);
 	}
 	
 	private void populateEnemies() {
@@ -145,9 +136,7 @@ public class Level1 extends Game.Src.Map.GameState{
 	public void update() {
 		handleInput();
 		
-		if(player.getHealth() == 0 || player.gety() > tileMap.getHeight()) {
-			eventDead = blockInput = true;
-		}
+		if(player.getHealth() == 0 || player.gety() > tileMap.getHeight()) { eventDead = blockInput = true;	}
 		
 		if(eventStart) eventStart();
 		if(eventDead) eventDead();
@@ -157,18 +146,18 @@ public class Level1 extends Game.Src.Map.GameState{
 		player.update();
 
 		if (player.getx() > 2240 && player.gety() > 1530 && player.gety() < 1870){
+
 			tileMap.setPosition(
 				GamePanel.WIDTH / 2 - player.getx()-200,
-				GamePanel.HEIGHT / 2 - player.gety()+100); // TUTAJ USTAWIAMY WIDOK
+				GamePanel.HEIGHT / 2 - player.gety()+100);
 		}
 		else tileMap.setPosition(
-			GamePanel.WIDTH / 2 - player.getx()-(50*player.setViewLeftRight()),
-			GamePanel.HEIGHT / 2 - player.gety()-(100*player.setViewDown())); // TUTAJ USTAWIAMY WIDOK
+				GamePanel.WIDTH / 2 - player.getx()-(50*player.setViewLeftRight()),
+				GamePanel.HEIGHT / 2 - player.gety()-(100*player.setViewDown()));
 			
 		tileMap.update();
 		tileMap.fixBounds();
-		
-		System.out.println(player.getx() + " " + player.gety());
+
 		for(int i = 0; i < fireballs.size(); i++){
 			FireBall f = fireballs.get(i);
 			f.update(enemies);
@@ -177,9 +166,7 @@ public class Level1 extends Game.Src.Map.GameState{
 				i--;
 			}
 		}
-		
-		
-		
+
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy e = enemies.get(i);
 			e.update();
@@ -188,6 +175,8 @@ public class Level1 extends Game.Src.Map.GameState{
 				i--;
 			}
 		}
+
+		debug.update();
 	}
 	
 	public void handleInput() {
@@ -197,7 +186,10 @@ public class Level1 extends Game.Src.Map.GameState{
 		player.setLeft(Keys.keyState[Keys.LEFT]);
 		player.setRight(Keys.keyState[Keys.RIGHT]);
 		player.setDown(Keys.keyState[Keys.DOWN]);
+
 		if(Keys.isPressed(Keys.BUTTON3)) player.setAttacking();
+		if(Keys.isPressed(Keys.BUTTON4)) debug.setReady();
+
 		if(Keys.isPressed(Keys.ESCAPE)) gsm.setPaused(true);
 		
 		if(Keys.isPressed(Keys.BUTTON2)){
@@ -236,13 +228,10 @@ public class Level1 extends Game.Src.Map.GameState{
 		 
 		tileMap.draw(g);
 		
-		g.drawImage(hpBar, (player.getHealth()*2) - 75, 15, null);
-		g.drawImage(mpBar, (player.getMana()) - 75, 15+16, null);
-		g.drawImage(staBar, (player.getSta()/2) - 75, 15+32, null);
-		g.drawImage(hudBar, 0, 13, null);
-		
-		eb.drawHPBar(g);
 
+		hud.draw(g);
+		eb.drawHPBar(g);
+		debug.draw(g);
 		g.setColor(java.awt.Color.GREEN);
 		for(int i = 0; i < tb.size(); i++) {
 			g.fill(tb.get(i));

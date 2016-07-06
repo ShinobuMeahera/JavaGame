@@ -1,5 +1,6 @@
 package Game.Src.Objects;
 
+import Game.Src.Control.DebugInfo;
 import Game.Src.Map.TileMap.TileMap;
 import Game.Src.Map.TileMap.Tile;
 import Game.Src.Control.Animation;
@@ -61,6 +62,9 @@ public abstract class ParentObject {
 	protected double maxFallSpeed;
 	protected double jumpStart;
 	protected double stopJumpSpeed;
+
+	//kontrola
+	protected static boolean debugReady;
 
 
 	public ParentObject(TileMap tm) {
@@ -187,6 +191,14 @@ public abstract class ParentObject {
 		return (int)y;
 	}
 
+	public double getdx() {
+		return dx;
+	}
+
+	public double getdy() {
+		return dy;
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -251,9 +263,11 @@ public abstract class ParentObject {
 		}
 		
 		// draw collision box
-		/*Rectangle r = getRectangle();
-		r.x += xmap;
-		r.y += ymap;
-		g.draw(r);*/
+		if (DebugInfo.debugReady) {
+			Rectangle r = getRectangle();
+			r.x += xmap;
+			r.y += ymap;
+			g.draw(r);
+		}
 	}
 }

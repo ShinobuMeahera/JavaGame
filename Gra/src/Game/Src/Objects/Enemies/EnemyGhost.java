@@ -66,7 +66,17 @@ public class EnemyGhost extends Enemy {
 			dy = jumpStart;
 		}
 	}
-	
+
+	private double calculateDistance(Player p){
+		double dist = Math.abs(
+						Math.sqrt(
+								Math.pow( (x - p.getx() ), 2.00) +
+								Math.pow( (y - p.gety() ), 2.00)
+						)
+					);
+		return dist;
+	}
+
 	public void update() {
 		
 		
@@ -98,7 +108,7 @@ public class EnemyGhost extends Enemy {
 					animation.setDelay(-1);
 				}
 				attackTick++;
-				if(attackTick >= attackDelay && Math.abs(player.getx() - x) < 60) {
+				if(attackTick >= attackDelay && calculateDistance(player) < 60) {
 					step++;
 					attackTick = 0;
 				}

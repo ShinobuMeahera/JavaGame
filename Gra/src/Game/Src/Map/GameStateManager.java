@@ -2,6 +2,7 @@ package Game.Src.Map;
 
 import Game.Src.Start.GamePanel;
 import Game.Src.Map.Level1.Level1;
+import Game.Src.Map.Level2.Level2;
 
 public class GameStateManager {
 	
@@ -14,6 +15,7 @@ public class GameStateManager {
 
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1 = 1;
+	public static final int LEVEL2 = 2;
 	
 	public GameStateManager() {
 			
@@ -29,6 +31,7 @@ public class GameStateManager {
 	private void loadState(int state) {
 		if(state == MENUSTATE)		gameStates[state] = new MenuState(this);
 		else if(state == LEVEL1)	gameStates[state] = new Level1(this);
+		else if(state == LEVEL2)	gameStates[state] = new Level2(this);
 	}
 	
 	private void unloadState(int state) {

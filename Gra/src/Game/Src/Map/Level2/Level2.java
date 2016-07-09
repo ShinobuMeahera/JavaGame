@@ -1,4 +1,4 @@
-package Game.Src.Map.Level1;
+package Game.Src.Map.Level2;
 
 import Game.Src.Control.Background;
 import Game.Src.Control.HUD;
@@ -19,10 +19,10 @@ import Game.Src.Control.DebugInfo;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Level1 extends Game.Src.Map.GameState{
+public class Level2 extends Game.Src.Map.GameState{
 
-	private static final String TILESET = "/Game/Src/Map/Level1/tileset.png";
-	private static final String LEVEL = "/Game/Src/Map/Level1/level1.map";
+	private static final String TILESET = "/Game/Src/Map/Level2/tileset.png";
+	private static final String LEVEL = "/Game/Src/Map/Level2/level.map";
 	private static final String BACKGROUND = "/Game/Src/Assets/tlo.png";
 
 
@@ -35,22 +35,20 @@ public class Level1 extends Game.Src.Map.GameState{
 	private ArrayList<EnergyParticle> energyParticles;
 	private HUD hud;
 	private Teleport teleport;
-
-
-	private EnemyBoss1 eb;
 	private DebugInfo debug;
-	
+
 	private int eventCount = 0;
 	private boolean eventStart;
 	private boolean eventDead;
 	private boolean eventFinish;
+
 	private boolean blockInput = false;
 
-	public Level1(GameStateManager gsm) {
+	public Level2(GameStateManager gsm) {
 		super(gsm);
 		init();
 	}
-	
+
 	public void init() {
 		back = new Background(BACKGROUND, 0.5);
 
@@ -60,82 +58,42 @@ public class Level1 extends Game.Src.Map.GameState{
 		tileMap.loadMap(LEVEL);
 		tileMap.setPosition(0, 0);
 		tileMap.setTween(0.025);
-		
+
 		//player
 		player = new Player(tileMap);
-		player.setPosition(180, 1115);	
+		player.setPosition(300, 1115);
 		fireballs = new ArrayList<FireBall>();
 
-
-		
 		//takie ladne zielone intro
 		eventStart = true;
-		tb = new ArrayList<Rectangle>();	
+		tb = new ArrayList<Rectangle>();
 		eventStart();
-		
+
 		//wrogowie
 		enemies = new ArrayList<Enemy>();
-		
+
 		// energy particle
 		energyParticles = new ArrayList<EnergyParticle>();
-		
+
+		teleport = new Teleport(tileMap);
+		teleport.setPosition(3760, 1250);
+
 		// init player
 		player.init(enemies, energyParticles);
 		populateEnemies();
-
-		teleport = new Teleport(tileMap);
-		teleport.setPosition(3100, 2300);
 
 		debug = new DebugInfo(tileMap, player);
 		hud = new HUD(tileMap);
 		hud.init(player);
 	}
-	
+
 	private void populateEnemies() {
 		enemies.clear();
 		EnemySkeleton es;
 		EnemyGhost eg;
 
-		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(660, 1175);
-		enemies.add(es);
-		
-		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(1035, 1118);
-		enemies.add(es);
-		
-		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(808, 1118);
-		enemies.add(es);
-		
-		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(340, 200);
-		enemies.add(es);
-		
-		es = new EnemySkeleton(tileMap, player);
-		es.setPosition(1764, 1088);
-		enemies.add(es);
-		
-		
-		eg = new EnemyGhost(tileMap, player);
-		eg.setPosition(1464, 1088);
-		enemies.add(eg);
-
-		eg = new EnemyGhost(tileMap, player);
-		eg.setPosition(1956, 1088);
-		enemies.add(eg);		
-				
-		eg = new EnemyGhost(tileMap, player);
-		eg.setPosition(1720, 2250);
-		enemies.add(eg);
-
-
-
-		eb = new EnemyBoss1(tileMap, player);
-		eb.setPosition(2550, 1700);
-		enemies.add(eb);
 	}
-	
+
 	public void update() {
 		handleInput();
 
@@ -144,29 +102,22 @@ public class Level1 extends Game.Src.Map.GameState{
 		}
 
 		if(player.getHealth() == 0 || player.gety() > tileMap.getHeight()) { eventDead = blockInput = true;	}
-		
+
 		if(eventStart) eventStart();
 		if(eventDead) eventDead();
 		if(eventFinish) eventFinish();
-		
+
 		back.setPosition(tileMap.getx(), tileMap.gety());
-		
+
 		player.update();
 
-		if (player.getx() > 2240 && player.gety() > 1530 && player.gety() < 1870){
-			tileMap.setPosition(
-				GamePanel.WIDTH / 2 - player.getx()-200,
-				GamePanel.HEIGHT / 2 - player.gety()+100
-			);
-		}
-		else {
+
 			tileMap.setPosition(
 					GamePanel.WIDTH / 2 - player.getx() - (70 * player.setViewLeftRight()),
 					GamePanel.HEIGHT / 2 - player.gety() - (150 * player.setViewDown()) + 10
 			);
 
-		}
-			
+
 		tileMap.update();
 		tileMap.fixBounds();
 
@@ -190,10 +141,10 @@ public class Level1 extends Game.Src.Map.GameState{
 		teleport.update();
 		debug.update();
 	}
-	
+
 	public void handleInput() {
 		FireBall fb;
-		
+
 		player.setJumping(Keys.keyState[Keys.UP]);
 		player.setLeft(Keys.keyState[Keys.LEFT]);
 		player.setRight(Keys.keyState[Keys.RIGHT]);
@@ -204,7 +155,7 @@ public class Level1 extends Game.Src.Map.GameState{
 		if(Keys.isPressed(Keys.ENTER)) reset();
 
 		if(Keys.isPressed(Keys.ESCAPE)) gsm.setPaused(true);
-		
+
 		if(Keys.isPressed(Keys.BUTTON2)){
 			if (player.isDashingReady()) player.setDashing();
 		}
@@ -220,14 +171,14 @@ public class Level1 extends Game.Src.Map.GameState{
 			}
 		}
 	}
-	
+
 	public void draw(Graphics2D g) {
 		g.setColor(java.awt.Color.GREEN);
 		Rectangle r = new Rectangle(0,0,GamePanel.WIDTH,GamePanel.HEIGHT);
 		g.fill(r);
-		
+
 		back.draw(g);
-		
+
 		player.draw(g);
 		teleport.draw(g);
 
@@ -238,13 +189,12 @@ public class Level1 extends Game.Src.Map.GameState{
 		for(int i = 0; i < enemies.size(); i++) {
 			enemies.get(i).draw(g);
 		}
-		 
+
 		tileMap.draw(g);
-		
+
 
 		hud.draw(g);
 		debug.draw(g);
-		eb.drawHPBar(g);
 
 		g.setColor(java.awt.Color.BLACK);
 		for(int i = 0; i < tb.size(); i++) {
@@ -262,7 +212,7 @@ public class Level1 extends Game.Src.Map.GameState{
 		eventStart = true;
 		eventStart();
 	}
-	
+
 	private void eventStart() {
 		eventCount++;
 		if(eventCount == 1) {
@@ -294,7 +244,7 @@ public class Level1 extends Game.Src.Map.GameState{
 		if(eventCount == 60) {
 			tb.clear();
 			tb.add(new Rectangle(
-				GamePanel.WIDTH / 2, GamePanel.HEIGHT / 2, 0, 0));
+					GamePanel.WIDTH / 2, GamePanel.HEIGHT / 2, 0, 0));
 		}
 		else if(eventCount > 60) {
 			tb.get(0).x -= 6;
@@ -333,7 +283,7 @@ public class Level1 extends Game.Src.Map.GameState{
 		}
 		if(eventCount == 20) {
 
-			gsm.setState(GameStateManager.LEVEL2);
+			gsm.setState(GameStateManager.LEVEL1);
 		}
 
 	}

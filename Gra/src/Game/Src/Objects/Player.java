@@ -48,11 +48,14 @@ public class Player extends ParentObject{
 	private int health;
 	private int maxHealth;
 	private int damage;
+
+	private int boost;
 	
 	// rozne timery, do immoratala i do dasha
 	private long flinchCount;
 	private int dashTimer;
 	private int dashCooldown;
+	private int maxDashCooldown;
 	
 	// ANIMACJE
 	private ArrayList<BufferedImage[]> sprites;
@@ -96,7 +99,8 @@ public class Player extends ParentObject{
 	public Player(TileMap tm) {
 	
 		super(tm);
-		
+		boost = 1;
+
 		attackRect = new Rectangle(0, 0, 0, 0);
 		attackRect.width = 20;
 		attackRect.height = 10;
@@ -112,20 +116,14 @@ public class Player extends ParentObject{
 		cheight = 45;
 		
 		//atrybuty dasha i fireballa
-		maxFireballCooldown = 0;
+		maxFireballCooldown = 100;
 		fireballShooted = false;
 		setFireballCooldown(maxFireballCooldown);
-		dashCooldown = 40;
-		
+		dashCooldown = 190;
+		maxDashCooldown = 200;
+
 		//artybuty poruszania sie
-		moveSpeed = 0.5;
-		maxSpeed = 2.8;
-		stopSpeed = 1.0;
-		fallSpeed = 0.2;
-		maxFallSpeed = 9.0;
-		jumpStart = -5.5;
-		stopJumpSpeed = 0.3;
-		doubleJumpStart = -5;
+		setParameters(boost);
 		
 		facingRight = true;
 		attack = false;
@@ -187,12 +185,20 @@ public class Player extends ParentObject{
 	
 	public void setFireballCooldown(int x){
 		fireballCooldown = x;
+		fireballShooted = true;
 	}
-	
-	public void setTeleporting(boolean b) {
-		teleporting = b;
+
+	private void setParameters(int boost){
+		moveSpeed = 0.5*boost;
+		maxSpeed = 2.8*boost;
+		stopSpeed = 1.0*boost;
+		fallSpeed = 0.2*boost;
+		maxFallSpeed = 9.0*boost;
+		jumpStart = -5.5*boost;
+		stopJumpSpeed = 0.3*boost;
+		doubleJumpStart = -5*boost;
 	}
-	
+
 	public boolean isFireballReady(){
 		if (fireballCooldown >= 100 && (falling || jumping  || !left || !right) && !knockback && !dashing) return true;
 		else return false;
@@ -219,12 +225,15 @@ public class Player extends ParentObject{
 	public int getHealth(){
 		return health;
 	}
+	public int getMaxHealth() { return maxHealth; }
 	public int getMana(){
 		return fireballCooldown;
 	}
+	public int getMaxMana(){return maxFireballCooldown; }
 	public int getSta(){
 		return dashCooldown;
 	}
+	public int getMaxSta(){return maxDashCooldown;}
 	public boolean getFacing(){
 		return facingRight;
 	}
@@ -261,13 +270,16 @@ public class Player extends ParentObject{
 	public void reset() {
 		facingRight = true;
 		currentAction = -1;
+		health = maxHealth;
 		stop();
 	}
 	
 	public void stop() {
 		left = right = jumping = flinching = dashing = squat = attack = hi_attack = low_attack = false;
 	}
-	
+
+	public void setTeleporting(boolean b) { teleporting = b; }
+
 	private void getNextPosition() {
 		
 		if(knockback) {
@@ -386,12 +398,21 @@ public class Player extends ParentObject{
 	}
 	
 	public void update() {
-	
-		boolean isFalling = falling;
+
 		getNextPosition();
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
-				
+
+		if (DebugInfo.debugReady) boost = 2;
+		else boost = 1;
+		setParameters(boost);
+		
+		if(teleporting) {
+			energyParticles.add(
+					new EnergyParticle(tileMap, x, y, EnergyParticle.UP)
+			);
+		}
+
 		if(dx == 0) x = (int)x;
 		if (fireballCooldown > 15) fireballShooted = false;
 		
@@ -438,8 +459,7 @@ public class Player extends ParentObject{
 		for(int i = 0; i < enemies.size(); i++) {
 			
 			Enemy e = enemies.get(i);
-			
-			// sprawdzenie ataku, zadajemy obrazenia wrogowi
+
 			if( currentAction == HIGH_ATTACK ) {
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
@@ -454,8 +474,8 @@ public class Player extends ParentObject{
 				if(e.intersects(attackRect)) {
 					e.hit(damage);
 				}
-			}					
-			// kolizja z wrogiem, na niekorzysc gracza
+			}
+
 			if(!e.isDead() && intersects(e)) {
 				hit(e.getDamage());
 			}
@@ -543,9 +563,6 @@ public class Player extends ParentObject{
 		}
 	}
 
-	public void drawHUD(Graphics2D g){
-
-	}
 	@Override
 	public void draw(Graphics2D g) {
 	

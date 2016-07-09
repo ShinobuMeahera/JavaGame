@@ -20,10 +20,13 @@ import java.awt.Transparency;
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements Runnable, KeyListener{
 		
-	public static Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-	public static final int SCALE = 2;
-	public static final int WIDTH = (int) dim.getWidth()/ SCALE;
-	public static final int HEIGHT = (int) dim.getHeight()/ SCALE;
+	public static final Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+	public static double SCALE = 2.00;
+	public static final int SCREEN_WIDTH = (int) (dim.getWidth());
+	public static final int SCREEN_HEIGHT = (int) (dim.getHeight());
+	public static int WIDTH = (int) (SCREEN_WIDTH/SCALE);
+	public static int HEIGHT = (int) (SCREEN_HEIGHT/SCALE);
+
 
 	private Thread thread;
 	private boolean running;
@@ -35,13 +38,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 	private GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	private GraphicsDevice device = env.getDefaultScreenDevice();
 	private GraphicsConfiguration config = device.getDefaultConfiguration();
-	private BufferedImage buffy;
+	private BufferedImage buffyNormal;
+	private BufferedImage buffyBoss;
+	private BufferedImage readyImage;
 
 	private GameStateManager gsm;
 		
 	public GamePanel() {
 		super();
-		setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		setFocusable(true);
 		requestFocus();
 	}
@@ -57,8 +62,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 	}
 	
 	private void init() {
-		buffy = config.createCompatibleImage(WIDTH, HEIGHT, Transparency.TRANSLUCENT);
-		g = (Graphics2D) buffy.getGraphics();
+		buffyNormal = config.createCompatibleImage(WIDTH, HEIGHT, Transparency.TRANSLUCENT);
+		readyImage = buffyNormal;
+		g = (Graphics2D) readyImage.getGraphics();
 				
 		running = true;
 		
@@ -103,6 +109,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 	private void update() {
 		gsm.update();
 		Keys.update();
+
 	}
 
 	private void draw() {
@@ -112,7 +119,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 	private void drawToScreen() {
 		Graphics g2 = getGraphics();
 
-		g2.drawImage(buffy, 0, 0,(int) (WIDTH * SCALE), (int)(HEIGHT  * SCALE), null);
+		g2.drawImage(readyImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null);
 		g2.dispose();
 		
 	}

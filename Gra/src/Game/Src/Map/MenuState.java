@@ -55,7 +55,7 @@ public class MenuState extends GameState {
 		// draw title
 		g.setColor(titleColor);
 		g.setFont(titleFont);
-		g.drawString("ANDORMALIUS", GamePanel.WIDTH/2 - 150, (int)yPos);
+		g.drawString("ANDROMALIUS", GamePanel.WIDTH/2 - 150, (int)yPos);
 		
 		// draw menu options
 		g.setFont(font);

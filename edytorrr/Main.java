@@ -196,6 +196,7 @@ public class Main extends Application {
         }
         mController.src2 = src;
         mController.refreshLeft();
+        setCanvas(1);
 
     }
     public void setCanvas(int mode){ 

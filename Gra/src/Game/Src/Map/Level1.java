@@ -37,17 +37,18 @@ public class Level1 extends GameState{
 	private FireBall fireball;
 	private ArrayList<Enemy> enemies;
 	private ArrayList<FireBall> fireballs;
+<<<<<<< HEAD:Gra/src/Game/Src/Map/Level1.java
 	private ArrayList<EnergyParticle> energyParticles;
 	private BufferedImage hpBar = null;
 	private BufferedImage mpBar = null;
 	private BufferedImage staBar = null;
 	private BufferedImage hudBar = null;
 	private EnemyBoss1 eb;
+=======
+>>>>>>> master:Gra/Level1.java
 	
 	private int eventCount = 0;
 	private boolean eventStart;
-	private boolean eventDead;
-	private boolean blockInput = false;
 
 	public Level1(GameStateManager gsm) {
 		super(gsm);
@@ -55,6 +56,7 @@ public class Level1 extends GameState{
 	}
 	
 	public void init() {
+<<<<<<< HEAD:Gra/src/Game/Src/Map/Level1.java
 		back = new Background(BACKGROUND, 0.5);
 
 		// tilemap
@@ -62,11 +64,23 @@ public class Level1 extends GameState{
 		tileMap.loadTiles(TILESET);
 		tileMap.loadMap(LEVEL);
 		tileMap.setPosition(0, 0);
+=======
+		back = new Background("tlo.png", 0.2);
+		// tilemap
+		tileMap = new TileMap(30);
+		tileMap.loadTiles("tileset3.png");
+		tileMap.loadMap("level15.map");
+		tileMap.setPosition(400, 600);
+>>>>>>> master:Gra/Level1.java
 		tileMap.setTween(0.05);
 		
 		//player
 		player = new Player(tileMap);
+<<<<<<< HEAD:Gra/src/Game/Src/Map/Level1.java
 		player.setPosition(180, 1115);	
+=======
+		player.setPosition(400, 250);	
+>>>>>>> master:Gra/Level1.java
 		fireballs = new ArrayList<FireBall>();
 		
 		//takie ladne zielone intro
@@ -76,19 +90,18 @@ public class Level1 extends GameState{
 		
 		//wrogowie
 		enemies = new ArrayList<Enemy>();
-		
-		// energy particle
-		energyParticles = new ArrayList<EnergyParticle>();
-		
-		// init player
-		player.init(enemies, energyParticles);
+		player.init(enemies);
 		populateEnemies();
 		
 		try{
+<<<<<<< HEAD:Gra/src/Game/Src/Map/Level1.java
 			hpBar = ImageIO.read( getClass().getResourceAsStream(HPBAR));
 			mpBar = ImageIO.read( getClass().getResourceAsStream(FIREBAR));
 			staBar = ImageIO.read( getClass().getResourceAsStream(DASHBAR));
 			hudBar = ImageIO.read( getClass().getResourceAsStream(HUD));
+=======
+			background = ImageIO.read( getClass().getResourceAsStream("background.png"));
+>>>>>>> master:Gra/Level1.java
 		} catch (Exception e){}
 	}
 	
@@ -98,6 +111,7 @@ public class Level1 extends GameState{
 		EnemyGhost eg;
 		
 		es = new EnemySkeleton(tileMap, player);
+<<<<<<< HEAD:Gra/src/Game/Src/Map/Level1.java
 		es.setPosition(660, 1175);
 		enemies.add(es);
 		
@@ -107,12 +121,24 @@ public class Level1 extends GameState{
 		
 		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(808, 1118);
+=======
+		es.setPosition(1425, 50);
+		enemies.add(es);
+		
+		es = new EnemySkeleton(tileMap, player);
+		es.setPosition(2094, 115);
+		enemies.add(es);
+		
+		es = new EnemySkeleton(tileMap, player);
+		es.setPosition(600, 150);
+>>>>>>> master:Gra/Level1.java
 		enemies.add(es);
 		
 		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(340, 200);
 		enemies.add(es);
 		
+<<<<<<< HEAD:Gra/src/Game/Src/Map/Level1.java
 		es = new EnemySkeleton(tileMap, player);
 		es.setPosition(1764, 1088);
 		enemies.add(es);
@@ -125,42 +151,24 @@ public class Level1 extends GameState{
 		eg = new EnemyGhost(tileMap, player);
 		eg.setPosition(1956, 1088);
 		enemies.add(eg);		
+=======
+>>>>>>> master:Gra/Level1.java
 				
 		eg = new EnemyGhost(tileMap, player);
-		eg.setPosition(1720, 2250);
+		eg.setPosition(1240, 200);
 		enemies.add(eg);
-		
-		
-		
-		eb = new EnemyBoss1(tileMap, player);
-		eb.setPosition(2550, 1700);
-		enemies.add(eb);
 	}
 	
 	public void update() {
 		handleInput();
-		
-		if(player.getHealth() == 0 || player.gety() > tileMap.getHeight()) {
-			eventDead = blockInput = true;
-		}
-		
 		if(eventStart) eventStart();
-		if(eventDead) eventDead();
-		
 		back.setPosition(tileMap.getx(), tileMap.gety());
-		
 		player.update();
-		if (player.getx() > 2240 && player.gety() > 1530 && player.gety() < 1870){
-			tileMap.setPosition(
-				GamePanel.WIDTH / 2 - player.getx()-200,
-				GamePanel.HEIGHT / 2 - player.gety()+100); // TUTAJ USTAWIAMY WIDOK
-		}
-		else tileMap.setPosition(
-			GamePanel.WIDTH / 2 - player.getx()-(50*player.setViewLeftRight()),
-			GamePanel.HEIGHT / 2 - player.gety()-(100*player.setViewDown())); // TUTAJ USTAWIAMY WIDOK
-			
+		tileMap.setPosition( GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety() );
 		tileMap.update();
 		tileMap.fixBounds();
+
+		//if (player.gety() >= tileMap.getHeight()) gsm.setState(gsm.MENUSTATE); // jeżeli spadniemy to wraca do menu
 		
 		System.out.println(player.getx() + " " + player.gety());
 		for(int i = 0; i < fireballs.size(); i++){
@@ -212,17 +220,22 @@ public class Level1 extends GameState{
 	}
 	
 	public void draw(Graphics2D g) {
+<<<<<<< HEAD:Gra/src/Game/Src/Map/Level1.java
 		g.setColor(java.awt.Color.GREEN);
 		Rectangle r = new Rectangle(0,0,GamePanel.WIDTH,GamePanel.HEIGHT);
 		g.fill(r);
+=======
+		//g.drawImage(background,0,0,GamePanel.WIDTH,  GamePanel.HEIGHT, null);
+>>>>>>> master:Gra/Level1.java
 		
 		back.draw(g);
-		
 		player.draw(g);
 		for(int i = 0; i < fireballs.size(); i++) { fireballs.get(i).draw(g); }
 		for(int i = 0; i < enemies.size(); i++) { enemies.get(i).draw(g); }
 		 
+		 
 		tileMap.draw(g);
+<<<<<<< HEAD:Gra/src/Game/Src/Map/Level1.java
 		
 		g.drawImage(hpBar, (player.getHealth()*2) - 75, 15, null);
 		g.drawImage(mpBar, (player.getMana()) - 75, 15+16, null);
@@ -236,6 +249,8 @@ public class Level1 extends GameState{
 			g.drawString(tekst, GamePanel.WIDTH-150, 50);
 		} catch (Exception e){}*/
 		
+=======
+>>>>>>> master:Gra/Level1.java
 		g.setColor(java.awt.Color.GREEN);
 		for(int i = 0; i < tb.size(); i++) {
 			g.fill(tb.get(i));
@@ -246,18 +261,6 @@ public class Level1 extends GameState{
 	}
 	
 	// taki event, tylko intro
-	
-	private void reset() {
-		player.reset();
-		player.setPosition(400, 600);
-		populateEnemies();
-		blockInput = true;
-		eventCount = 0;
-		tileMap.setShaking(false, 0);
-		eventStart = true;
-		eventStart();
-	}
-	
 	private void eventStart() {
 		eventCount++;
 		if(eventCount == 1) {
@@ -277,35 +280,6 @@ public class Level1 extends GameState{
 			eventStart = false;
 			eventCount = 0;
 			tb.clear();
-		}
-	}
-
-	private void eventDead() {
-		eventCount++;
-		if(eventCount == 1) {
-			player.setDead();
-			player.stop();
-		}
-		if(eventCount == 60) {
-			tb.clear();
-			tb.add(new Rectangle(
-				GamePanel.WIDTH / 2, GamePanel.HEIGHT / 2, 0, 0));
-		}
-		else if(eventCount > 60) {
-			tb.get(0).x -= 6;
-			tb.get(0).y -= 4;
-			tb.get(0).width += 12;
-			tb.get(0).height += 8;
-		}
-		if(eventCount >= 120) {
-			if(player.getHealth() == 0) {
-				gsm.setState(GameStateManager.MENUSTATE);
-			}
-			else {
-				eventDead = blockInput = false;
-				eventCount = 0;
-				reset();
-			}
 		}
 	}
 }

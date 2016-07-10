@@ -38,7 +38,7 @@ public class EnemyGhost extends Enemy {
 		cwidth = 25;
 		cheight = 40;
 		
-		damage = 15;
+		damage = 1;
 
 		moveSpeed = 1.5;
 		fallSpeed = 0.15;

@@ -33,7 +33,7 @@ public class EnemySkeleton extends Enemy {
 		cwidth = 25;
 		cheight = 45;
 		
-		damage = 10;
+		damage = 1;
 		moveSpeed = 0.8;
 		fallSpeed = 0.15;
 		maxFallSpeed = 4.0;

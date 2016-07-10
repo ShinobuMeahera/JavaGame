@@ -98,12 +98,18 @@ public class Background {
 	}
 	
 	public void draw(Graphics2D g) {
+<<<<<<< HEAD:Gra/src/Game/Src/Control/Background.java
 		for (int i = 0; i < GamePanel.WIDTH/width * GamePanel.SCALE; i++) {
 			for (int j = 0; j < GamePanel.HEIGHT/height* GamePanel.SCALE; j++) {
 				g.drawImage(image,
 						(int) (x + width * i),
 						(int) (y + height * j),
 						null);
+=======
+		for ( int i = 0; i < 5; i++){
+			for (int j = 0; j < 4; j++){
+				g.drawImage(image, (int)x+width*i, height*j+(int)y, null);
+>>>>>>> master:Gra/Background.java
 			}
 		}
 

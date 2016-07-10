@@ -25,10 +25,10 @@ public class Keys {
 		else if	(i == KeyEvent.VK_LEFT) 	keyState[LEFT] = b;
 		else if	(i == KeyEvent.VK_DOWN) 	keyState[DOWN] = b;
 		else if	(i == KeyEvent.VK_RIGHT) 	keyState[RIGHT] = b;
-		else if	(i == KeyEvent.VK_Q) 		keyState[BUTTON1] = b;
-		else if	(i == KeyEvent.VK_W) 		keyState[BUTTON2] = b;
-		else if	(i == KeyEvent.VK_E) 		keyState[BUTTON3] = b;
-		else if	(i == KeyEvent.VK_R) 		keyState[BUTTON4] = b;
+		else if	(i == KeyEvent.VK_W) 		keyState[BUTTON1] = b;
+		else if	(i == KeyEvent.VK_E) 		keyState[BUTTON2] = b;
+		else if	(i == KeyEvent.VK_R) 		keyState[BUTTON3] = b;
+		else if	(i == KeyEvent.VK_F) 		keyState[BUTTON4] = b;
 		else if	(i == KeyEvent.VK_ENTER) 	keyState[ENTER] = b;
 		else if	(i == KeyEvent.VK_ESCAPE) 	keyState[ESCAPE] = b;
 	}

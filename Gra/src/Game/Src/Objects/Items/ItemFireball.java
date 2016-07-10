@@ -47,5 +47,6 @@ public class ItemFireball extends ItemParent {
 
     public void draw(Graphics2D g) {
         super.draw(g);
+        if (player.getSkill(3)) super.drawInHUD(g, 30, 15);
     }
 }

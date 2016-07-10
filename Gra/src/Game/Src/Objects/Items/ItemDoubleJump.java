@@ -47,5 +47,6 @@ public class ItemDoubleJump extends ItemParent {
 
     public void draw(Graphics2D g) {
         super.draw(g);
+        if (player.getSkill(0)) super.drawInHUD(g, 10, 35);
     }
 }

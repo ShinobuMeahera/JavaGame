@@ -97,20 +97,30 @@ public class Level1 extends Game.Src.Map.GameState{
 		ItemDash id;
 		ItemFireball ifb;
 
-		idj = new ItemDoubleJump(tileMap, player);
+		idj = new ItemDoubleJump(tileMap, player); // pierwsza instancja do umieszczenia na mapie
 		idj.setPosition(272, 1530);
 		items.add(idj);
-
 		id = new ItemDash(tileMap, player);
 		id.setPosition(3080, 1000);
 		items.add(id);
-
-		/*is = new ItemSword(tileMap, player);
-		is.setPosition(210, 2140);
-		items.add(is);*/
-
+		is = new ItemSword(tileMap, player);
+		is.setPosition(1000, 1500);
+		items.add(is);
 		ifb = new ItemFireball(tileMap, player);
 		ifb.setPosition(210, 2140);
+		items.add(ifb);
+
+		idj = new ItemDoubleJump(tileMap, player); // druga instancja do wyswietlania w hud
+		idj.setPosition(0, 0);
+		items.add(idj);
+		id = new ItemDash(tileMap, player);
+		id.setPosition(0, 0);
+		items.add(id);
+		is = new ItemSword(tileMap, player);
+		is.setPosition(0, 0);
+		items.add(is);
+		ifb = new ItemFireball(tileMap, player);
+		ifb.setPosition(0, 0);
 		items.add(ifb);
 	}
 
@@ -269,12 +279,14 @@ public class Level1 extends Game.Src.Map.GameState{
 
 		for(int i = 0; i < enemies.size(); i++) enemies.get(i).draw(g);
 
-		for(int i = 0; i < items.size(); i++) items.get(i).draw(g);
-
 		tileMap.draw(g);
-		
 
 		hud.draw(g);
+		for(int i = 0; i < items.size(); i++) items.get(i).draw(g);
+
+		
+
+
 		debug.draw(g);
 		eb.drawHPBar(g);
 
@@ -287,6 +299,7 @@ public class Level1 extends Game.Src.Map.GameState{
 	private void reset() {
 		player.reset();
 		player.setPosition(180, 1115);
+		player.setSkill(666,false);
 		populateEnemies();
 		putHereItems();
 		blockInput = false;

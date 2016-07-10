@@ -34,4 +34,7 @@ public class ItemParent extends ParentObject {
     public void draw(java.awt.Graphics2D g) {
         super.draw(g);
     }
+    public void drawInHUD(java.awt.Graphics2D g, int x, int y){
+        g.drawImage( animation.getImage(), x, y, null );
+    }
 }

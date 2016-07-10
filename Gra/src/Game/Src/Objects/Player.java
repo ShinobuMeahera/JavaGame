@@ -394,10 +394,8 @@ public class Player extends ParentObject{
 		robeAnimation.setFrames(robeSprites.get(currentAction));
 		robeAnimation.setDelay(SPRITEDELAYS[currentAction]);
 
-		if (getSkill(2)) {
-			swordAnimation.setFrames(swordSprites.get(currentAction));
-			swordAnimation.setDelay(swordSPRITEDELAYS[currentAction]);
-		}
+		swordAnimation.setFrames(swordSprites.get(currentAction));
+		swordAnimation.setDelay(swordSPRITEDELAYS[currentAction]);
 
 		width = FRAMEWIDTHS[currentAction];
 		height = FRAMEHEIGHTS[currentAction];

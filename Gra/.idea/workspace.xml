@@ -26,14 +26,15 @@
     <favorites_list name="Gra" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file leaf-file-name="Level1.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Game/Src/Map/Level1/Level1.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="443">
-              <caret line="109" column="24" selection-start-line="109" selection-start-column="24" selection-end-line="109" selection-end-column="24" />
+            <state relative-caret-position="340">
+              <caret line="288" column="0" selection-start-line="288" selection-start-column="0" selection-end-line="288" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#putHereItems#0;class#Level1#0" expanded="false" />
                 <element signature="method#populateEnemies#0;class#Level1#0" expanded="false" />
                 <element signature="method#handleInput#0;class#Level1#0" expanded="false" />
                 <element signature="method#eventStart#0;class#Level1#0" expanded="false" />
@@ -44,17 +45,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Animation.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Game/Src/Control/Animation.java">
+      <file leaf-file-name="HUD.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Game/Src/Control/HUD.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="455">
-              <caret line="45" column="9" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
-              <folding>
-                <element signature="e#763#764#0" expanded="true" />
-                <element signature="e#797#798#0" expanded="true" />
-                <element signature="e#898#899#0" expanded="true" />
-                <element signature="e#928#929#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="119">
+              <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -62,10 +58,11 @@
       <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="560">
-              <caret line="645" column="41" selection-start-line="645" selection-start-column="41" selection-end-line="645" selection-end-column="41" />
+            <state relative-caret-position="238">
+              <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#Player#0;class#Player#0" expanded="false" />
                 <element signature="method#init#0;class#Player#0" expanded="false" />
                 <element signature="method#setFireballCooldown#0;class#Player#0" expanded="false" />
                 <element signature="method#setParameters#0;class#Player#0" expanded="false" />
@@ -73,15 +70,18 @@
                 <element signature="method#setJumping#0;class#Player#0" expanded="false" />
                 <element signature="method#setDead#0;class#Player#0" expanded="false" />
                 <element signature="method#setSkill#0;class#Player#0" expanded="false" />
+                <element signature="method#getSkill#0;class#Player#0" expanded="false" />
                 <element signature="method#setAttacking#0;class#Player#0" expanded="false" />
                 <element signature="method#setDashing#0;class#Player#0" expanded="false" />
                 <element signature="method#reset#0;class#Player#0" expanded="false" />
                 <element signature="method#getNextPosition#0;class#Player#0" expanded="false" />
+                <element signature="method#setAnimation#0;class#Player#0" expanded="false" />
                 <element signature="method#setViewLeftRight#0;class#Player#0" expanded="false" />
                 <element signature="method#setViewDown#0;class#Player#0" expanded="false" />
                 <element signature="method#hit#0;class#Player#0" expanded="false" />
                 <element signature="method#draw#0;class#Player#0" expanded="false" />
                 <element signature="method#loadGraphics#0;class#Player#0" expanded="false" />
+                <element signature="method#checkItemCollision#0;class#Player#0" expanded="false" />
                 <element signature="method#checkEnemyCollision#0;class#Player#0" expanded="false" />
                 <element signature="method#checkAnimations#0;class#Player#0" expanded="false" />
               </folding>
@@ -92,12 +92,10 @@
       <file leaf-file-name="ItemParent.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemParent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
+            <state relative-caret-position="136">
+              <caret line="8" column="3" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#564#565#0" expanded="true" />
-                <element signature="e#593#594#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -106,8 +104,8 @@
       <file leaf-file-name="ItemSword.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemSword.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="41" column="35" selection-start-line="41" selection-start-column="35" selection-end-line="41" selection-end-column="35" />
+            <state relative-caret-position="408">
+              <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -118,8 +116,28 @@
       <file leaf-file-name="ItemFireball.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemFireball.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+            <state relative-caret-position="765">
+              <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ItemDoubleJump.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDoubleJump.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="663">
+              <caret line="43" column="27" selection-start-line="43" selection-start-column="27" selection-end-line="43" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ItemDash.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDash.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="765">
+              <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -128,33 +146,8 @@
       <file leaf-file-name="ParentObject.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/ParentObject.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="748">
-              <caret line="50" column="28" selection-start-line="50" selection-start-column="28" selection-end-line="50" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Level2.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Game/Src/Map/Level2/Level2.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="51" column="5" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
-              <folding>
-                <element signature="method#handleInput#0;class#Level2#0" expanded="false" />
-                <element signature="method#reset#0;class#Level2#0" expanded="false" />
-                <element signature="method#eventStart#0;class#Level2#0" expanded="false" />
-                <element signature="method#eventDead#0;class#Level2#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ItemDash.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDash.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
+            <state relative-caret-position="685">
+              <caret line="257" column="121" selection-start-line="257" selection-start-column="12" selection-end-line="257" selection-end-column="121" />
               <folding />
             </state>
           </provider>
@@ -213,17 +206,17 @@
         <option value="$PROJECT_DIR$/src/Game/Src/Map/GameStateManager.java" />
         <option value="$PROJECT_DIR$/src/Game/Src/Map/MenuState.java" />
         <option value="$PROJECT_DIR$/src/Game/Src/Map/PauseState.java" />
-        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemSword.java" />
-        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDoubleJump.java" />
-        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDash.java" />
-        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemParent.java" />
         <option value="$PROJECT_DIR$/src/Game/Src/Map/Level2/Level2.java" />
         <option value="$PROJECT_DIR$/src/Game/Src/Objects/ParentObject.java" />
         <option value="$PROJECT_DIR$/src/Game/Src/Control/Animation.java" />
-        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemFireball.java" />
-        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Player.java" />
         <option value="$PROJECT_DIR$/src/Game/Src/Control/Content.java" />
+        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemSword.java" />
+        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemFireball.java" />
+        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDoubleJump.java" />
+        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDash.java" />
         <option value="$PROJECT_DIR$/src/Game/Src/Map/Level1/Level1.java" />
+        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Player.java" />
+        <option value="$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemParent.java" />
       </list>
     </option>
   </component>
@@ -270,6 +263,7 @@
     <property name="last_opened_file_path" value="$USER_HOME$/Desktop/GitHub.appref-ms" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="full.screen.before.presentation.mode" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -556,7 +550,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21987315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21987315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -575,7 +569,7 @@
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -583,7 +577,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21987315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21987315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296875" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -640,6 +634,7 @@
           <caret line="546" column="0" selection-start-line="546" selection-start-column="0" selection-end-line="546" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#Player#0;class#Player#0" expanded="false" />
             <element signature="method#init#0;class#Player#0" expanded="false" />
             <element signature="method#setFireballCooldown#0;class#Player#0" expanded="false" />
             <element signature="method#setParameters#0;class#Player#0" expanded="false" />
@@ -647,15 +642,18 @@
             <element signature="method#setJumping#0;class#Player#0" expanded="false" />
             <element signature="method#setDead#0;class#Player#0" expanded="false" />
             <element signature="method#setSkill#0;class#Player#0" expanded="false" />
+            <element signature="method#getSkill#0;class#Player#0" expanded="false" />
             <element signature="method#setAttacking#0;class#Player#0" expanded="false" />
             <element signature="method#setDashing#0;class#Player#0" expanded="false" />
             <element signature="method#reset#0;class#Player#0" expanded="false" />
             <element signature="method#getNextPosition#0;class#Player#0" expanded="false" />
+            <element signature="method#setAnimation#0;class#Player#0" expanded="false" />
             <element signature="method#setViewLeftRight#0;class#Player#0" expanded="false" />
             <element signature="method#setViewDown#0;class#Player#0" expanded="false" />
             <element signature="method#hit#0;class#Player#0" expanded="false" />
             <element signature="method#draw#0;class#Player#0" expanded="false" />
             <element signature="method#loadGraphics#0;class#Player#0" expanded="false" />
+            <element signature="method#checkItemCollision#0;class#Player#0" expanded="false" />
             <element signature="method#checkEnemyCollision#0;class#Player#0" expanded="false" />
             <element signature="method#checkAnimations#0;class#Player#0" expanded="false" />
           </folding>
@@ -756,6 +754,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#putHereItems#0;class#Level1#0" expanded="false" />
             <element signature="method#populateEnemies#0;class#Level1#0" expanded="false" />
             <element signature="method#handleInput#0;class#Level1#0" expanded="false" />
             <element signature="method#eventStart#0;class#Level1#0" expanded="false" />
@@ -771,6 +770,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#putHereItems#0;class#Level1#0" expanded="false" />
             <element signature="method#populateEnemies#0;class#Level1#0" expanded="false" />
             <element signature="method#handleInput#0;class#Level1#0" expanded="false" />
             <element signature="method#eventStart#0;class#Level1#0" expanded="false" />
@@ -786,6 +786,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#putHereItems#0;class#Level1#0" expanded="false" />
             <element signature="method#populateEnemies#0;class#Level1#0" expanded="false" />
             <element signature="method#handleInput#0;class#Level1#0" expanded="false" />
             <element signature="method#eventStart#0;class#Level1#0" expanded="false" />
@@ -861,14 +862,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="81">
           <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game/Src/Control/HUD.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
           <folding />
         </state>
       </provider>
@@ -988,22 +981,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDoubleJump.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="32" column="31" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDash.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Enemies/EnemyGhost.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1836">
@@ -1017,18 +994,6 @@
         <state relative-caret-position="-1126">
           <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemParent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#564#565#0" expanded="true" />
-            <element signature="e#593#594#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1066,60 +1031,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/ParentObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="748">
-          <caret line="50" column="28" selection-start-line="50" selection-start-column="28" selection-end-line="50" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemSword.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="41" column="35" selection-start-line="41" selection-start-column="35" selection-end-line="41" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemFireball.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="645" column="41" selection-start-line="645" selection-start-column="41" selection-end-line="645" selection-end-column="41" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#init#0;class#Player#0" expanded="false" />
-            <element signature="method#setFireballCooldown#0;class#Player#0" expanded="false" />
-            <element signature="method#setParameters#0;class#Player#0" expanded="false" />
-            <element signature="method#isFireballReady#0;class#Player#0" expanded="false" />
-            <element signature="method#setJumping#0;class#Player#0" expanded="false" />
-            <element signature="method#setDead#0;class#Player#0" expanded="false" />
-            <element signature="method#setSkill#0;class#Player#0" expanded="false" />
-            <element signature="method#setAttacking#0;class#Player#0" expanded="false" />
-            <element signature="method#setDashing#0;class#Player#0" expanded="false" />
-            <element signature="method#reset#0;class#Player#0" expanded="false" />
-            <element signature="method#getNextPosition#0;class#Player#0" expanded="false" />
-            <element signature="method#setViewLeftRight#0;class#Player#0" expanded="false" />
-            <element signature="method#setViewDown#0;class#Player#0" expanded="false" />
-            <element signature="method#hit#0;class#Player#0" expanded="false" />
-            <element signature="method#draw#0;class#Player#0" expanded="false" />
-            <element signature="method#loadGraphics#0;class#Player#0" expanded="false" />
-            <element signature="method#checkEnemyCollision#0;class#Player#0" expanded="false" />
-            <element signature="method#checkAnimations#0;class#Player#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Game/Src/Control/Content.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
@@ -1128,12 +1039,105 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game/Src/Map/Level1/Level1.java">
+    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/ParentObject.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="109" column="24" selection-start-line="109" selection-start-column="24" selection-end-line="109" selection-end-column="24" />
+        <state relative-caret-position="685">
+          <caret line="257" column="121" selection-start-line="257" selection-start-column="12" selection-end-line="257" selection-end-column="121" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDash.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="765">
+          <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemDoubleJump.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="663">
+          <caret line="43" column="27" selection-start-line="43" selection-start-column="27" selection-end-line="43" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemFireball.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="765">
+          <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemSword.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Game/Src/Control/HUD.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Items/ItemParent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="3" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Game/Src/Objects/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#Player#0;class#Player#0" expanded="false" />
+            <element signature="method#init#0;class#Player#0" expanded="false" />
+            <element signature="method#setFireballCooldown#0;class#Player#0" expanded="false" />
+            <element signature="method#setParameters#0;class#Player#0" expanded="false" />
+            <element signature="method#isFireballReady#0;class#Player#0" expanded="false" />
+            <element signature="method#setJumping#0;class#Player#0" expanded="false" />
+            <element signature="method#setDead#0;class#Player#0" expanded="false" />
+            <element signature="method#setSkill#0;class#Player#0" expanded="false" />
+            <element signature="method#getSkill#0;class#Player#0" expanded="false" />
+            <element signature="method#setAttacking#0;class#Player#0" expanded="false" />
+            <element signature="method#setDashing#0;class#Player#0" expanded="false" />
+            <element signature="method#reset#0;class#Player#0" expanded="false" />
+            <element signature="method#getNextPosition#0;class#Player#0" expanded="false" />
+            <element signature="method#setAnimation#0;class#Player#0" expanded="false" />
+            <element signature="method#setViewLeftRight#0;class#Player#0" expanded="false" />
+            <element signature="method#setViewDown#0;class#Player#0" expanded="false" />
+            <element signature="method#hit#0;class#Player#0" expanded="false" />
+            <element signature="method#draw#0;class#Player#0" expanded="false" />
+            <element signature="method#loadGraphics#0;class#Player#0" expanded="false" />
+            <element signature="method#checkItemCollision#0;class#Player#0" expanded="false" />
+            <element signature="method#checkEnemyCollision#0;class#Player#0" expanded="false" />
+            <element signature="method#checkAnimations#0;class#Player#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Game/Src/Map/Level1/Level1.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="288" column="0" selection-start-line="288" selection-start-column="0" selection-end-line="288" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#putHereItems#0;class#Level1#0" expanded="false" />
             <element signature="method#populateEnemies#0;class#Level1#0" expanded="false" />
             <element signature="method#handleInput#0;class#Level1#0" expanded="false" />
             <element signature="method#eventStart#0;class#Level1#0" expanded="false" />

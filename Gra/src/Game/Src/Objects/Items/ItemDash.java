@@ -47,5 +47,6 @@ public class ItemDash extends ItemParent {
 
     public void draw(Graphics2D g) {
         super.draw(g);
+        if (player.getSkill(1)) super.drawInHUD(g, 30, 35);
     }
 }

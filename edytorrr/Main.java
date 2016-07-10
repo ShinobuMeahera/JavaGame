@@ -24,6 +24,7 @@ public class Main extends Application {
     private Stage primaryStage;
     private MainSceneController mController;
     public Image src;
+    public String tileMapName = "tileset3.png";
     
 
     private int[][] map = new int[0][0];
@@ -36,7 +37,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try{
-            src = new Image(new FileInputStream("tileset3.png"));
+            src = new Image(new FileInputStream(tileMapName));
         }
         catch(Exception e){
             System.out.print("Brak src2");
@@ -163,6 +164,40 @@ public class Main extends Application {
                 System.out.println("NullPointerExe"); 
             }
 	}
+    public void Prefer(){
+        Parent prefer;
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("Prefer.fxml"));
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(getPrimaryStage());
+            stage.setTitle("Preferences");
+            stage.setScene(new Scene(loader.load()));
+
+            PreferController controller = loader.getController();
+            controller.setApp(this);
+            controller.run();
+            stage.showAndWait();
+
+    }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+    public void changeTileMap(File newtileMap){
+        tileMapName = newtileMap.getPath();
+        try{
+            src = new Image(new FileInputStream(tileMapName));
+        }
+        catch(Exception e){
+            System.out.print("Brak src2");
+        }
+        mController.src2 = src;
+        mController.refreshLeft();
+
+    }
     public void setCanvas(int mode){ 
         if(mode == 0){ //NOWA MAPA
             

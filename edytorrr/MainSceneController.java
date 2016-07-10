@@ -109,6 +109,8 @@ public class MainSceneController implements Initializable {
         saveMenuItem.setDisable(false);
         saveAsMenuItem.setDisable(false);
         controlBar.setDisable(false);
+        src2 = mainApp.src;
+        refreshLeft();
     }
 
     @FXML
@@ -135,6 +137,11 @@ public class MainSceneController implements Initializable {
     @FXML
     public void closeFunction(){
         System.exit(1);
+    }
+
+    @FXML
+    public void preferFunction(){
+        mainApp.Prefer();
     }
 
     @FXML
@@ -344,7 +351,7 @@ public class MainSceneController implements Initializable {
         System.out.println("Z  " + zKey + " x " + xKey);
 
     }
-    private void refreshLeft(){
+    public void refreshLeft(){
         gc2 = canvas2.getGraphicsContext2D();
         gc2.setFill(Color.MAGENTA);
         gc2.fillRect(0,0,1000,1000);
@@ -384,12 +391,6 @@ public class MainSceneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try{
-            src2 = new Image(new FileInputStream("tileset3.png"));
-        }
-        catch(Exception e){
-            System.out.print("Brak src2");
-        }
 
         scroll.setOnScrollFinished(this::scrollBar);
         gc = canvas.getGraphicsContext2D();

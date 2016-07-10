@@ -67,7 +67,5 @@ public class NewMapController {
     public void setApp(Main main) {
         this.mainApp = main;
     }
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+
 }

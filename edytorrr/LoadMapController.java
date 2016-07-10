@@ -16,10 +16,10 @@ import javafx.stage.Stage;
  *
  * @author Shinobu Meahera
  */
-public class LoadMapController {
+public class LoadMapController  {
     private Main mainApp;
     private Stage newMapStage;
-    
+
     @FXML
     private TextField nameTextField;
     

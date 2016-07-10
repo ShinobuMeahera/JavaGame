@@ -286,7 +286,7 @@ public class Level1 extends Game.Src.Map.GameState{
 
 		
 
-
+// random after merge
 		debug.draw(g);
 		eb.drawHPBar(g);
 

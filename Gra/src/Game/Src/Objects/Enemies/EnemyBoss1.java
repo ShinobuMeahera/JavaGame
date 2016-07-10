@@ -91,9 +91,8 @@ public class EnemyBoss1 extends Enemy {
 			lastBreath--;
 			if (lastBreath <= 0) remove = true;
 		}
-		
-		if(player.getx() < x) facingRight = false;
-		else facingRight = true;
+
+		facingRight = player.getx() >= x;
 		
 		
 		if (player.getx() > 2240 && player.gety() > 1530 && player.gety() < 1870){

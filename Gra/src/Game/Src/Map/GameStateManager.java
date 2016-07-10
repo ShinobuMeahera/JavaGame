@@ -4,6 +4,8 @@ import Game.Src.Start.GamePanel;
 import Game.Src.Map.Level1.Level1;
 import Game.Src.Map.Level2.Level2;
 
+import java.awt.*;
+
 public class GameStateManager {
 	
 	private GameState[] gameStates;
@@ -63,7 +65,9 @@ public class GameStateManager {
 		}
 		if(gameStates[currentState] != null) gameStates[currentState].draw(g);
 		else {
-			g.setColor(java.awt.Color.BLACK);
+			Color myColour = new Color(255, 255, 255, 127);
+
+			g.setColor(myColour);
 			g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
 		}
 	}

@@ -8,6 +8,7 @@ import Game.Src.Objects.Enemies.Enemy;
 import Game.Src.Objects.Enemies.EnemyBoss1;
 import Game.Src.Objects.Enemies.EnemyGhost;
 import Game.Src.Objects.Enemies.EnemySkeleton;
+import Game.Src.Objects.Items.*;
 import Game.Src.Objects.Player;
 import Game.Src.Objects.Projectiles.EnergyParticle;
 import Game.Src.Objects.Projectiles.FireBall;
@@ -15,6 +16,7 @@ import Game.Src.Objects.Teleport;
 import Game.Src.Start.GamePanel;
 import Game.Src.Map.GameStateManager;
 import Game.Src.Control.DebugInfo;
+
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class Level1 extends Game.Src.Map.GameState{
 	private ArrayList<Enemy> enemies;
 	private ArrayList<FireBall> fireballs;
 	private ArrayList<EnergyParticle> energyParticles;
+	private ArrayList<ItemParent> items;
 	private HUD hud;
 	private Teleport teleport;
 
@@ -49,48 +52,68 @@ public class Level1 extends Game.Src.Map.GameState{
 	public Level1(GameStateManager gsm) {
 		super(gsm);
 		init();
+		blockInput = false;
 	}
 	
 	public void init() {
 		back = new Background(BACKGROUND, 0.5);
 
-		// tilemap
 		tileMap = new TileMap(30);
 		tileMap.loadTiles(TILESET);
 		tileMap.loadMap(LEVEL);
 		tileMap.setPosition(0, 0);
 		tileMap.setTween(0.025);
-		
-		//player
+
 		player = new Player(tileMap);
-		player.setPosition(180, 1115);	
-		fireballs = new ArrayList<FireBall>();
+		player.setPosition(180, 1115);
 
+		items = new ArrayList<ItemParent>();
+		putHereItems();
 
-		
-		//takie ladne zielone intro
-		eventStart = true;
-		tb = new ArrayList<Rectangle>();	
-		eventStart();
-		
-		//wrogowie
 		enemies = new ArrayList<Enemy>();
-		
-		// energy particle
-		energyParticles = new ArrayList<EnergyParticle>();
-		
-		// init player
-		player.init(enemies, energyParticles);
 		populateEnemies();
+
+		fireballs = new ArrayList<FireBall>();
+		energyParticles = new ArrayList<EnergyParticle>();
 
 		teleport = new Teleport(tileMap);
 		teleport.setPosition(3100, 2300);
 
+		player.init(enemies, energyParticles, items);
+
 		debug = new DebugInfo(tileMap, player);
 		hud = new HUD(tileMap);
 		hud.init(player);
+
+		eventStart = true;
+		tb = new ArrayList<Rectangle>();
+		eventStart();
 	}
-	
+
+	private void putHereItems(){
+		items.clear();
+		ItemDoubleJump idj;
+		ItemSword is;
+		ItemDash id;
+		ItemFireball ifb;
+
+		idj = new ItemDoubleJump(tileMap, player);
+		idj.setPosition(272, 1530);
+		items.add(idj);
+
+		id = new ItemDash(tileMap, player);
+		id.setPosition(3080, 1000);
+		items.add(id);
+
+		/*is = new ItemSword(tileMap, player);
+		is.setPosition(210, 2140);
+		items.add(is);*/
+
+		ifb = new ItemFireball(tileMap, player);
+		ifb.setPosition(210, 2140);
+		items.add(ifb);
+	}
+
 	private void populateEnemies() {
 		enemies.clear();
 		EnemySkeleton es;
@@ -132,7 +155,7 @@ public class Level1 extends Game.Src.Map.GameState{
 
 
 		eb = new EnemyBoss1(tileMap, player);
-		eb.setPosition(2550, 1700);
+		eb.setPosition(2550, 1750);
 		enemies.add(eb);
 	}
 	
@@ -179,6 +202,15 @@ public class Level1 extends Game.Src.Map.GameState{
 			}
 		}
 
+		for(int i = 0; i < items.size(); i++) {
+			ItemParent e = items.get(i);
+			e.update();
+			if(e.shouldRemove()){
+				items.remove(i);
+				i--;
+			}
+		}
+
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy e = enemies.get(i);
 			e.update();
@@ -193,30 +225,32 @@ public class Level1 extends Game.Src.Map.GameState{
 	
 	public void handleInput() {
 		FireBall fb;
-		
-		player.setJumping(Keys.keyState[Keys.UP]);
-		player.setLeft(Keys.keyState[Keys.LEFT]);
-		player.setRight(Keys.keyState[Keys.RIGHT]);
-		player.setDown(Keys.keyState[Keys.DOWN]);
 
-		if(Keys.isPressed(Keys.BUTTON3)) player.setAttacking();
-		if(Keys.isPressed(Keys.BUTTON4)) debug.setReady();
-		if(Keys.isPressed(Keys.ENTER)) reset();
+		if (!blockInput) {
+			player.setJumping(Keys.keyState[Keys.UP]);
+			player.setLeft(Keys.keyState[Keys.LEFT]);
+			player.setRight(Keys.keyState[Keys.RIGHT]);
+			player.setDown(Keys.keyState[Keys.DOWN]);
 
-		if(Keys.isPressed(Keys.ESCAPE)) gsm.setPaused(true);
-		
-		if(Keys.isPressed(Keys.BUTTON2)){
-			if (player.isDashingReady()) player.setDashing();
-		}
+			if (Keys.isPressed(Keys.BUTTON3)) player.setAttacking();
+			if (Keys.isPressed(Keys.BUTTON4)) debug.setReady();
+			if (Keys.isPressed(Keys.ENTER)) reset();
 
-		if(Keys.isPressed(Keys.BUTTON1)) {
-			if ( player.isFireballReady()){
-				fb = new FireBall(tileMap, player.getFacing());
-				fb.shootFireball(player.getx(), player.gety(), player.getFacing());
-				fireballs.add(fb);
+			if (Keys.isPressed(Keys.ESCAPE)) gsm.setPaused(true);
 
-				player.setAttacking();
-				player.setFireballCooldown(0);
+			if (Keys.isPressed(Keys.BUTTON2)) {
+				if (player.isDashingReady() && player.getSkill(1) ) player.setDashing();
+			}
+
+			if (Keys.isPressed(Keys.BUTTON1)) {
+				if (player.isFireballReady() && player.getSkill(3)) {
+					fb = new FireBall(tileMap, player.getFacing());
+					fb.shootFireball(player.getx(), player.gety(), player.getFacing());
+					fireballs.add(fb);
+
+					player.setAttacking();
+					player.setFireballCooldown(0);
+				}
 			}
 		}
 	}
@@ -231,14 +265,12 @@ public class Level1 extends Game.Src.Map.GameState{
 		player.draw(g);
 		teleport.draw(g);
 
-		for(int i = 0; i < fireballs.size(); i++) {
-			fireballs.get(i).draw(g);
-		}
+		for(int i = 0; i < fireballs.size(); i++) fireballs.get(i).draw(g);
 
-		for(int i = 0; i < enemies.size(); i++) {
-			enemies.get(i).draw(g);
-		}
-		 
+		for(int i = 0; i < enemies.size(); i++) enemies.get(i).draw(g);
+
+		for(int i = 0; i < items.size(); i++) items.get(i).draw(g);
+
 		tileMap.draw(g);
 		
 
@@ -256,7 +288,8 @@ public class Level1 extends Game.Src.Map.GameState{
 		player.reset();
 		player.setPosition(180, 1115);
 		populateEnemies();
-		blockInput = true;
+		putHereItems();
+		blockInput = false;
 		eventCount = 0;
 		tileMap.setShaking(false, 0);
 		eventStart = true;
@@ -316,22 +349,22 @@ public class Level1 extends Game.Src.Map.GameState{
 
 	private void eventFinish() {
 		eventCount++;
-		if(eventCount == 1) {
+		if(eventCount == 30) {
 			player.setTeleporting(true);
 			player.stop();
 		}
-		else if(eventCount == 5) {
+		else if(eventCount == 45) {
 			tb.clear();
 			tb.add(new Rectangle(
 					GamePanel.WIDTH / 2, GamePanel.HEIGHT / 2, 0, 0));
 		}
-		else if(eventCount > 10) {
+		else if(eventCount > 60) {
 			tb.get(0).x -= 6;
 			tb.get(0).y -= 4;
 			tb.get(0).width += 12;
 			tb.get(0).height += 8;
 		}
-		if(eventCount == 20) {
+		if(eventCount == 120) {
 
 			gsm.setState(GameStateManager.LEVEL2);
 		}

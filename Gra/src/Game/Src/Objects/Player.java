@@ -4,6 +4,7 @@ import Game.Src.Control.Animation;
 import Game.Src.Control.DebugInfo;
 import Game.Src.Map.TileMap.TileMap;
 import Game.Src.Objects.Enemies.Enemy;
+import Game.Src.Objects.Items.*;
 import Game.Src.Objects.Projectiles.EnergyParticle;
 
 import java.awt.Graphics2D;
@@ -18,9 +19,11 @@ public class Player extends ParentObject{
 	
 	private ArrayList<Enemy> enemies;
 	private ArrayList<EnergyParticle> energyParticles;
+	private ArrayList<ItemParent> items;
 
 	public static final String PLAYERSPRITEMAP = "/Game/Src/Assets/player-spritemap.png";
 	public static final String ARMORSPRITEMAP = "/Game/Src/Assets/armor05-spritemap.png";
+	public static final String ROBESPRITEMAP = "/Game/Src/Assets/robe02-spritemap.png";
 	public static final String SWORDSPRITEMAP = "/Game/Src/Assets/sword-slash.png";
 	
 	// dostepne ruchy
@@ -34,6 +37,11 @@ public class Player extends ParentObject{
 	private boolean dashing;
 	public boolean knockback;
 	private boolean flinching;
+
+	private boolean skill_doubleJump;
+	private boolean skill_sword;
+	private boolean skill_dash;
+	private boolean skill_fireball;
 	
 	//stuff do fireballa
 	public static boolean fireballShooted;
@@ -42,7 +50,6 @@ public class Player extends ParentObject{
 	
 	// dynks do animacji
 	protected int currentAction;
-	protected int previousAction;
 	
 	//takie drobne rzeczy gracza
 	private int health;
@@ -59,6 +66,7 @@ public class Player extends ParentObject{
 	
 	// ANIMACJE
 	private ArrayList<BufferedImage[]> sprites;
+	private ArrayList<BufferedImage[]> armorSprites;
 	private ArrayList<BufferedImage[]> robeSprites;
 	private ArrayList<BufferedImage[]> swordSprites;
 	
@@ -75,11 +83,11 @@ public class Player extends ParentObject{
 	
 	//klasy animacji
 	protected Animation bodyAnimation = new Animation();
+	protected Animation armorAnimation = new Animation();
 	protected Animation robeAnimation = new Animation();
 	protected Animation swordAnimation = new Animation();
 	
 	private Rectangle attackRect;
-	private Rectangle attackRectDraw;
 	private Rectangle aur;
 	private Rectangle alr;
 	
@@ -100,6 +108,7 @@ public class Player extends ParentObject{
 	
 		super(tm);
 		boost = 1;
+		skill_doubleJump = skill_sword = skill_dash = skill_fireball = false;
 
 		attackRect = new Rectangle(0, 0, 0, 0);
 		attackRect.width = 20;
@@ -133,54 +142,16 @@ public class Player extends ParentObject{
 		damage = 2;
 		health = maxHealth = 50;
 
-		try {
-			
-			BufferedImage spritesheet = ImageIO.read( getClass().getResourceAsStream(PLAYERSPRITEMAP));
-			BufferedImage spritesheet2 = ImageIO.read(getClass().getResourceAsStream(ARMORSPRITEMAP));
-			BufferedImage spritesheet3 = ImageIO.read(getClass().getResourceAsStream(SWORDSPRITEMAP));
-			
-			//tutaj częśc dla człowieczka
-			int count = 0;
-			sprites = new ArrayList<BufferedImage[]>();
-			for(int i = 0; i < NUMFRAMES.length; i++) {
-				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
-				for(int j = 0; j < NUMFRAMES[i]; j++) { bi[j] = spritesheet.getSubimage( j * FRAMEWIDTHS[i], count,	FRAMEWIDTHS[i],	FRAMEHEIGHTS[i]);}
-				sprites.add(bi);
-				count += FRAMEHEIGHTS[i];
-			}
+		loadGraphics();
 
-			// tutaj część dla szaty
-			count = 0;
-			robeSprites = new ArrayList<BufferedImage[]>();
-			for(int i = 0; i < NUMFRAMES.length; i++) {
-				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
-				for(int j = 0; j < NUMFRAMES[i]; j++) { bi[j] = spritesheet2.getSubimage(j * FRAMEWIDTHS[i], count, FRAMEWIDTHS[i],	FRAMEHEIGHTS[i]	); }
-				robeSprites.add(bi);
-				count += FRAMEHEIGHTS[i];
-			}	
-			
-			// tutaj czesc dla miecza
-			count = 0;
-			swordSprites = new ArrayList<BufferedImage[]>();
-			for(int i = 0; i < swordNUMFRAMES.length; i++) {
-				BufferedImage[] bi = new BufferedImage[swordNUMFRAMES[i]];
-				for(int j = 0; j < swordNUMFRAMES[i]; j++) { bi[j] = spritesheet3.getSubimage( j * swordFRAMEWIDTHS[i], count, swordFRAMEWIDTHS[i], swordFRAMEHEIGHTS[i]);}
-				swordSprites.add(bi);
-				count += swordFRAMEHEIGHTS[i];
-			}	
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			System.out.println("Error loading graphics for PLAYER.");
-			System.exit(0);
-		}	
 		energyParticles = new ArrayList<EnergyParticle>();
 		setAnimation(STAND);
 	}	
 	
-	public void init(ArrayList<Enemy> enemies, ArrayList<EnergyParticle> energyParticles) {
+	public void init(ArrayList<Enemy> enemies, ArrayList<EnergyParticle> energyParticles, ArrayList<ItemParent> items) {
 		this.enemies = enemies;
 		this.energyParticles = energyParticles;
+		this.items = items;
 	}
 	
 	public void setFireballCooldown(int x){
@@ -200,21 +171,22 @@ public class Player extends ParentObject{
 	}
 
 	public boolean isFireballReady(){
-		if (fireballCooldown >= 100 && (falling || jumping  || !left || !right) && !knockback && !dashing) return true;
-		else return false;
+		return fireballCooldown >= 100 && (falling || jumping || !left || !right) && !knockback && !dashing;
 	}
 	
 	public boolean isDashingReady(){
-		if (dashCooldown >= 200 && (falling || jumping || left || right)&& !knockback) return true;
-		else return false;
+		return dashCooldown >= 200 && (falling || jumping || left || right) && !knockback;
 	}
 	
 	public void setJumping(boolean b) {
 		if(knockback) return;
+
+
 		if(b && !jumping && falling && !alreadyDoubleJump) {
 			doubleJump = true;
 		}
 		jumping = b;
+
 	}
 	
 	public void setDead() {
@@ -237,33 +209,83 @@ public class Player extends ParentObject{
 	public boolean getFacing(){
 		return facingRight;
 	}
-	
+
+	public void setSkill(int number, boolean state){
+		switch (number) {
+			case 0:
+				skill_doubleJump = state;
+				break;
+
+			case 1:
+				skill_dash = state;
+				break;
+
+			case 2:
+				skill_sword = state;
+				break;
+
+			case 3:
+				skill_fireball = state;
+				break;
+
+			case 666:
+				skill_doubleJump = state;
+				skill_dash = state;
+				skill_sword = state;
+				skill_fireball = state;
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	public boolean getSkill(int number){
+		switch (number) {
+			case 0:
+				return skill_doubleJump;
+
+			case 1:
+				return skill_dash;
+
+			case 2:
+				return skill_sword;
+
+			case 3:
+				return skill_fireball;
+
+			default: return false;
+		}
+	}
+
 	public void setAttacking() {
 		if(knockback) return;
 		if(dashing) return;
-		
-		if( ( jumping  || falling ) && (!attack || !hi_attack) && !squat){
-					hi_attack = true;
-			attack = false;
-			low_attack = false;
-		}
-		else if (squat && (!attack || !low_attack) && !jumping && !falling){
-			hi_attack = false;
-			attack = false;
-					low_attack = true;
-		}
-		else if (!squat && !jumping && !falling && !attack && !low_attack && !hi_attack){
-			hi_attack = false;
-						attack = true;
-			low_attack = false;
+
+		if (skill_sword) {
+			if ((jumping || falling) && (!attack || !hi_attack) && !squat) {
+				hi_attack = true;
+				attack = false;
+				low_attack = false;
+			} else if (squat && (!attack || !low_attack) && !jumping && !falling) {
+				hi_attack = false;
+				attack = false;
+				low_attack = true;
+			} else if (!squat && !jumping && !falling && !attack && !low_attack && !hi_attack) {
+				hi_attack = false;
+				attack = true;
+				low_attack = false;
+			}
 		}
 	}
 	
 	public void setDashing() {
 		if(knockback) return;
-		if(!attack && !hi_attack  && !low_attack && !dashing && (left || right || jumping || falling) && !squat) {
-			dashing = true;
-			dashTimer = 0;
+		if (skill_dash) {
+			if (!attack && !hi_attack && !low_attack && !dashing && (left || right || jumping || falling) && !squat) {
+				dashing = true;
+				dashTimer = 0;
+			}
 		}
 	}
 		
@@ -328,21 +350,26 @@ public class Player extends ParentObject{
 		if(dashing) {
 			dashCooldown = 0;
 			dashTimer++;
-			if(facingRight) dx = moveSpeed * (10 - dashTimer * 0.04);
-			else dx = -moveSpeed * (10 - dashTimer * 0.04);
+			if(facingRight) {
+				dx = moveSpeed * (10 - dashTimer * 0.04);
+				for(int i = 0; i < 6; i++) {
+					energyParticles.add(new EnergyParticle(	tileMap, x,	y + cheight / 4, EnergyParticle.LEFT));
+				}
+			}
+			else {
+				dx = -moveSpeed * (10 - dashTimer * 0.04);
+				for(int i = 0; i < 6; i++) {
+					energyParticles.add(new EnergyParticle(	tileMap, x,	y + cheight / 4, EnergyParticle.RIGHT));
+				}
+			}
 		}
 		
-		if(doubleJump) {
+		if(doubleJump && skill_doubleJump) {
 			dy = doubleJumpStart;
 			alreadyDoubleJump = true;
 			doubleJump = false;
 			for(int i = 0; i < 6; i++) {
-				energyParticles.add(
-					new EnergyParticle(
-						tileMap,
-						x,
-						y + cheight / 4,
-						EnergyParticle.DOWN));
+				energyParticles.add(new EnergyParticle(	tileMap, x,	y + cheight / 4, EnergyParticle.DOWN));
 			}
 		}
 		
@@ -359,13 +386,19 @@ public class Player extends ParentObject{
 		currentAction = i;
 		
 		bodyAnimation.setFrames(sprites.get(currentAction));
-		robeAnimation.setFrames(robeSprites.get(currentAction));
-		swordAnimation.setFrames(swordSprites.get(currentAction));
-		
 		bodyAnimation.setDelay(SPRITEDELAYS[currentAction]);
+
+		armorAnimation.setFrames(armorSprites.get(currentAction));
+		armorAnimation.setDelay(SPRITEDELAYS[currentAction]);
+
+		robeAnimation.setFrames(robeSprites.get(currentAction));
 		robeAnimation.setDelay(SPRITEDELAYS[currentAction]);
-		swordAnimation.setDelay(swordSPRITEDELAYS[currentAction]);
-	
+
+		if (getSkill(2)) {
+			swordAnimation.setFrames(swordSprites.get(currentAction));
+			swordAnimation.setDelay(swordSPRITEDELAYS[currentAction]);
+		}
+
 		width = FRAMEWIDTHS[currentAction];
 		height = FRAMEHEIGHTS[currentAction];
 	}
@@ -403,20 +436,19 @@ public class Player extends ParentObject{
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
 
-		if (DebugInfo.debugReady) boost = 2;
+		if (DebugInfo.debugReady) {
+			setSkill(666, true);
+			boost = 2;
+		}
 		else boost = 1;
 		setParameters(boost);
-		
-		if(teleporting) {
-			energyParticles.add(
-					new EnergyParticle(tileMap, x, y, EnergyParticle.UP)
-			);
-		}
+
+		if(teleporting) energyParticles.add( new EnergyParticle(tileMap, x, y, EnergyParticle.UP));
 
 		if(dx == 0) x = (int)x;
 		if (fireballCooldown > 15) fireballShooted = false;
 		
-		if (fireballCooldown >= 100) fireballCooldown = 100;
+		if(fireballCooldown >= 100) fireballCooldown = 100;
 		else fireballCooldown++;
 		
 		if (dashCooldown >= 200) dashCooldown = 200;
@@ -456,8 +488,171 @@ public class Player extends ParentObject{
 			}
 		}
 				
-		for(int i = 0; i < enemies.size(); i++) {
+		checkEnemyCollision();
+		checkItemCollision();
+
+		checkAnimations();
+
+		bodyAnimation.update();
+		armorAnimation.update();
+		robeAnimation.update();
+		swordAnimation.update();
+		
+		// ustawienie kierunku
+		if(!attack && !hi_attack && !low_attack && !knockback && !dashing) {
+			if(right) facingRight = true;
+			if(left) facingRight = false;
+		}
+	}
+
+	@Override
+	public void draw(Graphics2D g) {
+
+		setMapPosition();
+
+
+		for(int i = 0; i < energyParticles.size(); i++) {
+			energyParticles.get(i).draw(g);
+		}
+		if(flinching && !knockback) {
+			if(flinchCount % 10 < 5) return;
+		}
+		
+		if(facingRight) {
+			g.drawImage( bodyAnimation.getImage(), (int)(x + xmap - width / 2), (int)(y + ymap - height / 2), null );
+
+			if (skill_doubleJump && !skill_dash) 	g.drawImage( armorAnimation.getImage(), (int)(x + xmap - width / 2), (int)(y + ymap - height / 2), null );
+			else if (skill_dash) g.drawImage( robeAnimation.getImage(), (int)(x + xmap - width / 2), (int)(y + ymap - height / 2), null );
+
 			
+			if (!fireballShooted){
+				if (attack || low_attack || hi_attack){
+					double new_y;
+					
+					if (squat){
+						new_y = y+ ymap -(height/2) + 10;
+					}
+					else {
+						new_y = y+ ymap -height/2;
+					}
+					
+					if (getSkill(2)) g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2),	(int)(new_y), null );
+				}
+			}
+		}
+		else {
+
+			g.drawImage( bodyAnimation.getImage(), 		(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
+			if (skill_doubleJump && !skill_dash) 	g.drawImage( armorAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
+			else if (skill_dash) g.drawImage( robeAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
+
+				
+			if (!fireballShooted){
+				if (attack || low_attack || hi_attack){
+					double new_y;
+					
+					if (squat) {
+						new_y = y + ymap - (height / 2) + 10;
+					}
+					else {
+						new_y = y + ymap - height / 2;
+					}
+
+					if (getSkill(2)) g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2 + width), (int)(new_y), -60,	30,	null );
+				}
+			}
+		}
+
+		if (DebugInfo.debugReady) {
+			Rectangle r = getRectangle();
+			r.x += xmap;
+			r.y += ymap;
+			g.draw(r);
+		}
+	}
+
+	private void loadGraphics(){
+		try {
+
+			BufferedImage spritesheet = ImageIO.read( getClass().getResourceAsStream(PLAYERSPRITEMAP));
+			BufferedImage spritesheet2 = ImageIO.read(getClass().getResourceAsStream(ARMORSPRITEMAP));
+			BufferedImage spritesheet3 = ImageIO.read(getClass().getResourceAsStream(SWORDSPRITEMAP));
+			BufferedImage spritesheet4 = ImageIO.read(getClass().getResourceAsStream(ROBESPRITEMAP));
+
+			//tutaj częśc dla człowieczka
+			int count = 0;
+			sprites = new ArrayList<BufferedImage[]>();
+			for(int i = 0; i < NUMFRAMES.length; i++) {
+				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
+				for(int j = 0; j < NUMFRAMES[i]; j++) { bi[j] = spritesheet.getSubimage( j * FRAMEWIDTHS[i], count,	FRAMEWIDTHS[i],	FRAMEHEIGHTS[i]);}
+				sprites.add(bi);
+				count += FRAMEHEIGHTS[i];
+			}
+
+			// tutaj część dla zbroi
+			count = 0;
+			armorSprites = new ArrayList<BufferedImage[]>();
+			for(int i = 0; i < NUMFRAMES.length; i++) {
+				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
+				for(int j = 0; j < NUMFRAMES[i]; j++) { bi[j] = spritesheet2.getSubimage(j * FRAMEWIDTHS[i], count, FRAMEWIDTHS[i],	FRAMEHEIGHTS[i]	); }
+				armorSprites.add(bi);
+				count += FRAMEHEIGHTS[i];
+			}
+
+			// tutaj czesc dla miecza
+			count = 0;
+			swordSprites = new ArrayList<BufferedImage[]>();
+			for(int i = 0; i < swordNUMFRAMES.length; i++) {
+				BufferedImage[] bi = new BufferedImage[swordNUMFRAMES[i]];
+				for(int j = 0; j < swordNUMFRAMES[i]; j++) { bi[j] = spritesheet3.getSubimage( j * swordFRAMEWIDTHS[i], count, swordFRAMEWIDTHS[i], swordFRAMEHEIGHTS[i]);}
+				swordSprites.add(bi);
+				count += swordFRAMEHEIGHTS[i];
+			}
+
+			count = 0;
+			robeSprites = new ArrayList<BufferedImage[]>();
+			for(int i = 0; i < NUMFRAMES.length; i++) {
+				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
+				for(int j = 0; j < NUMFRAMES[i]; j++) { bi[j] = spritesheet4.getSubimage(j * FRAMEWIDTHS[i], count, FRAMEWIDTHS[i],	FRAMEHEIGHTS[i]	); }
+				robeSprites.add(bi);
+				count += FRAMEHEIGHTS[i];
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("Error loading graphics for PLAYER.");
+			System.exit(0);
+		}
+	}
+
+	private void checkItemCollision() {
+		for(int i = 0; i < items.size(); i++) {
+
+			ItemParent e = items.get(i);
+
+			if (intersects(e)) {
+				if (e instanceof ItemDoubleJump) {
+					setSkill(0, true);
+					e.canBeRemoved();
+				}
+				if (e instanceof ItemDash) {
+					setSkill(1, true);
+					e.canBeRemoved();
+				}
+				if (e instanceof ItemSword) {
+					setSkill(2, true);
+					e.canBeRemoved();
+				}
+				if (e instanceof ItemFireball) {
+					setSkill(3, true);
+					e.canBeRemoved();
+				}
+			}
+		}
+	}
+	private void checkEnemyCollision(){
+		for(int i = 0; i < enemies.size(); i++) {
+
 			Enemy e = enemies.get(i);
 
 			if( currentAction == HIGH_ATTACK ) {
@@ -479,10 +674,10 @@ public class Player extends ParentObject{
 			if(!e.isDead() && intersects(e)) {
 				hit(e.getDamage());
 			}
-			
+
 		}
-		
-		// SPRAWDZENIE ANIMACJI
+	}
+	private void checkAnimations(){
 		if(teleporting) {
 			if(currentAction != TELEPORTING) {
 				setAnimation(TELEPORTING);
@@ -521,7 +716,7 @@ public class Player extends ParentObject{
 				if(facingRight) attackRect.x = (int)x + 10;
 				else attackRect.x = (int)x - 35;
 			}
-		}				
+		}
 		else if(dy < 0) {
 			if(currentAction != JUMPING) {
 				setAnimation(JUMPING);
@@ -549,81 +744,6 @@ public class Player extends ParentObject{
 		}
 		else if(currentAction != STAND) {
 			setAnimation(STAND);
-		}
-		
-		//aktualizacja animacji
-		bodyAnimation.update();
-		robeAnimation.update();
-		swordAnimation.update();
-		
-		// ustawienie kierunku
-		if(!attack && !hi_attack && !low_attack && !knockback && !dashing) {
-			if(right) facingRight = true;
-			if(left) facingRight = false;
-		}
-	}
-
-	@Override
-	public void draw(Graphics2D g) {
-	
-		//rysowanie animacji, najpierw czlowieczek, potem szata, ogolnie zasada taka
-		// zeby rysowac warstwami, najpierw te co glebiej, potem te co blizej nas
-		
-		setMapPosition();
-		for(int i = 0; i < energyParticles.size(); i++) {
-			energyParticles.get(i).draw(g);
-		}
-		if(flinching && !knockback) {
-			if(flinchCount % 10 < 5) return;
-		}
-		
-		if(facingRight) {
-			// jeżeli obrócony w prawo
-			g.drawImage( bodyAnimation.getImage(), 	(int)(x + xmap - width / 2),	(int)(y + ymap - height / 2), null );
-			g.drawImage( robeAnimation.getImage(), 	(int)(x + xmap - width / 2), 	(int)(y + ymap - height / 2), null );
-			
-			if (!fireballShooted){
-				if (attack || low_attack || hi_attack){
-					double new_y = 0;
-					
-					if (squat){
-						new_y = y+ ymap -(height/2) + 10;
-					}
-					else {
-						new_y = y+ ymap -height/2;
-					}
-					
-					g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2),	(int)(new_y), null );
-				}
-			}
-		}
-		else {
-			// jeżeli obrócony w lewo
-
-			g.drawImage( bodyAnimation.getImage(), 	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
-			g.drawImage( robeAnimation.getImage(),	(int)(x + xmap - width / 2 + width),	(int)(y + ymap - height / 2), -width, height, null);
-				
-			if (!fireballShooted){
-				if (attack || low_attack || hi_attack){
-					double new_y = 0;
-					
-					if (squat) {
-						new_y = y + ymap - (height / 2) + 10;
-					}
-					else {
-						new_y = y + ymap - height / 2;
-					}
-					
-					g.drawImage( swordAnimation.getImage(),	(int)(x + xmap - width / 2 + width), (int)(new_y), -60,	30,	null );
-				}
-			}
-		}
-
-		if (DebugInfo.debugReady) {
-			Rectangle r = getRectangle();
-			r.x += xmap;
-			r.y += ymap;
-			g.draw(r);
 		}
 	}
 }

@@ -8,6 +8,7 @@ import Game.Src.Objects.Enemies.Enemy;
 import Game.Src.Objects.Enemies.EnemyBoss1;
 import Game.Src.Objects.Enemies.EnemyGhost;
 import Game.Src.Objects.Enemies.EnemySkeleton;
+import Game.Src.Objects.Items.ItemParent;
 import Game.Src.Objects.Player;
 import Game.Src.Objects.Projectiles.EnergyParticle;
 import Game.Src.Objects.Projectiles.FireBall;
@@ -33,6 +34,7 @@ public class Level2 extends Game.Src.Map.GameState{
 	private ArrayList<Enemy> enemies;
 	private ArrayList<FireBall> fireballs;
 	private ArrayList<EnergyParticle> energyParticles;
+	private ArrayList<ItemParent> items;
 	private HUD hud;
 	private Teleport teleport;
 	private DebugInfo debug;
@@ -63,7 +65,7 @@ public class Level2 extends Game.Src.Map.GameState{
 		player = new Player(tileMap);
 		player.setPosition(300, 1115);
 		fireballs = new ArrayList<FireBall>();
-
+		items = new ArrayList<ItemParent>();
 		//takie ladne zielone intro
 		eventStart = true;
 		tb = new ArrayList<Rectangle>();
@@ -79,7 +81,7 @@ public class Level2 extends Game.Src.Map.GameState{
 		teleport.setPosition(3760, 1250);
 
 		// init player
-		player.init(enemies, energyParticles);
+		player.init(enemies, energyParticles, items);
 		populateEnemies();
 
 		debug = new DebugInfo(tileMap, player);

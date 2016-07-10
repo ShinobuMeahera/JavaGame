@@ -97,9 +97,8 @@ public class EnemyGhost extends Enemy {
 			getNextPosition();
 			checkTileMapCollision();
 			setPosition(xtemp, ytemp);
-			
-			if(player.getx() < x) facingRight = false;
-			else facingRight = true;
+
+			facingRight = player.getx() >= x;
 			
 			// idle
 			if(step == 0) {

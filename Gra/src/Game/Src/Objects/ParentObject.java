@@ -49,7 +49,6 @@ public abstract class ParentObject {
 	// poruszanie sie
 	protected boolean left;
 	protected boolean right;
-	protected boolean up;
 	protected boolean squat;
 	protected boolean jumping;
 	protected boolean falling;
@@ -270,4 +269,5 @@ public abstract class ParentObject {
 			g.draw(r);
 		}
 	}
+
 }

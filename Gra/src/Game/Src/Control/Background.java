@@ -108,16 +108,16 @@ public class Background {
 		}
 
 		if (x < 0) {
-			g.drawImage(image, (int) x + (int) GamePanel.WIDTH, (int) y, null);
+			g.drawImage(image, (int) x + GamePanel.WIDTH, (int) y, null);
 		}
 		if (x > 0) {
-			g.drawImage(image, (int) x - (int) GamePanel.WIDTH, (int) y, null);
+			g.drawImage(image, (int) x - GamePanel.WIDTH, (int) y, null);
 		}
 		if (y < 0) {
-			g.drawImage(image, (int) x, (int) y + (int) GamePanel.HEIGHT, null);
+			g.drawImage(image, (int) x, (int) y + GamePanel.HEIGHT, null);
 		}
 		if (y > 0) {
-			g.drawImage(image, (int) x, (int) y - (int) GamePanel.HEIGHT, null);
+			g.drawImage(image, (int) x, (int) y - GamePanel.HEIGHT, null);
 		}
 	}
 }

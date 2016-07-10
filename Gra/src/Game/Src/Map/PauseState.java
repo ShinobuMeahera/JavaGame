@@ -30,7 +30,8 @@ public class PauseState extends GameState {
 	}
 	
 	public void draw(Graphics2D g) {
-		g.setColor(Color.BLACK);
+		Color myColour = new Color(0, 0, 0, 32);
+		g.setColor(myColour);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
 		
 		g.setFont(font);
@@ -40,6 +41,7 @@ public class PauseState extends GameState {
 		
 		if(currentChoice == 0) g.fillRect(		GamePanel.WIDTH/2 - 120, GamePanel.HEIGHT/2 - 5, 		5, 5);
 		else if(currentChoice == 1) g.fillRect(	GamePanel.WIDTH/2 - 120, GamePanel.HEIGHT/2 -5 + 30, 	5, 5);
+
 	}
 	
 	public void handleInput() {

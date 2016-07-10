@@ -11,11 +11,21 @@ public class Content {
 	private static final String PARTICLESPRITEMAP = "/Game/Src/Assets/energy-particle.png";
 	private static final String BOSS1SPRITEMAP = "/Game/Src/Assets/boss-1.png";
 
+	private static final String SWORD = "/Game/Src/Assets/icons/sword3.png";
+	private static final String DOUBLEJUMP = "/Game/Src/Assets/icons/armor5.png";
+	private static final String DASH = "/Game/Src/Assets/icons/robe2.png";
+	private static final String FIREBALL = "/Game/Src/Assets/icons/book7.png";
+
 	public static BufferedImage[][] EnemySkeleton = load(SKELETONSPRITEMAP, 36, 48);
 	public static BufferedImage[][] EnemySkeletonDead = load(DEADSKELETONSPRITEMAP, 36, 48);
 	public static BufferedImage[][] EnemyGhost = load(GHOSTSPRITEMAP, 25, 35);
 	public static BufferedImage[][] EnergyParticle = load(PARTICLESPRITEMAP, 5, 5);
 	public static BufferedImage[][] EnemyBoss1 = load(BOSS1SPRITEMAP, 57*2, 88*2);
+
+	public static BufferedImage[][] Sword = load(SWORD, 16, 16);
+	public static BufferedImage[][] DoubleJump = load(DOUBLEJUMP, 16, 16);
+	public static BufferedImage[][] Dash = load(DASH, 16, 16);
+	public static BufferedImage[][] Fireball = load(FIREBALL, 16, 16);
 
 	private static BufferedImage[][] load(String s, int w, int h) {
 
